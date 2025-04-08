@@ -72,7 +72,7 @@ CREATE TABLE `Tutor` (
   `introduction` TEXT,
   `avg_rating` DECIMAL(10,2) DEFAULT 0,
   `completed_courses` INT DEFAULT 0,
-  `feedback_course_count` IN DEFAULT 0,
+  `feedback_course_count` INT DEFAULT 0,
   `phone_number` VARCHAR(20) UNIQUE,
   `is_approved` BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (`user_id`) REFERENCES `Account` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
