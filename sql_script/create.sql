@@ -6,12 +6,12 @@ CREATE DATABASE TutorLink;
 USE TutorLink;
 
 CREATE TABLE `Role` (
-  `role_id` INT PRIMARY KEY,
-  `role_name` VARCHAR(100)
+  `role_id` INT PRIMARY KEY AUTO_INCREMENT,
+  `role_name` VARCHAR(100) UNIQUE NOT NULL 
 );
 
 CREATE TABLE `Permission` (
-  `permission_id` INT PRIMARY KEY,
+  `permission_id` INT PRIMARY KEY AUTO_INCREMENT,
   `permission_name` VARCHAR(100) UNIQUE NOT NULL,
   `description` VARCHAR(255)
 );
@@ -20,7 +20,7 @@ CREATE TABLE `Account` (
   `user_id` INT PRIMARY KEY AUTO_INCREMENT,
   `username` VARCHAR(100) UNIQUE NOT NULL,
   `email` VARCHAR(255) UNIQUE NOT NULL,
-  `password` VARCHAR(255) NOT NULL,
+  `hashed_password` VARCHAR(255) NOT NULL,
   `role_id` INT,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `is_active` BOOLEAN DEFAULT TRUE,
@@ -31,9 +31,9 @@ CREATE TABLE `Customer` (
   `customer_id` INT PRIMARY KEY AUTO_INCREMENT,
   `user_id` INT UNIQUE NOT NULL,
   `name` VARCHAR(255),
-  `gender` VARCHAR(20),
+  `gender` ENUM("MALE", "FEMALE"),
   `address` TEXT,
-  `phone_number` VARCHAR(20),
+  `phone_number` VARCHAR(20) UNIQUE,
   FOREIGN KEY (`user_id`) REFERENCES `Account` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -41,8 +41,9 @@ CREATE TABLE `Tutor` (
   `tutor_id` INT PRIMARY KEY AUTO_INCREMENT,
   `user_id` INT UNIQUE NOT NULL,
   `name` VARCHAR(255),
-  `gender` VARCHAR(20),
+  `gender` ENUM("MALE", "FEMALE"),
   `introduction` TEXT,
+  `phone_number` VARCHAR(20) UNIQUE,
   `is_approved` BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (`user_id`) REFERENCES `Account` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -51,53 +52,55 @@ CREATE TABLE `Admin` (
   `admin_id` INT PRIMARY KEY AUTO_INCREMENT,
   `user_id` INT UNIQUE NOT NULL,
   `name` VARCHAR(255),
+  `gender` ENUM("MALE", "FEMALE"),
+  `phone_number` VARCHAR(20) UNIQUE,
   FOREIGN KEY (`user_id`) REFERENCES `Account` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `Province` (
   `province_id` VARCHAR(20) PRIMARY KEY,
-  `name` VARCHAR(100) UNIQUE
+  `name` VARCHAR(100) UNIQUE NOT NULL
 );
 
 CREATE TABLE `District` (
   `district_id` VARCHAR(20) PRIMARY KEY,
-  `name` VARCHAR(100) UNIQUE,
+  `name` VARCHAR(100) UNIQUE NOT NULL,
   `province_id` VARCHAR(20),
   FOREIGN KEY (`province_id`) REFERENCES `Province` (`province_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 CREATE TABLE `Ward` (
   `ward_id` VARCHAR(20) PRIMARY KEY,
-  `name` VARCHAR(100),
+  `name` VARCHAR(100) UNIQUE NOT NULL,
   `district_id` VARCHAR(20),
   FOREIGN KEY (`district_id`) REFERENCES `District` (`district_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 CREATE TABLE `Subject` (
   `subject_id` INT PRIMARY KEY AUTO_INCREMENT,
-  `subject_name` VARCHAR(100) UNIQUE
+  `subject_name` VARCHAR(100) UNIQUE NOT NULL
 );
 
 CREATE TABLE `Class` (
   `class_id` INT PRIMARY KEY AUTO_INCREMENT,
-  `class_name` VARCHAR(100) UNIQUE
+  `class_name` VARCHAR(100) UNIQUE NOT NULL
 );
 
 CREATE TABLE `Subject_Class_Mapping` (
+  `subject_class_id` INT PRIMARY KEY AUTO_INCREMENT,
   `subject_id` INT,
   `class_id` INT,
-  PRIMARY KEY (`subject_id`, `class_id`),
+  UNIQUE (`subject_id`, `class_id`),
   FOREIGN KEY (`subject_id`) REFERENCES `Subject` (`subject_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`class_id`) REFERENCES `Class` (`class_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `Tutor_Subject_Class` (
   `tutor_id` INT,
-  `subject_id` INT,
-  `class_id` INT,
-  PRIMARY KEY (`tutor_id`, `subject_id`, `class_id`),
+  `subject_class_id` INT,
+  PRIMARY KEY (`tutor_id`, `subject_class_id`),
   FOREIGN KEY (`tutor_id`) REFERENCES `Tutor` (`tutor_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`subject_id`, `class_id`) REFERENCES `Subject_Class_Mapping` (`subject_id`, `class_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (`subject_class_id`) REFERENCES `Subject_Class_Mapping` (`subject_class_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `Tutor_Certificate` (
@@ -111,23 +114,21 @@ CREATE TABLE `Tutor_Certificate` (
   FOREIGN KEY (`tutor_id`) REFERENCES `Tutor` (`tutor_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE `TutoringRequest` (
+CREATE TABLE `Tutoring_Request` (
   `request_id` INT PRIMARY KEY AUTO_INCREMENT,
   `customer_id` INT NOT NULL,
   `tutor_id` INT,
-  `subject_id` INT NOT NULL,
-  `class_id` INT NOT NULL,
-  `number_of_sessions` INT,
-  `teaching_days_preference` VARCHAR(255),
+  `subject_class_id` INT,
+  `sessions_per_week` INT,
   `ward_id` VARCHAR(20) NOT NULL,
-  `proposed_fee` VARCHAR(100),
-  `is_assigned` BOOLEAN DEFAULT FALSE,
-  `created_date` DATE,
-  `status` ENUM("Pending", "Approved", "Rejected") DEFAULT "Pending",
+  `address_detail` VARCHAR(255),
+  `proposed_fee_per_session` DECIMAL(15, 2),
+  `created_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `expired_date` DATETIME,
+  `status` ENUM("Pending", "Approved", "Rejected", "Assigned", "Cancelled") DEFAULT "Pending",
   FOREIGN KEY (`customer_id`) REFERENCES `Customer` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`tutor_id`) REFERENCES `Tutor` (`tutor_id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  FOREIGN KEY (`subject_id`) REFERENCES `Subject` (`subject_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  FOREIGN KEY (`class_id`) REFERENCES `Class` (`class_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  FOREIGN KEY (`subject_class_id`) REFERENCES `Subject_Class_Mapping` (`subject_class_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   FOREIGN KEY (`ward_id`) REFERENCES `Ward` (`ward_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   INDEX `idx_tutoringrequest_customer` (`customer_id`),
   INDEX `idx_tutoringrequest_tutor` (`tutor_id`),
@@ -136,12 +137,11 @@ CREATE TABLE `TutoringRequest` (
 
 CREATE TABLE `Request_Schedule` (
   `request_id` INT,
-  `schedule_item_id` INT,
-  `day_of_week` VARCHAR(20),
+  `schedule_id` INT PRIMARY KEY AUTO_INCREMENT,
+  `day_of_week` INT CHECK(`day_of_week` >= 1 AND `day_of_week` <= 7),
   `start_time` TIME,
   `end_time` TIME,
-  PRIMARY KEY (`request_id`, `schedule_item_id`),
-  FOREIGN KEY (`request_id`) REFERENCES `TutoringRequest` (`request_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (`request_id`) REFERENCES `Tutoring_Request` (`request_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `Course` (
@@ -149,34 +149,30 @@ CREATE TABLE `Course` (
   `request_id` INT UNIQUE NOT NULL,
   `start_date` DATE,
   `end_date` DATE,
-  `status` ENUM("In Progress", "Completed", "Ended", "Cancelled"),
+  `status` ENUM("In Progress", "Completed", "Cancelled"),
   `sessions_per_week` INT,
-  FOREIGN KEY (`request_id`) REFERENCES `TutoringRequest` (`request_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`request_id`) REFERENCES `Tutoring_Request` (`request_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   INDEX `idx_course_request` (`request_id`),
   INDEX `idx_course_status` (`status`)
 );
 
 CREATE TABLE `Course_Schedule` (
   `course_id` INT,
-  `schedule_item_id` INT,
-  `day_of_week` VARCHAR(20),
+  `schedule_id` INT PRIMARY KEY AUTO_INCREMENT,
+  `day_of_week` INT CHECK(`day_of_week` >= 1 AND `day_of_week` <= 7),
   `start_time` TIME,
   `end_time` TIME,
-  PRIMARY KEY (`course_id`, `schedule_item_id`),
   FOREIGN KEY (`course_id`) REFERENCES `Course` (`course_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `Feedback` (
   `feedback_id` INT PRIMARY KEY AUTO_INCREMENT,
   `course_id` INT NOT NULL,
-  `user_id` INT NOT NULL,
   `rating` INT,
   `content` TEXT,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (`course_id`) REFERENCES `Course` (`course_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`user_id`) REFERENCES `Account` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  INDEX `idx_feedback_course` (`course_id`),
-  INDEX `idx_feedback_user` (`user_id`)
+  INDEX `idx_feedback_course` (`course_id`)
 );
 
 CREATE TABLE `Payment` (
@@ -214,8 +210,8 @@ CREATE TABLE `Cancellation_Response` (
   `cancellation_request_id` INT UNIQUE NOT NULL,
   `is_approved` BOOLEAN,
   `reason` TEXT,
-  `refund_deposit` BOOLEAN DEFAULT FALSE,
-  `refund_tuition` BOOLEAN DEFAULT FALSE,
+  `refund_deposit` DECIMAL(15, 2) DEFAULT 0,
+  `refund_tuition` DECIMAL(15, 2) DEFAULT 0,
   `response_date` DATE,
   FOREIGN KEY (`admin_id`) REFERENCES `Admin` (`admin_id`) ON DELETE SET NULL ON UPDATE CASCADE,
   FOREIGN KEY (`cancellation_request_id`) REFERENCES `Cancellation_Request` (`cancellation_request_id`) ON DELETE CASCADE ON UPDATE CASCADE
