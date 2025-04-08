@@ -194,8 +194,8 @@ CREATE TABLE `Cancellation_Response` (
   `admin_id` INT,
   `is_approved` BOOLEAN,
   `reason` TEXT,
-  `refund_deposit` DECIMAL(15, 2) DEFAULT 0,
-  `refund_tuition` DECIMAL(15, 2) DEFAULT 0,
+  `refund_deposit` DECIMAL(15, 2) DEFAULT 0 CHECK(`refund_deposit` >= 0),
+  `refund_tuition` DECIMAL(15, 2) DEFAULT 0 CHECK(`refund_tuition` >= 0),
   `created_at` DATETIME,
   FOREIGN KEY (`admin_id`) REFERENCES `Admin` (`admin_id`) ON DELETE SET NULL ON UPDATE CASCADE,
   FOREIGN KEY (`cancellation_request_id`) REFERENCES `Cancellation_Request` (`cancellation_request_id`) ON DELETE CASCADE ON UPDATE CASCADE
