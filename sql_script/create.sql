@@ -29,12 +29,38 @@ CREATE TABLE `Account` (
   `username` VARCHAR(100) UNIQUE NOT NULL,
   `email` VARCHAR(255) UNIQUE NOT NULL,
   `hashed_password` VARCHAR(255) NOT NULL,
+  `otp` VARCHAR(255) DEFAULT NULL,
+  `otp_expired_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `unread_notifications` INT DEFAULT 0,
   `role_id` INT,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `is_active` BOOLEAN DEFAULT TRUE,
   FOREIGN KEY (`role_id`) REFERENCES `Role` (`role_id`) ON DELETE SET NULL ON UPDATE CASCADE
 );
+
+-- Trigger BEFORE INSERT
+DELIMITER $$
+CREATE TRIGGER trg_otp_expired_date_insert
+BEFORE INSERT ON `Account`
+FOR EACH ROW
+BEGIN
+  IF NEW.otp IS NOT NULL THEN
+    SET NEW.otp_expired_date = NOW() + INTERVAL 5 MINUTE;
+  END IF;
+END$$
+DELIMITER ;
+
+-- Trigger BEFORE UPDATE
+DELIMITER $$
+CREATE TRIGGER trg_otp_expired_date_update
+BEFORE UPDATE ON `Account`
+FOR EACH ROW
+BEGIN
+  IF (NEW.otp IS NOT NULL AND (OLD.otp IS NULL OR OLD.otp <> NEW.otp)) THEN
+    SET NEW.otp_expired_date = NOW() + INTERVAL 5 MINUTE;
+  END IF;
+END$$
+DELIMITER ;
 
 CREATE TABLE `Notification` (
   `notification_id` INT PRIMARY KEY AUTO_INCREMENT,
