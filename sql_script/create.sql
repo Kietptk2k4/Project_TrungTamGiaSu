@@ -221,7 +221,7 @@ CREATE TABLE `Payment` (
 CREATE TABLE `Feedback` (
   `feedback_id` INT PRIMARY KEY AUTO_INCREMENT,
   `course_id` INT NOT NULL,
-  `rating` INT,
+  `rating` INT CHECK (`rating` BETWEEN 0 AND 5),
   `content` TEXT,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (`course_id`) REFERENCES `Course` (`course_id`) ON DELETE CASCADE ON UPDATE CASCADE
