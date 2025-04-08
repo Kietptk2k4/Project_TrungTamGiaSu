@@ -1,12 +1,14 @@
-package com.trungtangiasu;
+package com.trungtangiasu.server;
 
 import com.trungtangiasu.server.utils.EmailSender;
+import com.trungtangiasu.server.utils.OtpGenerator;
 public class Main {
     public static void main(String[] args) {
         testEmailSender(
             "n22dccn193@student.ptithcm.edu.vn", 
-            "TEST EMAIL SENDER",
-            "HELLO WORLD");
+            "TEST OTP CHO QUAN LY TRUNG TAM GIA SU",
+            "Xin Chao Tu, \nBan dang yeu cau thay doi mat khau. Ma OTP cua ban la: "
+                    + OtpGenerator.randomOtp(6) + "\nMa se het han trong vong 5 phut!"  );
     }
 
     public static void testEmailSender(String receiver, String title, String content){
