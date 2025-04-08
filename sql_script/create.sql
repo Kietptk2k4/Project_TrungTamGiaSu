@@ -1,6 +1,10 @@
 SET default_storage_engine=InnoDB;
 SET NAMES utf8mb4;
 
+DROP DATABASE IF EXISTS TutorLink;
+CREATE DATABASE TutorLink;
+USE TutorLink;
+
 CREATE TABLE `Role` (
   `role_id` INT PRIMARY KEY,
   `role_name` VARCHAR(100)
@@ -193,33 +197,6 @@ CREATE TABLE `Payment` (
   INDEX `idx_payment_course` (`course_id`),
   INDEX `idx_payment_customer` (`customer_id`),
   INDEX `idx_payment_date` (`payment_date`)
-);
-
-CREATE TABLE `Tutor_Deposit` (
-  `deposit_id` INT PRIMARY KEY AUTO_INCREMENT,
-  `course_id` INT NOT NULL,
-  `tutor_id` INT NOT NULL,
-  `amount` DECIMAL(15, 2) NOT NULL,
-  `description` VARCHAR(255),
-  `notes` TEXT,
-  `payment_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  `status` VARCHAR(30) DEFAULT 'Paid',
-  FOREIGN KEY (`course_id`) REFERENCES `Course` (`course_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  FOREIGN KEY (`tutor_id`) REFERENCES `Tutor` (`tutor_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-  INDEX `idx_tutordeposit_course` (`course_id`),
-  INDEX `idx_tutordeposit_tutor` (`tutor_id`)
-);
-
-CREATE TABLE `Tutor_Refund` (
-  `refund_id` INT PRIMARY KEY AUTO_INCREMENT,
-  `deposit_id` INT UNIQUE NOT NULL,
-  `amount` DECIMAL(15, 2) NOT NULL,
-  `description` VARCHAR(255),
-  `notes` TEXT,
-  `refund_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  `processed_by_user_id` INT,
-  FOREIGN KEY (`deposit_id`) REFERENCES `Tutor_Deposit` (`deposit_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`processed_by_user_id`) REFERENCES `Account` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE TABLE `Cancellation_Request` (
