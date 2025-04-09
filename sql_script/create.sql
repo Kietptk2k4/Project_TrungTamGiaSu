@@ -75,34 +75,43 @@ CREATE TABLE `Admin` (
   `admin_id` INT PRIMARY KEY AUTO_INCREMENT,
   `user_id` INT UNIQUE NOT NULL,
   `name` VARCHAR(255),
-  `gender` ENUM("MALE", "FEMALE"),
-  `phone_number` VARCHAR(20) UNIQUE,
   FOREIGN KEY (`user_id`) REFERENCES `Account` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
 
 CREATE TABLE `Customer` (
   `customer_id` INT PRIMARY KEY AUTO_INCREMENT,
   `user_id` INT UNIQUE NOT NULL,
-  `name` VARCHAR(255),
-  `gender` ENUM("MALE", "FEMALE"),
+  `personal_info_id` INT NOT NULL,
   `address` TEXT,
-  `phone_number` VARCHAR(20) UNIQUE,
-  FOREIGN KEY (`user_id`) REFERENCES `Account` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (`user_id`) REFERENCES `Account` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`personal_info_id`) REFERENCES `Personal_Info` (`personal_info_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+
+
 
 CREATE TABLE `Tutor` (
   `tutor_id` INT PRIMARY KEY AUTO_INCREMENT,
   `user_id` INT UNIQUE NOT NULL,
-  `name` VARCHAR(255),
-  `gender` ENUM("MALE", "FEMALE"),
+  `personal_info_id` INT NOT NULL,
   `introduction` TEXT,
   `avg_rating` DECIMAL(10,2) DEFAULT 0,
   `completed_courses` INT DEFAULT 0,
   `feedback_course_count` INT DEFAULT 0,
-  `phone_number` VARCHAR(20) UNIQUE,
   `is_approved` BOOLEAN DEFAULT FALSE,
-  FOREIGN KEY (`user_id`) REFERENCES `Account` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (`user_id`) REFERENCES `Account` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`personal_info_id`) REFERENCES `Personal_Info` (`personal_info_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+
+CREATE TABLE `Personal_Info` (
+  `personal_info_id` INT PRIMARY KEY AUTO_INCREMENT,
+  `name` VARCHAR(255),
+  `gender` ENUM("MALE", "FEMALE"),
+  `phone_number` VARCHAR(20) UNIQUE
+);
+
 
 CREATE TABLE `Tutor_Certificate` (
   `certificate_id` INT PRIMARY KEY AUTO_INCREMENT,
