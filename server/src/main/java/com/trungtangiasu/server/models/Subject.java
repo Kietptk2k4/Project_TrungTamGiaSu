@@ -10,10 +10,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Subject {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "subject_id", nullable = false)
+    @Column(name = "subject_id")
     private Integer subjectId;
 
     @Column(name = "subject_name", nullable = false, unique = true, length = 100)

@@ -10,12 +10,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Ward {
-
     @Id
-    @Column(name = "ward_id", length = 20, nullable = false)
+    @Column(name = "ward_id", length = 20)
     private String wardId;
 
-    @Column(name = "name", length = 100, nullable = false)
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
 
     @ManyToOne

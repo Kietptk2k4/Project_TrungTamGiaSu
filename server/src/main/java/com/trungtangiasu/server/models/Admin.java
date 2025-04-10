@@ -10,7 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Admin {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "admin_id")
@@ -20,6 +19,7 @@ public class Admin {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private Account user;
 
-    @Column(name = "name", length = 255)
-    private String name;
+    @OneToOne
+    @JoinColumn(name = "personal_info_id", referencedColumnName = "personal_info_id", nullable = false)
+    private PersonalInfo personalInfo;
 }

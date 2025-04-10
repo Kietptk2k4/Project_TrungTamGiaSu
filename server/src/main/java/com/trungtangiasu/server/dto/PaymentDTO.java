@@ -14,7 +14,7 @@ public class PaymentDTO {
     private LocalDateTime paymentDate;
     private String paymentMethod;
     private String transactionCode;
-    private String paymentStatus; // Completed, Pending, etc.
+    private String paymentStatus;
     private String description;
     private String notes;
 }

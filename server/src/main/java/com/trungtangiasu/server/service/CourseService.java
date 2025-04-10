@@ -20,12 +20,4 @@ public class CourseService {
     public Optional<Course> findCourseById(Integer courseId) {
         return courseRepository.findById(courseId);
     }
-
-    public Course findCourseByRequestId(Integer requestId) {
-        return courseRepository.findByRequestRequestId(requestId);
-    }
-
-    public void deleteCourse(Integer courseId) {
-        courseRepository.deleteById(courseId);
-    }
 }

@@ -15,19 +15,13 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
 
-    @PostMapping
-    public ResponseEntity<Payment> createPayment(@RequestBody Payment payment) {
-        return ResponseEntity.ok(paymentService.savePayment(payment));
-    }
-
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<Payment>> getPaymentsByCustomerId(@PathVariable Integer customerId) {
         return ResponseEntity.ok(paymentService.findPaymentsByCustomerId(customerId));
     }
 
-    @DeleteMapping("/{paymentId}")
-    public ResponseEntity<Void> deletePayment(@PathVariable Integer paymentId) {
-        paymentService.deletePayment(paymentId);
-        return ResponseEntity.noContent().build();
+    @PostMapping
+    public ResponseEntity<Payment> createPayment(@RequestBody Payment payment) {
+        return ResponseEntity.ok(paymentService.savePayment(payment));
     }
 }

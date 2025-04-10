@@ -15,19 +15,13 @@ public class RequestScheduleController {
     @Autowired
     private RequestScheduleService requestScheduleService;
 
-    @PostMapping
-    public ResponseEntity<RequestSchedule> createRequestSchedule(@RequestBody RequestSchedule schedule) {
-        return ResponseEntity.ok(requestScheduleService.saveRequestSchedule(schedule));
-    }
-
     @GetMapping("/request/{requestId}")
     public ResponseEntity<List<RequestSchedule>> getSchedulesByRequestId(@PathVariable Integer requestId) {
         return ResponseEntity.ok(requestScheduleService.findSchedulesByRequestId(requestId));
     }
 
-    @DeleteMapping("/{scheduleId}")
-    public ResponseEntity<Void> deleteRequestSchedule(@PathVariable Integer scheduleId) {
-        requestScheduleService.deleteRequestSchedule(scheduleId);
-        return ResponseEntity.noContent().build();
+    @PostMapping
+    public ResponseEntity<RequestSchedule> createRequestSchedule(@RequestBody RequestSchedule schedule) {
+        return ResponseEntity.ok(requestScheduleService.saveRequestSchedule(schedule));
     }
 }

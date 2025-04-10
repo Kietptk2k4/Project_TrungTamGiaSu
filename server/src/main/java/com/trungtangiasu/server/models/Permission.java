@@ -2,7 +2,6 @@ package com.trungtangiasu.server.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "Permission")
@@ -11,7 +10,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Permission {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "permission_id")
@@ -22,7 +20,4 @@ public class Permission {
 
     @Column(name = "description", length = 255)
     private String description;
-
-    @ManyToMany(mappedBy = "permissions")
-    private Set<Role> roles;
 }

@@ -10,7 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestSchedule {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_id")

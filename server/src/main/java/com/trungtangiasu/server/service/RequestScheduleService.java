@@ -20,8 +20,4 @@ public class RequestScheduleService {
     public List<RequestSchedule> findSchedulesByRequestId(Integer requestId) {
         return requestScheduleRepository.findByRequestRequestId(requestId);
     }
-
-    public void deleteRequestSchedule(Integer scheduleId) {
-        requestScheduleRepository.deleteById(scheduleId);
-    }
 }

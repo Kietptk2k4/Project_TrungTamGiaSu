@@ -1,8 +1,9 @@
 package com.trungtangiasu.server.models;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.*;
 import lombok.*;
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "Tutor")
@@ -11,7 +12,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Tutor {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tutor_id")

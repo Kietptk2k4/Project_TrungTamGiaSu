@@ -16,11 +16,6 @@ public class TutoringRequestController {
     @Autowired
     private TutoringRequestService tutoringRequestService;
 
-    @PostMapping
-    public ResponseEntity<TutoringRequest> createTutoringRequest(@RequestBody TutoringRequest request) {
-        return ResponseEntity.ok(tutoringRequestService.saveTutoringRequest(request));
-    }
-
     @GetMapping("/{requestId}")
     public ResponseEntity<TutoringRequest> getTutoringRequestById(@PathVariable Integer requestId) {
         Optional<TutoringRequest> request = tutoringRequestService.findTutoringRequestById(requestId);
@@ -32,9 +27,8 @@ public class TutoringRequestController {
         return ResponseEntity.ok(tutoringRequestService.findTutoringRequestsByCustomerId(customerId));
     }
 
-    @DeleteMapping("/{requestId}")
-    public ResponseEntity<Void> deleteTutoringRequest(@PathVariable Integer requestId) {
-        tutoringRequestService.deleteTutoringRequest(requestId);
-        return ResponseEntity.noContent().build();
+    @PostMapping
+    public ResponseEntity<TutoringRequest> createTutoringRequest(@RequestBody TutoringRequest request) {
+        return ResponseEntity.ok(tutoringRequestService.saveTutoringRequest(request));
     }
 }

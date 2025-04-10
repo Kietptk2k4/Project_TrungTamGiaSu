@@ -9,11 +9,10 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClassEntity {
-
+public class Class {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "class_id", nullable = false)
+    @Column(name = "class_id")
     private Integer classId;
 
     @Column(name = "class_name", nullable = false, unique = true, length = 100)

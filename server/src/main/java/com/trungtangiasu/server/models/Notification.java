@@ -21,10 +21,10 @@ public class Notification {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private Account user;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
     @Column(name = "is_read", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")

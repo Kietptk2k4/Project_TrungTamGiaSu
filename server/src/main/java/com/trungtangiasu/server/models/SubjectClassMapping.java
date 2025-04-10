@@ -10,10 +10,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubjectClassMapping {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "subject_class_id", nullable = false)
+    @Column(name = "subject_class_id")
     private Integer subjectClassId;
 
     @ManyToOne
@@ -22,5 +21,5 @@ public class SubjectClassMapping {
 
     @ManyToOne
     @JoinColumn(name = "class_id", referencedColumnName = "class_id", nullable = false)
-    private ClassEntity classEntity;
+    private Class classEntity;
 }

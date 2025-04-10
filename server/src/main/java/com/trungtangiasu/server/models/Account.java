@@ -35,13 +35,13 @@ public class Account {
     @Column(name = "unread_notifications", nullable = false, columnDefinition = "INT DEFAULT 0")
     private Integer unreadNotifications;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @ManyToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
+    private Role role;
+
+    @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isActive;
-
-    @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
-    private Role role;
 }

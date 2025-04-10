@@ -25,12 +25,4 @@ public class TutoringRequestService {
     public List<TutoringRequest> findTutoringRequestsByCustomerId(Integer customerId) {
         return tutoringRequestRepository.findByCustomerCustomerId(customerId);
     }
-
-    public List<TutoringRequest> findTutoringRequestsByStatus(TutoringRequest.Status status) {
-        return tutoringRequestRepository.findByStatus(status);
-    }
-
-    public void deleteTutoringRequest(Integer requestId) {
-        tutoringRequestRepository.deleteById(requestId);
-    }
 }
