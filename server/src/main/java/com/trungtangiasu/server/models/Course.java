@@ -1,52 +1,40 @@
 package com.trungtangiasu.server.models;
+
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "Courses")
+@Table(name = "Course")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Course {
-    
-    @Id
-    @Column(name = "courseId", nullable = false)
-    private Integer courseId;
-    
-    @ManyToOne
-    @JoinColumn(name = "subjectId", referencedColumnName = "subjectId", nullable = false)
-    private Subject subject;
-    
-    @ManyToOne
-    @JoinColumn(name = "tutorId", referencedColumnName = "tutorId", nullable = false)
-    private Tutor tutor;
-    
-    @Column(name = "subjectName", columnDefinition = "NCHAR", nullable = false)
-    private String subjectName;
-    
-    @Column(name = "numofLec", nullable = false)
-    private Integer numOfLec;
-    
-    @Column(name = "adress", nullable = false, length = 255)
-    private String address;
-    
-    @Column(name = "price", nullable = false)
-    private Integer price;
-    
-    @Column(name = "Request", length = 255)
-    private String request;
-    
-    @Column(name = "Type", length = 50)
-    private String type;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private CourseStatus status;
-}
 
-enum CourseStatus {
-    ACTIVE,
-    COMPLETED,
-    CANCELLED
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "course_id")
+    private Integer courseId;
+
+    @OneToOne
+    @JoinColumn(name = "request_id", referencedColumnName = "request_id", nullable = false)
+    private TutoringRequest request;
+
+    @Column(name = "start_date")
+    private LocalDate startDate;
+
+    @Column(name = "end_date")
+    private LocalDate endDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "ENUM('In Progress', 'Completed', 'Cancelled') DEFAULT 'In Progress'")
+    private Status status;
+
+    @Column(name = "sessions_per_week")
+    private Integer sessionsPerWeek;
+
+    public enum Status {
+        InProgress, Completed, Cancelled
+    }
 }

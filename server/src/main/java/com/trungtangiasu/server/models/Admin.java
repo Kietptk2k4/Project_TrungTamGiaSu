@@ -4,19 +4,22 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "Admins")
+@Table(name = "Admin")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Admin {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "adminId", nullable = false)
+    @Column(name = "admin_id")
     private Integer adminId;
-    
+
     @OneToOne
-    @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
-    private ClientInfor clientInfor;
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private Account user;
+
+    @Column(name = "name", length = 255)
+    private String name;
 }
