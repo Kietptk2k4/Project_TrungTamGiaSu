@@ -1,0 +1,111 @@
+.tutor-card {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tutor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.tutor-image-container {
+  position: relative;
+  height: 240px;
+  overflow: hidden;
+}
+
+.tutor-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.favorite-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #666;
+  backdrop-filter: blur(4px);
+  transition: color 0.2s;
+}
+
+.favorite-button:hover {
+  color: #f44336;
+}
+
+.favorite-button[data-favorite="true"] {
+  color: #f44336;
+}
+
+.tutor-info-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  color: white;
+}
+
+.tutor-name {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.tutor-location {
+  font-size: 14px;
+}
+
+.tutor-details {
+  padding: 16px;
+}
+
+.tutor-rating-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.tutor-rating {
+  display: flex;
+  align-items: center;
+}
+
+.rating-star {
+  color: #ffb400;
+  margin-right: 4px;
+}
+
+.rating-value {
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.review-count {
+  font-size: 14px;
+  color: #666;
+}
+
+.ambassador-badge {
+  color: #4a6bff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tutor-description {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #333;
+}

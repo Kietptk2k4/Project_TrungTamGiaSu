@@ -1,0 +1,45 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  width: 100%;
+}
+
+.logo a {
+  font-size: 24px;
+  font-weight: 700;
+  color: #f44336;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.help-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #666;
+  transition: background-color 0.2s;
+}
+
+.help-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: #f44336;
+}
