@@ -71,11 +71,19 @@ CREATE TABLE `Notification` (
   FOREIGN KEY (`user_id`) REFERENCES `Account` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE `Personal_Info` (
+  `personal_info_id` INT PRIMARY KEY AUTO_INCREMENT,
+  `name` VARCHAR(255),
+  `gender` ENUM("MALE", "FEMALE"),
+  `phone_number` VARCHAR(20) UNIQUE
+);
+
 CREATE TABLE `Admin` (
   `admin_id` INT PRIMARY KEY AUTO_INCREMENT,
   `user_id` INT UNIQUE NOT NULL,
-  `name` VARCHAR(255),
-  FOREIGN KEY (`user_id`) REFERENCES `Account` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  `personal_info_id` INT NOT NULL,
+  FOREIGN KEY (`user_id`) REFERENCES `Account` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`personal_info_id`) REFERENCES `Personal_Info` (`personal_info_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -89,8 +97,6 @@ CREATE TABLE `Customer` (
 );
 
 
-
-
 CREATE TABLE `Tutor` (
   `tutor_id` INT PRIMARY KEY AUTO_INCREMENT,
   `user_id` INT UNIQUE NOT NULL,
@@ -102,14 +108,6 @@ CREATE TABLE `Tutor` (
   `is_approved` BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (`user_id`) REFERENCES `Account` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`personal_info_id`) REFERENCES `Personal_Info` (`personal_info_id`) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-
-CREATE TABLE `Personal_Info` (
-  `personal_info_id` INT PRIMARY KEY AUTO_INCREMENT,
-  `name` VARCHAR(255),
-  `gender` ENUM("MALE", "FEMALE"),
-  `phone_number` VARCHAR(20) UNIQUE
 );
 
 
@@ -200,7 +198,7 @@ CREATE TABLE `Course` (
   `request_id` INT UNIQUE NOT NULL,
   `start_date` DATE,
   `end_date` DATE,
-  `status` ENUM("In Progress", "Completed", "Cancelled") DEFAULT "In Progress",
+  `status` ENUM("InProgress", "Completed", "Cancelled") DEFAULT "InProgress",
   `sessions_per_week` INT,
   FOREIGN KEY (`request_id`) REFERENCES `Tutoring_Request` (`request_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
