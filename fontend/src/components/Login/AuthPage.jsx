@@ -36,28 +36,28 @@ export default function AuthPage() {
     }
 
     if (!isLogin && !formData.username) {
-      newErrors.username = "Username is required"
+      newErrors.username = "Tên người dùng là bắt buộc"
       valid = false
     }
 
     if (!formData.email) {
-      newErrors.email = "Email is required"
+      newErrors.email = "Email là bắt buộc"
       valid = false
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid"
+      newErrors.email = "Email không hợp lệ"
       valid = false
     }
 
     if (!formData.password) {
-      newErrors.password = "Password is required"
+      newErrors.password = "Mật khẩu là bắt buộc"
       valid = false
     } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters"
+      newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự"
       valid = false
     }
 
     if (!isLogin && formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match"
+      newErrors.confirmPassword = "Mật khẩu không khớp"
       valid = false
     }
 
@@ -69,11 +69,9 @@ export default function AuthPage() {
     e.preventDefault()
 
     if (validateForm()) {
-      // Here you would typically send the data to your backend
       console.log("Form submitted:", formData)
-      alert(isLogin ? "Login successful!" : "Registration successful!")
+      alert(isLogin ? "Đăng nhập thành công!" : "Đăng ký thành công!")
 
-      // Reset form after submission
       setFormData({
         username: "",
         email: "",
@@ -87,30 +85,34 @@ export default function AuthPage() {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <h1>{isLogin ? "Login" : "Register"}</h1>
-          <p>{isLogin ? "Welcome back! Please login to your account." : "Create a new account to get started."}</p>
+          <h1>{isLogin ? "Đăng Nhập" : "Đăng Ký"}</h1>
+          <p>
+            {isLogin
+              ? "Chào mừng bạn trở lại! Vui lòng đăng nhập vào tài khoản của bạn."
+              : "Tạo một tài khoản mới để bắt đầu."}
+          </p>
         </div>
 
         <div className="auth-tabs">
           <button className={isLogin ? "active" : ""} onClick={() => setIsLogin(true)}>
-            Login
+            Đăng Nhập
           </button>
           <button className={!isLogin ? "active" : ""} onClick={() => setIsLogin(false)}>
-            Register
+            Đăng Ký
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
           {!isLogin && (
             <div className="form-group">
-              <label htmlFor="username">Username</label>
+              <label htmlFor="username">Tên Người Dùng</label>
               <input
                 type="text"
                 id="username"
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                placeholder="Enter your username"
+                placeholder="Nhập tên người dùng của bạn"
               />
               {errors.username && <span className="error">{errors.username}</span>}
             </div>
@@ -124,34 +126,34 @@ export default function AuthPage() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Enter your email"
+              placeholder="Nhập email của bạn"
             />
             {errors.email && <span className="error">{errors.email}</span>}
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Mật Khẩu</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Enter your password"
+              placeholder="Nhập mật khẩu của bạn"
             />
             {errors.password && <span className="error">{errors.password}</span>}
           </div>
 
           {!isLogin && (
             <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
+              <label htmlFor="confirmPassword">Xác Nhận Mật Khẩu</label>
               <input
                 type="password"
                 id="confirmPassword"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                placeholder="Confirm your password"
+                placeholder="Xác nhận mật khẩu của bạn"
               />
               {errors.confirmPassword && <span className="error">{errors.confirmPassword}</span>}
             </div>
@@ -159,18 +161,18 @@ export default function AuthPage() {
 
           {isLogin && (
             <div className="forgot-password">
-              <a href="#">Forgot password?</a>
+              <a href="#">Quên mật khẩu?</a>
             </div>
           )}
 
           <button type="submit" className="submit-btn">
-            {isLogin ? "Login" : "Register"}
+            {isLogin ? "Đăng Nhập" : "Đăng Ký"}
           </button>
         </form>
 
         <div className="auth-footer">
           <p>
-            {isLogin ? "Don't have an account? " : "Already have an account? "}
+            {isLogin ? "Chưa có tài khoản? " : "Đã có tài khoản? "}
             <a
               href="#"
               onClick={(e) => {
@@ -178,7 +180,7 @@ export default function AuthPage() {
                 setIsLogin(!isLogin)
               }}
             >
-              {isLogin ? "Register" : "Login"}
+              {isLogin ? "Đăng Ký" : "Đăng Nhập"}
             </a>
           </p>
         </div>

@@ -28,40 +28,38 @@ export default function TutoringRequestForm() {
   const [districts, setDistricts] = useState([])
   const [wards, setWards] = useState([])
 
-  // Subjects list
+  // Danh sách môn học
   const subjects = [
-    "Mathematics",
-    "Physics",
-    "Chemistry",
-    "Biology",
-    "English",
-    "Literature",
-    "History",
-    "Geography",
-    "Computer Science",
-    "Art",
-    "Music",
-    "Physical Education",
-    "Foreign Language",
-    "Economics",
-    "Business Studies",
+    "Toán học",
+    "Vật lý",
+    "Hóa học",
+    "Sinh học",
+    "Tiếng Anh",
+    "Văn học",
+    "Lịch sử",
+    "Địa lý",
+    "Tin học",
+    "Mỹ thuật",
+    "Âm nhạc",
+    "Thể dục",
+    "Ngoại ngữ",
+    "Kinh tế",
+    "Kinh doanh",
   ]
 
-  // Days of the week
+  // Danh sách ngày trong tuần
   const daysOfWeek = [
-    { value: "monday", label: "Monday" },
-    { value: "tuesday", label: "Tuesday" },
-    { value: "wednesday", label: "Wednesday" },
-    { value: "thursday", label: "Thursday" },
-    { value: "friday", label: "Friday" },
-    { value: "saturday", label: "Saturday" },
-    { value: "sunday", label: "Sunday" },
+    { value: "monday", label: "Thứ Hai" },
+    { value: "tuesday", label: "Thứ Ba" },
+    { value: "wednesday", label: "Thứ Tư" },
+    { value: "thursday", label: "Thứ Năm" },
+    { value: "friday", label: "Thứ Sáu" },
+    { value: "saturday", label: "Thứ Bảy" },
+    { value: "sunday", label: "Chủ Nhật" },
   ]
 
-  // Mock data for provinces, districts, and wards
-  // In a real application, you would fetch this data from an API
+  // Mock data cho tỉnh, quận, phường
   useEffect(() => {
-    // Simulate fetching provinces
     setProvinces([
       { id: "1", name: "Hà Nội" },
       { id: "2", name: "Hồ Chí Minh" },
@@ -72,9 +70,7 @@ export default function TutoringRequestForm() {
   }, [])
 
   useEffect(() => {
-    // Reset districts and wards when province changes
     if (formData.address?.province) {
-      // Simulate fetching districts based on selected province
       const mockDistricts = {
         1: [
           { id: "101", name: "Ba Đình" },
@@ -129,9 +125,7 @@ export default function TutoringRequestForm() {
   }, [formData.address.province])
 
   useEffect(() => {
-    // Reset wards when district changes
     if (formData.address?.district) {
-      // Simulate fetching wards based on selected district
       const mockWards = {
         101: [
           { id: "1011", name: "Phúc Xá" },
@@ -158,7 +152,6 @@ export default function TutoringRequestForm() {
           { id: "2094", name: "Linh Trung" },
           { id: "2095", name: "Tam Phú" },
         ],
-        // Add more mock wards for other districts as needed
       }
 
       setWards(mockWards[formData.address.district] || [])
@@ -174,15 +167,12 @@ export default function TutoringRequestForm() {
     }
   }, [formData.address.district])
 
-  // Handle number of sessions change
   const handleSessionsPerWeekChange = (e) => {
     const value = Number.parseInt(e.target.value) || 0
-    const newValue = Math.min(Math.max(value, 1), 7) // Limit between 1 and 7
+    const newValue = Math.min(Math.max(value, 1), 7)
 
-    // Update sessions array based on new count
     let newSessions = [...formData.sessions]
     if (newValue > formData.sessions.length) {
-      // Add new sessions
       for (let i = formData.sessions.length; i < newValue; i++) {
         newSessions.push({
           dayOfWeek: daysOfWeek[i % 7].value,
@@ -191,7 +181,6 @@ export default function TutoringRequestForm() {
         })
       }
     } else if (newValue < formData.sessions.length) {
-      // Remove excess sessions
       newSessions = newSessions.slice(0, newValue)
     }
 
@@ -202,7 +191,6 @@ export default function TutoringRequestForm() {
     })
   }
 
-  // Handle session detail changes
   const handleSessionChange = (index, field, value) => {
     const updatedSessions = [...formData.sessions]
     updatedSessions[index] = {
@@ -215,7 +203,6 @@ export default function TutoringRequestForm() {
     })
   }
 
-  // Handle address changes
   const handleAddressChange = (field, value) => {
     setFormData({
       ...formData,
@@ -226,7 +213,6 @@ export default function TutoringRequestForm() {
     })
   }
 
-  // Handle general form changes
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData({
@@ -235,71 +221,62 @@ export default function TutoringRequestForm() {
     })
   }
 
-  // Validate form
   const validateForm = () => {
     const newErrors = {}
 
-    // Validate sessions per week
     if (!formData.sessionsPerWeek || formData.sessionsPerWeek < 1) {
-      newErrors.sessionsPerWeek = "Please enter at least 1 session per week"
+      newErrors.sessionsPerWeek = "Vui lòng nhập ít nhất 1 buổi mỗi tuần"
     }
 
-    // Validate sessions
     formData.sessions.forEach((session, index) => {
       if (!session.dayOfWeek) {
-        newErrors[`session_${index}_day`] = "Please select a day"
+        newErrors[`session_${index}_day`] = "Vui lòng chọn ngày"
       }
       if (!session.startTime) {
-        newErrors[`session_${index}_start`] = "Please select a start time"
+        newErrors[`session_${index}_start`] = "Vui lòng chọn giờ bắt đầu"
       }
       if (!session.endTime) {
-        newErrors[`session_${index}_end`] = "Please select an end time"
+        newErrors[`session_${index}_end`] = "Vui lòng chọn giờ kết thúc"
       }
       if (session.startTime && session.endTime && session.startTime >= session.endTime) {
-        newErrors[`session_${index}_time`] = "End time must be after start time"
+        newErrors[`session_${index}_time`] = "Giờ kết thúc phải sau giờ bắt đầu"
       }
     })
 
-    // Validate budget
     if (!formData.budget) {
-      newErrors.budget = "Please enter your budget"
+      newErrors.budget = "Vui lòng nhập ngân sách"
     } else if (isNaN(formData.budget) || Number.parseFloat(formData.budget) <= 0) {
-      newErrors.budget = "Please enter a valid budget amount"
+      newErrors.budget = "Vui lòng nhập số tiền hợp lệ"
     }
 
-    // Validate subject
     if (!formData.subject) {
-      newErrors.subject = "Please select a subject"
+      newErrors.subject = "Vui lòng chọn môn học"
     }
 
-    // Validate address
     if (!formData.address.province) {
-      newErrors.province = "Please select a province"
+      newErrors.province = "Vui lòng chọn tỉnh/thành phố"
     }
     if (!formData.address.district) {
-      newErrors.district = "Please select a district"
+      newErrors.district = "Vui lòng chọn quận/huyện"
     }
     if (!formData.address.ward) {
-      newErrors.ward = "Please select a ward"
+      newErrors.ward = "Vui lòng chọn phường/xã"
     }
     if (!formData.address.street) {
-      newErrors.street = "Please enter your street address"
+      newErrors.street = "Vui lòng nhập địa chỉ đường phố"
     }
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault()
 
     if (validateForm()) {
-      // Here you would typically send the data to your backend
       console.log("Form submitted:", formData)
-      alert("Tutoring request submitted successfully!")
+      alert("Yêu cầu gia sư đã được gửi thành công!")
     } else {
-      // Scroll to the first error
       const firstError = document.querySelector(".error")
       if (firstError) {
         firstError.scrollIntoView({ behavior: "smooth", block: "center" })
@@ -310,17 +287,17 @@ export default function TutoringRequestForm() {
   return (
     <div className="tutoring-container">
       <div className="tutoring-header">
-        <h1>Tutoring Request Form</h1>
-        <p>Fill out the form below to request a tutor for your needs</p>
+        <h1>Form Yêu Cầu Gia Sư</h1>
+        <p>Điền thông tin dưới đây để yêu cầu gia sư phù hợp với nhu cầu của bạn</p>
       </div>
 
       <div className="tutoring-card">
         <form onSubmit={handleSubmit} className="tutoring-form">
-          {/* Sessions per week */}
+          {/* Số buổi mỗi tuần */}
           <div className="form-section">
-            <h2>Session Requirements</h2>
+            <h2>Yêu Cầu Buổi Học</h2>
             <div className="form-group">
-              <label htmlFor="sessionsPerWeek">Number of sessions per week</label>
+              <label htmlFor="sessionsPerWeek">Số buổi mỗi tuần</label>
               <input
                 type="number"
                 id="sessionsPerWeek"
@@ -334,17 +311,17 @@ export default function TutoringRequestForm() {
               {errors.sessionsPerWeek && <span className="error">{errors.sessionsPerWeek}</span>}
             </div>
 
-            {/* Session details */}
+            {/* Chi tiết buổi học */}
             <div className="sessions-container">
-              <h3>Session Details</h3>
+              <h3>Chi Tiết Buổi Học</h3>
               {formData.sessions.map((session, index) => (
                 <div key={index} className="session-item">
                   <div className="session-header">
-                    <h4>Session {index + 1}</h4>
+                    <h4>Buổi {index + 1}</h4>
                   </div>
                   <div className="session-details">
                     <div className="form-group">
-                      <label htmlFor={`day-${index}`}>Day of the week</label>
+                      <label htmlFor={`day-${index}`}>Ngày trong tuần</label>
                       <select
                         id={`day-${index}`}
                         value={session.dayOfWeek}
@@ -364,7 +341,7 @@ export default function TutoringRequestForm() {
 
                     <div className="time-group">
                       <div className="form-group">
-                        <label htmlFor={`start-${index}`}>Start time</label>
+                        <label htmlFor={`start-${index}`}>Giờ bắt đầu</label>
                         <input
                           type="time"
                           id={`start-${index}`}
@@ -378,7 +355,7 @@ export default function TutoringRequestForm() {
                       </div>
 
                       <div className="form-group">
-                        <label htmlFor={`end-${index}`}>End time</label>
+                        <label htmlFor={`end-${index}`}>Giờ kết thúc</label>
                         <input
                           type="time"
                           id={`end-${index}`}
@@ -400,12 +377,12 @@ export default function TutoringRequestForm() {
             </div>
           </div>
 
-          {/* Budget and Subject */}
+          {/* Ngân sách và Môn học */}
           <div className="form-section">
-            <h2>Budget and Subject</h2>
+            <h2>Ngân Sách và Môn Học</h2>
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="budget">Budget per session (VND)</label>
+                <label htmlFor="budget">Ngân sách (VND)</label>
                 <div className="input-with-icon">
                   <input
                     type="text"
@@ -413,7 +390,7 @@ export default function TutoringRequestForm() {
                     name="budget"
                     value={formData.budget}
                     onChange={handleChange}
-                    placeholder="e.g., 300,000"
+                    placeholder="VD: 300,000"
                     className={errors.budget ? "error-input" : ""}
                   />
                   <span className="currency-symbol">₫</span>
@@ -422,7 +399,7 @@ export default function TutoringRequestForm() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="subject">Subject</label>
+                <label htmlFor="subject">Môn học</label>
                 <select
                   id="subject"
                   name="subject"
@@ -430,7 +407,7 @@ export default function TutoringRequestForm() {
                   onChange={handleChange}
                   className={errors.subject ? "error-input" : ""}
                 >
-                  <option value="">Select a subject</option>
+                  <option value="">Chọn môn học</option>
                   {subjects.map((subject) => (
                     <option key={subject} value={subject}>
                       {subject}
@@ -442,18 +419,18 @@ export default function TutoringRequestForm() {
             </div>
           </div>
 
-          {/* Address */}
+          {/* Địa chỉ */}
           <div className="form-section">
-            <h2>Home Address</h2>
+            <h2>Địa Chỉ Nhà</h2>
             <div className="form-group">
-              <label htmlFor="province">Province</label>
+              <label htmlFor="province">Tỉnh/Thành phố</label>
               <select
                 id="province"
                 value={formData.address.province}
                 onChange={(e) => handleAddressChange("province", e.target.value)}
                 className={errors.province ? "error-input" : ""}
               >
-                <option value="">Select a province</option>
+                <option value="">Chọn tỉnh/thành phố</option>
                 {provinces.map((province) => (
                   <option key={province.id} value={province.id}>
                     {province.name}
@@ -465,7 +442,7 @@ export default function TutoringRequestForm() {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="district">District</label>
+                <label htmlFor="district">Quận/Huyện</label>
                 <select
                   id="district"
                   value={formData.address.district}
@@ -473,7 +450,7 @@ export default function TutoringRequestForm() {
                   disabled={!formData.address.province}
                   className={errors.district ? "error-input" : ""}
                 >
-                  <option value="">Select a district</option>
+                  <option value="">Chọn quận/huyện</option>
                   {districts.map((district) => (
                     <option key={district.id} value={district.id}>
                       {district.name}
@@ -484,7 +461,7 @@ export default function TutoringRequestForm() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="ward">Ward</label>
+                <label htmlFor="ward">Phường/Xã</label>
                 <select
                   id="ward"
                   value={formData.address.ward}
@@ -492,7 +469,7 @@ export default function TutoringRequestForm() {
                   disabled={!formData.address.district}
                   className={errors.ward ? "error-input" : ""}
                 >
-                  <option value="">Select a ward</option>
+                  <option value="">Chọn phường/xã</option>
                   {wards.map((ward) => (
                     <option key={ward.id} value={ward.id}>
                       {ward.name}
@@ -504,13 +481,13 @@ export default function TutoringRequestForm() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="street">Street name and house number</label>
+              <label htmlFor="street">Tên đường và số nhà</label>
               <input
                 type="text"
                 id="street"
                 value={formData.address.street}
                 onChange={(e) => handleAddressChange("street", e.target.value)}
-                placeholder="e.g., 79 Man Thiên"
+                placeholder="VD: 79 Man Thiên"
                 className={errors.street ? "error-input" : ""}
               />
               {errors.street && <span className="error">{errors.street}</span>}
@@ -519,7 +496,7 @@ export default function TutoringRequestForm() {
 
           <div className="form-actions">
             <button type="submit" className="submit-btn">
-              Submit Tutoring Request
+              Gửi Yêu Cầu Gia Sư
             </button>
           </div>
         </form>

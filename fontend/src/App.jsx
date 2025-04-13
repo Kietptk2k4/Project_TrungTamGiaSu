@@ -15,7 +15,7 @@ function App() {
     <div className="app">
       <CustomerPage  />
       {/* <PaymentPage /> */}
-      {/* <AuthPage /> */}
+      <AuthPage />
   
       <TutoringRequestForm />
     </div>
