@@ -41,6 +41,24 @@ public class AccountDAO {
         return account;
     }
 
+    public static Account accountSelectByUserName(String username) throws SQLException{
+        Account account = null;
+
+        String sql = "SELECT * FROM Account WHERE username = ?";
+        try(
+                Connection con = MySql.createConnection();
+                PreparedStatement stm = con.prepareStatement(sql);
+        )
+        {
+            stm.setString(1, username);
+            try(ResultSet res = stm.executeQuery()){
+                if(res.next())
+                    account = Account.fromResultSet(res);
+            }
+        }
+        return account;
+    }
+
     public static void insert(Account account) throws SQLException{
         String sql = "INSERT INTO Account"
             + " (username, email, hashed_password, otp, otp_expired_date, unread_notifications, role_id, created_at, is_active) "
