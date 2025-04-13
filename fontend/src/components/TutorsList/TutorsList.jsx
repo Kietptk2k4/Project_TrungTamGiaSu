@@ -62,8 +62,4 @@ const TutorsList = () => {
 
 
 
-
-
-
-
 export default TutorsList

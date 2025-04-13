@@ -24,7 +24,7 @@ const TutorCard = ({ tutor }) => {
             <span className="review-count">({tutor.reviewCount} reviews)</span>
           </div>
 
-          
+
             <div className="ambassador-badge">
               <span>Đăng ký  </span>
             </div>
