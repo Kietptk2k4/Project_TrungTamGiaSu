@@ -25,9 +25,21 @@ const TutorCard = ({ tutor }) => {
           </div>
 
 
-            <div className="ambassador-badge">
-              <span>Đăng ký  </span>
-            </div>
+          <div className="ambassador-badge">
+        <button 
+          onClick={() => navigate('/tutoring-request-form', { state: { tutor } })}
+          style={{ 
+            background: 'none', 
+            border: 'none', 
+            color: 'inherit', 
+            font: 'inherit', 
+            cursor: 'pointer',
+            padding: 0
+          }}
+        >
+          Đăng ký
+        </button>
+      </div>
           
         </div>
 

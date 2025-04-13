@@ -4,6 +4,9 @@ import { useState, useEffect } from "react"
 import "./Style/tutoring-form.css"
 
 export default function TutoringRequestForm() {
+  const location = useLocation();
+  const selectedTutor = location.state?.tutor;
+
   const [formData, setFormData] = useState({
     sessionsPerWeek: 1,
     sessions: [
@@ -285,7 +288,15 @@ export default function TutoringRequestForm() {
   }
 
   return (
+
     <div className="tutoring-container">
+       {selectedTutor && (
+        <div className="selected-tutor-section">
+          <h3>Bạn đang đăng ký với gia sư:</h3>
+          <TutorCard tutor={selectedTutor} />
+        </div>
+      )}
+
       <div className="tutoring-header">
         <h1>Form Yêu Cầu Gia Sư</h1>
         <p>Điền thông tin dưới đây để yêu cầu gia sư phù hợp với nhu cầu của bạn</p>
