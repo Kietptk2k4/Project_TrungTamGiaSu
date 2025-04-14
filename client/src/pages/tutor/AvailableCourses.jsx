@@ -212,7 +212,7 @@ const AvailableCoursesPage = () => {
                   <div className="md:text-right">
                     <Link
                       to={`/tutor/courses/${course.id}/register`}
-                      className="inline-block px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
+                      className="inline-block px-4 py-2 bg-primary text-bold-black rounded hover:bg-primary-dark"
                     >
                       Đăng ký dạy
                     </Link>

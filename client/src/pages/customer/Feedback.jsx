@@ -106,7 +106,7 @@ const FeedbackPage = () => {
       <div className="bg-white p-8 rounded-lg shadow-md text-center">
         <h2 className="text-2xl font-bold text-red-500 mb-4">Không tìm thấy thông tin khóa học!</h2>
         <p className="text-gray-600 mb-6">Khóa học bạn đang tìm kiếm không tồn tại hoặc bạn không có quyền truy cập.</p>
-        <Link to="/customer/my-courses" className="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark">
+        <Link to="/customer/my-courses" className="px-4 py-2 bg-primary text-black rounded hover:bg-primary-dark">
           Quay lại danh sách khóa học
         </Link>
       </div>
@@ -119,7 +119,7 @@ const FeedbackPage = () => {
       <div className="bg-white p-8 rounded-lg shadow-md text-center">
         <h2 className="text-2xl font-bold text-yellow-500 mb-4">Không thể đánh giá!</h2>
         <p className="text-gray-600 mb-6">Bạn chỉ có thể đánh giá gia sư khi khóa học đã hoàn thành.</p>
-        <Link to={`/customer/courses/${id}`} className="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark">
+        <Link to={`/customer/courses/${id}`} className="px-4 py-2 bg-primary text-black rounded hover:bg-primary-dark">
           Quay lại chi tiết khóa học
         </Link>
       </div>
@@ -131,7 +131,7 @@ const FeedbackPage = () => {
       <div className="bg-white p-8 rounded-lg shadow-md text-center">
         <h2 className="text-2xl font-bold text-green-500 mb-4">Đã đánh giá!</h2>
         <p className="text-gray-600 mb-6">Bạn đã đánh giá khóa học này. Mỗi khóa học chỉ được đánh giá một lần.</p>
-        <Link to={`/customer/courses/${id}`} className="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark">
+        <Link to={`/customer/courses/${id}`} className="px-4 py-2 bg-primary text-black rounded hover:bg-primary-dark">
           Quay lại chi tiết khóa học
         </Link>
       </div>
@@ -227,7 +227,7 @@ const FeedbackPage = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-primary text-black rounded-md hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? 'Đang gửi...' : 'Gửi đánh giá'}
               </button>

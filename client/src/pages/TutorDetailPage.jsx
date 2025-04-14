@@ -55,7 +55,7 @@ const TutorDetailPage = () => {
     return (
       <div className="container mx-auto py-12 px-4 text-center">
         <h2 className="text-2xl font-bold text-red-500">Không tìm thấy thông tin gia sư!</h2>
-        <Link to="/tutors" className="mt-4 inline-block bg-primary text-white px-4 py-2 rounded">
+        <Link to="/tutors" className="mt-4 inline-block bg-primary text-black px-4 py-2 rounded">
           Quay lại danh sách gia sư
         </Link>
       </div>
@@ -66,7 +66,7 @@ const TutorDetailPage = () => {
     <div className="container mx-auto py-12 px-4">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         {/* Header */}
-        <div className="bg-primary text-white p-6">
+        <div className="bg-primary text-black p-6">
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold">{tutor.name}</h1>
             <div className="flex items-center">
@@ -170,14 +170,14 @@ const TutorDetailPage = () => {
             {/* Right column - Request form */}
             <div>
               <div className="bg-gray-50 rounded-lg p-6 sticky top-6">
-                <h2 className="text-xl font-bold mb-4">Gửi yêu cầu gia sư</h2>
+                <h2 className="text-black font-bold mb-4">Gửi yêu cầu gia sư</h2>
                 
                 {!showRequestForm ? (
                   <div className="text-center">
                     <p className="text-gray-700 mb-6">Hãy gửi yêu cầu thuê gia sư {tutor.name} ngay để nhận được sự hỗ trợ học tập tốt nhất.</p>
                     <button 
                       onClick={() => setShowRequestForm(true)}
-                      className="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition duration-300"
+                      className="w-full bg-primary text-black py-3 rounded-lg hover:bg-primary-dark transition duration-300"
                     >
                       Gửi yêu cầu gia sư
                     </button>
@@ -236,7 +236,7 @@ const TutorDetailPage = () => {
                     <div className="pt-2">
                       <button 
                         type="button"
-                        className="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary-dark transition duration-300"
+                        className="w-full bg-black text-white  py-2 rounded-lg hover:bg-primary-dark transition duration-300"
                         onClick={() => alert("Chức năng này sẽ được kích hoạt khi bạn đăng nhập. Vui lòng đăng nhập để gửi yêu cầu.")}
                       >
                         Gửi yêu cầu

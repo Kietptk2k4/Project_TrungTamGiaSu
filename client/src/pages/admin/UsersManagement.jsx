@@ -37,7 +37,6 @@ const UsersManagementPage = () => {
           created_at: new Date(2023, Math.floor(idx / 10), (idx % 30) + 1).toISOString(),
           is_active: idx % 7 !== 0,
           phone: `09${idx.toString().padStart(8, '0')}`,
-          last_login: idx % 5 !== 0 ? new Date(2023, 10, (idx % 30) + 1).toISOString() : null
         }
       })
       
@@ -252,7 +251,7 @@ const UsersManagementPage = () => {
                 <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Vai trò</th>
                 <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Trạng thái</th>
                 <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Ngày tạo</th>
-                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Lần đăng nhập gần nhất</th>
+               
                 <th className="px-4 py-2 text-center text-sm font-semibold text-gray-700">Hành động</th>
               </tr>
             </thead>
@@ -270,7 +269,7 @@ const UsersManagementPage = () => {
                     </span>
                   </td>
                   <td className="px-4 py-2">{new Date(user.created_at).toLocaleDateString()}</td>
-                  <td className="px-4 py-2">{user.last_login ? new Date(user.last_login).toLocaleDateString() : 'Chưa đăng nhập'}</td>
+                  
                   <td className="px-4 py-2 text-center space-x-2">
                     <Link
                       to={`/admin/users/${user.id}`}
@@ -299,7 +298,7 @@ const UsersManagementPage = () => {
             <button
               key={i + 1}
               onClick={() => paginate(i + 1)}
-              className={`px-3 py-1 border rounded-md ${currentPage === i + 1 ? 'bg-primary text-white' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
+              className={`px-3 py-1 border rounded-md ${currentPage === i + 1 ? 'bg-primary text-black' : 'bg-white text-gray-700 hover:bg-gray-100'}`}
             >
               {i + 1}
             </button>

@@ -142,6 +142,13 @@ const RefundRequestsPage = () => {
           Tất cả
         </button>
         <button
+            className={`py-2 px-4 font-medium ${activeTab === 'create' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 hover:text-gray-700'}`}
+            onClick={() => setActiveTab('create')}
+          >
+            Tạo yêu cầu
+        </button>
+
+        <button
           className={`py-2 px-4 font-medium ${activeTab === 'pending' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 hover:text-gray-700'}`}
           onClick={() => setActiveTab('pending')}
         >
@@ -168,6 +175,18 @@ const RefundRequestsPage = () => {
       </div>
       
       {isLoading ? (
+        <div className="text-center py-8">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <p className="mt-4 text-gray-600">Đang tải dữ liệu...</p>
+        </div>
+      ) : activeTab === 'create' ? (
+        <RefundForm
+          onSubmit={(newRequest) => {
+            setRefundRequests([...refundRequests, newRequest])
+            setActiveTab('pending')
+          }}
+        />
+      ) : filteredRequests.length === 0 ? (
         <div className="text-center py-8">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
           <p className="mt-4 text-gray-600">Đang tải dữ liệu...</p>
@@ -274,3 +293,87 @@ const RefundRequestsPage = () => {
 }
 
 export default RefundRequestsPage
+const RefundForm = ({ onSubmit }) => {
+  const [form, setForm] = useState({
+    course_subject: '',
+    course_class: '',
+    customer_name: '',
+    reason: '',
+    amount_requested: ''
+  })
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setForm(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const newRequest = {
+      id: Date.now(),
+      course_id: Math.floor(Math.random() * 1000),
+      ...form,
+      created_at: new Date().toISOString(),
+      status: 'Pending'
+    }
+    onSubmit(newRequest)
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md max-w-2xl mx-auto">
+      <h2 className="text-xl font-bold mb-4">Tạo yêu cầu hoàn tiền</h2>
+      <div className="grid grid-cols-1 gap-4">
+        <input
+          type="text"
+          name="course_subject"
+          placeholder="Môn học"
+          value={form.course_subject}
+          onChange={handleChange}
+          className="border p-2 rounded w-full"
+          required
+        />
+        <input
+          type="text"
+          name="course_class"
+          placeholder="Lớp học"
+          value={form.course_class}
+          onChange={handleChange}
+          className="border p-2 rounded w-full"
+          required
+        />
+        <input
+          type="text"
+          name="customer_name"
+          placeholder="Tên học sinh / phụ huynh"
+          value={form.customer_name}
+          onChange={handleChange}
+          className="border p-2 rounded w-full"
+          required
+        />
+        <textarea
+          name="reason"
+          placeholder="Lý do yêu cầu hoàn tiền"
+          value={form.reason}
+          onChange={handleChange}
+          className="border p-2 rounded w-full"
+          required
+        />
+        <input
+          type="number"
+          name="amount_requested"
+          placeholder="Số tiền yêu cầu hoàn (VND)"
+          value={form.amount_requested}
+          onChange={handleChange}
+          className="border p-2 rounded w-full"
+          required
+        />
+        <button
+          type="submit"
+          className="px-4 py-2 bg-black text-white rounded hover:bg-primary-dark mt-2"
+        >
+          Gửi yêu cầu
+        </button>
+      </div>
+    </form>
+  )
+}

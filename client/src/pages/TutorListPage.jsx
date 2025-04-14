@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+
 
 const TutorListPage = () => {
   // State cho danh sách gia sư và bộ lọc
@@ -27,7 +29,7 @@ const TutorListPage = () => {
     },
     {
       id: 2,
-      name: "Trần Thị B",
+      name: "Trần Thị ssssss B",
       gender: "FEMALE",
       avg_rating: 4.6,
       completed_courses: 18,
@@ -80,20 +82,37 @@ const TutorListPage = () => {
   const mockSubjects = ["Toán", "Văn", "Anh", "Lý", "Hóa", "Sinh", "Sử", "Địa"]
   const mockClasses = ["Lớp 1", "Lớp 2", "Lớp 3", "Lớp 4", "Lớp 5", "Lớp 6", "Lớp 7", "Lớp 8", "Lớp 9", "Lớp 10", "Lớp 11", "Lớp 12"]
   
+  // useEffect(() => {
+  //   // Giả lập API call để lấy danh sách gia sư
+  //   const fetchData = () => {
+  //     setTimeout(() => {
+  //       setTutors(mockTutors)
+        
+  //       setIsLoading(false)
+  //     }, 1000)
+  //   }
+    
+  //   fetchData()
+  // }, [])
+  
   useEffect(() => {
-    // Giả lập API call để lấy danh sách gia sư
-    const fetchData = () => {
-      setTimeout(() => {
-        setTutors(mockTutors)
+    const fetchTutors = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/tutors')
+        setTutors(response.data)
+
         setSubjects(mockSubjects)
         setClasses(mockClasses)
         setIsLoading(false)
-      }, 1000)
+        console.log('Gia sư:', tutors)
+      } catch (error) {
+        console.error('Lỗi khi fetch tutors:', error)
+        setIsLoading(false)
+      }
     }
-    
-    fetchData()
+
+    fetchTutors()
   }, [])
-  
   // Lọc gia sư theo các điều kiện
   const filteredTutors = tutors.filter(tutor => {
     // Lọc theo tên
@@ -233,7 +252,7 @@ const TutorListPage = () => {
                   </div>
                   <Link 
                     to={`/tutors/${tutor.id}`}
-                    className="bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition duration-300"
+                    className="bg-primary text-black py-2 px-4 rounded hover:bg-primary-dark transition duration-300"
                   >
                     Xem chi tiết
                   </Link>

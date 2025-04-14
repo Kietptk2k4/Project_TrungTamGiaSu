@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <header className="bg-primary text-black shadow-md">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold">TutorLink</Link>
+        <Link to="/" className="text-2xl font-bold">Trung tâm DSTK </Link>
         
         <div className="hidden md:flex space-x-6">
           <Link to="/" className="hover:text-gray-200">Trang chủ</Link>

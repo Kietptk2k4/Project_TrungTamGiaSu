@@ -2,15 +2,15 @@ const AboutPage = () => {
     return (
       <div className="container mx-auto py-12 px-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold text-center mb-8">Về TutorLink</h1>
+          <h1 className="text-4xl font-bold text-center mb-8">Về Trung tâm DSTK </h1>
           
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-4">Sứ mệnh của chúng tôi</h2>
             <p className="text-gray-700 mb-4">
-              TutorLink ra đời với sứ mệnh kết nối học sinh với gia sư chất lượng cao, mang đến giải pháp học tập hiệu quả và phù hợp với nhu cầu của từng học sinh.
+              Trung tâm DSTK  ra đời với sứ mệnh kết nối học sinh với gia sư chất lượng cao, mang đến giải pháp học tập hiệu quả và phù hợp với nhu cầu của từng học sinh.
             </p>
             <p className="text-gray-700">
-              Chúng tôi tin rằng mỗi học sinh đều có tiềm năng riêng, và với sự hướng dẫn phù hợp, các em có thể phát triển tối đa khả năng của mình. TutorLink cam kết tạo ra môi trường học tập tích cực, nơi học sinh được khuyến khích khám phá và phát triển đam mê học tập.
+              Chúng tôi tin rằng mỗi học sinh đều có tiềm năng riêng, và với sự hướng dẫn phù hợp, các em có thể phát triển tối đa khả năng của mình. Trung tâm DSTK  cam kết tạo ra môi trường học tập tích cực, nơi học sinh được khuyến khích khám phá và phát triển đam mê học tập.
             </p>
           </section>
           
@@ -52,26 +52,31 @@ const AboutPage = () => {
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-4">Đội ngũ của chúng tôi</h2>
             <p className="text-gray-700 mb-6">
-              TutorLink được thành lập bởi nhóm các chuyên gia giáo dục và công nghệ, với mong muốn tạo ra nền tảng kết nối gia sư hiện đại và hiệu quả tại Việt Nam.
+              Trung tâm DSTK  được thành lập bởi nhóm các chuyên gia giáo dục và công nghệ, với mong muốn tạo ra nền tảng kết nối gia sư hiện đại và hiệu quả tại Việt Nam.
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="text-center">
                 <div className="w-32 h-32 rounded-full bg-gray-300 mx-auto mb-4"></div>
-                <h3 className="font-semibold">Nguyễn Văn A</h3>
+                <h3 className="font-semibold">Vũ Tiến Đạt</h3>
                 <p className="text-gray-600">Đồng sáng lập & CEO</p>
               </div>
               
               <div className="text-center">
                 <div className="w-32 h-32 rounded-full bg-gray-300 mx-auto mb-4"></div>
-                <h3 className="font-semibold">Trần Thị B</h3>
+                <h3 className="font-semibold">Đàm Huy Sơn</h3>
                 <p className="text-gray-600">Giám đốc Học thuật</p>
               </div>
               
               <div className="text-center">
                 <div className="w-32 h-32 rounded-full bg-gray-300 mx-auto mb-4"></div>
-                <h3 className="font-semibold">Lê Văn C</h3>
+                <h3 className="font-semibold">Lê Ngọc Tú</h3>
                 <p className="text-gray-600">Giám đốc Công nghệ</p>
+              </div>
+              <div className="text-center">
+                <div className="w-32 h-32 rounded-full bg-gray-300 mx-auto mb-4"></div>
+                <h3 className="font-semibold">Phan Tuấn Kiệt</h3>
+                <p className="text-gray-600">Tổng Giám Đốc </p>
               </div>
             </div>
           </section>
@@ -79,7 +84,7 @@ const AboutPage = () => {
           <section>
             <h2 className="text-2xl font-bold mb-4">Liên hệ với chúng tôi</h2>
             <p className="text-gray-700 mb-6">
-              Nếu bạn có bất kỳ câu hỏi nào về dịch vụ của chúng tôi, đừng ngần ngại liên hệ. Đội ngũ TutorLink luôn sẵn sàng hỗ trợ bạn.
+              Nếu bạn có bất kỳ câu hỏi nào về dịch vụ của chúng tôi, đừng ngần ngại liên hệ. Đội ngũ Trung tâm DSTK  luôn sẵn sàng hỗ trợ bạn.
             </p>
             
             <div className="bg-white p-6 rounded-lg shadow-md">
@@ -104,7 +109,7 @@ const AboutPage = () => {
                       <svg className="h-6 w-6 text-primary mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
-                      <span>contact@tutorlink.com</span>
+                      <span>contact@Trung tâm DSTK .com</span>
                     </li>
                   </ul>
                 </div>
