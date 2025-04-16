@@ -11,7 +11,7 @@ const TutorSidebar = () => {
               to="/tutor" 
               className={({ isActive }) => 
                 `block px-4 py-2 rounded-md ${isActive 
-                  ? 'bg-primary text-white' 
+                  ? 'bg-primary text-red-500' 
                   : 'hover:bg-gray-200'}`
               }
               end
@@ -24,7 +24,7 @@ const TutorSidebar = () => {
               to="/tutor/available-courses" 
               className={({ isActive }) => 
                 `block px-4 py-2 rounded-md ${isActive 
-                  ? 'bg-primary text-white' 
+                  ? 'bg-primary text-red-500' 
                   : 'hover:bg-gray-200'}`
               }
             >
@@ -36,7 +36,7 @@ const TutorSidebar = () => {
               to="/tutor/my-courses" 
               className={({ isActive }) => 
                 `block px-4 py-2 rounded-md ${isActive 
-                  ? 'bg-primary text-white' 
+                  ? 'bg-primary text-red-500' 
                   : 'hover:bg-gray-200'}`
               }
             >
@@ -48,7 +48,7 @@ const TutorSidebar = () => {
               to="/tutor/requests" 
               className={({ isActive }) => 
                 `block px-4 py-2 rounded-md ${isActive 
-                  ? 'bg-primary text-white' 
+                  ? 'bg-primary text-red-500' 
                   : 'hover:bg-gray-200'}`
               }
             >
@@ -60,7 +60,7 @@ const TutorSidebar = () => {
               to="/tutor/refunds" 
               className={({ isActive }) => 
                 `block px-4 py-2 rounded-md ${isActive 
-                  ? 'bg-primary text-white' 
+                  ? 'bg-primary text-red-500' 
                   : 'hover:bg-gray-200'}`
               }
             >
@@ -72,7 +72,7 @@ const TutorSidebar = () => {
               to="/tutor/profile" 
               className={({ isActive }) => 
                 `block px-4 py-2 rounded-md ${isActive 
-                  ? 'bg-primary text-white' 
+                  ? 'bg-primary text-red-500' 
                   : 'hover:bg-gray-200'}`
               }
             >

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -9,7 +10,7 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData({
@@ -24,51 +25,57 @@ const LoginPage = () => {
       })
     }
   }
-  
+
   const validateForm = () => {
     const newErrors = {}
-    
     // Kiểm tra email
     if (!formData.email) {
       newErrors.email = 'Vui lòng nhập email'
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email không hợp lệ'
     }
-    
     // Kiểm tra mật khẩu
     if (!formData.password) {
       newErrors.password = 'Vui lòng nhập mật khẩu'
     }
-    
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
     if (!validateForm()) return
-    
+
     setIsLoading(true)
-    
-    // Giả lập login API call
-    setTimeout(() => {
-      // Giả định đăng nhập thành công
-      console.log('Đăng nhập với:', formData)
-      
-      // Lưu thông tin giả lập vào localStorage
-      localStorage.setItem('token', 'fake-jwt-token')
-      localStorage.setItem('user', JSON.stringify({
-        id: 1,
-        username: 'user123',
-        email: formData.email,
-        role: 'Customer'
-      }))
-      
+    try {
+      // Gọi API login thực tế tại đây
+      const response = await axios.post('http://localhost:8080/api/auth/login', formData)
+      const data = response.data
+
+      // Lưu token và thông tin user vào localStorage
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify(data.user))
+
+      // Điều hướng dựa trên role, ví dụ: nếu "Tutor" chuyển đến trang tutor-dashboard, nếu "Customer" chuyển đến trang customer-dashboard
+      if (data.user.role === 'TUTOR') {
+        navigate('/tutor')
+      } else if (data.user.role === 'CUSTOMER') {
+        navigate('/customer')
+      } else if (data.user.role === 'ADMIN') {
+        navigate('/admin')
+      } else {
+        // Nếu role khác, bạn có thể chuyển hướng đến trang mặc định.
+        navigate('/')
+      }
+    } catch (error) {
+      console.error('Lỗi đăng nhập:', error)
+      // Bạn có thể cải thiện xử lý lỗi bằng cách lấy thông báo lỗi từ response của server
+      setErrors({ auth: "Đăng nhập thất bại. Kiểm tra lại email và mật khẩu." })
+    } finally {
       setIsLoading(false)
-      navigate('/')
-    }, 1500)
+    }
   }
+
   
   return (
     <div className="container mx-auto py-12 px-4">
@@ -158,3 +165,4 @@ const LoginPage = () => {
 }
 
 export default LoginPage
+

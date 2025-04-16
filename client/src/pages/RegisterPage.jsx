@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -8,89 +9,95 @@ const RegisterPage = () => {
     phone: '',
     password: '',
     confirmPassword: '',
-    role: 'Customer'
-  })
-  const [errors, setErrors] = useState({})
-  const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
-  
+    role: 'Customer',
+    gender: ''
+  });
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value
-    })
-    // Xóa lỗi khi người dùng bắt đầu nhập
+    });
     if (errors[name]) {
       setErrors({
         ...errors,
         [name]: null
-      })
+      });
     }
-  }
-  
+  };
+
   const validateForm = () => {
-    const newErrors = {}
-    
-    // Kiểm tra tên
+    const newErrors = {};
+
     if (!formData.name.trim()) {
-      newErrors.name = 'Vui lòng nhập họ tên'
+      newErrors.name = 'Vui lòng nhập họ tên';
     }
-    
-    // Kiểm tra email
+
     if (!formData.email) {
-      newErrors.email = 'Vui lòng nhập email'
+      newErrors.email = 'Vui lòng nhập email';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email không hợp lệ'
+      newErrors.email = 'Email không hợp lệ';
     }
-    
-    // Kiểm tra số điện thoại
+
     if (!formData.phone) {
-      newErrors.phone = 'Vui lòng nhập số điện thoại'
+      newErrors.phone = 'Vui lòng nhập số điện thoại';
     } else if (!/^[0-9]{10}$/.test(formData.phone)) {
-      newErrors.phone = 'Số điện thoại không hợp lệ'
+      newErrors.phone = 'Số điện thoại không hợp lệ';
     }
-    
-    // Kiểm tra mật khẩu
+
+    if (!formData.gender) {
+      newErrors.gender = 'Vui lòng chọn giới tính';
+    }
+
     if (!formData.password) {
-      newErrors.password = 'Vui lòng nhập mật khẩu'
+      newErrors.password = 'Vui lòng nhập mật khẩu';
     } else if (formData.password.length < 8) {
-      newErrors.password = 'Mật khẩu phải có ít nhất 8 ký tự'
+      newErrors.password = 'Mật khẩu phải có ít nhất 8 ký tự';
     }
-    
-    // Kiểm tra xác nhận mật khẩu
+
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Mật khẩu xác nhận không khớp'
+      newErrors.confirmPassword = 'Mật khẩu xác nhận không khớp';
     }
-    
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-  
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    
-    if (!validateForm()) return
-    
-    setIsLoading(true)
-    
-    // Giả lập register API call
-    setTimeout(() => {
-      console.log('Đăng ký với:', formData)
-      setIsLoading(false)
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    setIsLoading(true);
+
+    try {
       
-      // Redirect to login page after successful registration
-      navigate('/login', { state: { message: 'Đăng ký thành công! Vui lòng đăng nhập.' } })
-    }, 1500)
-  }
-  
+      const response = await axios.post('http://localhost:8080/api/auth/register', formData);
+
+      console.log('Đăng ký thành công:', response.data);
+      navigate('/login', {
+        state: { message: 'Đăng ký thành công! Vui lòng đăng nhập.' }
+      });
+
+    } catch (error) {
+      const message = error.response?.data || 'Đăng ký thất bại. Vui lòng thử lại.';
+      alert(typeof message === 'string' ? message : JSON.stringify(message));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="container mx-auto py-12 px-4">
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
         <div className="bg-primary text-white py-4 px-6">
           <h2 className="text-black font-bold text-center">Đăng ký tài khoản</h2>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="py-6 px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -108,7 +115,7 @@ const RegisterPage = () => {
               />
               {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
             </div>
-            
+
             <div>
               <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900">
                 Email
@@ -124,7 +131,7 @@ const RegisterPage = () => {
               />
               {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
             </div>
-            
+
             <div>
               <label htmlFor="phone" className="block mb-2 text-sm font-medium text-gray-900">
                 Số điện thoại
@@ -140,23 +147,44 @@ const RegisterPage = () => {
               />
               {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
             </div>
-            
-            <div>
-              <label htmlFor="role" className="block mb-2 text-sm font-medium text-gray-900">
-                Đăng ký với vai trò
-              </label>
-              <select
-                id="role"
-                name="role"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
-                value={formData.role}
-                onChange={handleChange}
-              >
-                <option value="Customer">Khách hàng</option>
-                <option value="Tutor">Gia sư</option>
-              </select>
+
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <label htmlFor="role" className="block mb-2 text-sm font-medium text-gray-900">
+                  Vai trò
+                </label>
+                <select
+                  id="role"
+                  name="role"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2"
+                  value={formData.role}
+                  onChange={handleChange}
+                >
+                  <option value="Customer">Khách hàng</option>
+                  <option value="Tutor">Gia sư</option>
+                </select>
+              </div>
+
+              <div className="flex-1">
+                <label htmlFor="gender" className="block mb-2 text-sm font-medium text-gray-900">
+                  Giới tính
+                </label>
+                <select
+                  id="gender"
+                  name="gender"
+                  className={`bg-gray-50 border ${errors.gender ? 'border-red-500' : 'border-gray-300'} text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2`}
+                  value={formData.gender}
+                  onChange={handleChange}
+                >
+                  <option value="">Chọn giới tính</option>
+                  <option value="Male">Nam</option>
+                  <option value="Female">Nữ</option>
+                
+                </select>
+                {errors.gender && <p className="mt-1 text-sm text-red-600">{errors.gender}</p>}
+              </div>
             </div>
-            
+
             <div>
               <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900">
                 Mật khẩu
@@ -172,7 +200,7 @@ const RegisterPage = () => {
               />
               {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
             </div>
-            
+
             <div>
               <label htmlFor="confirmPassword" className="block mb-2 text-sm font-medium text-gray-900">
                 Xác nhận mật khẩu
@@ -189,12 +217,11 @@ const RegisterPage = () => {
               {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
             </div>
           </div>
-          
+
           <div className="mt-8">
             <button
               type="submit"
               className="w-full text-black bg-primary hover:bg-primary-dark focus:ring-4 focus:outline-none focus:ring-primary font-medium rounded-lg text-sm px-5 py-2.5 text-center flex justify-center border border-black"
-
               disabled={isLoading}
             >
               {isLoading ? (
@@ -210,7 +237,7 @@ const RegisterPage = () => {
               )}
             </button>
           </div>
-          
+
           <div className="text-sm text-gray-700 mt-6 text-center">
             Đã có tài khoản?{' '}
             <Link to="/login" className="text-primary hover:underline">
@@ -220,7 +247,7 @@ const RegisterPage = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RegisterPage
+export default RegisterPage;

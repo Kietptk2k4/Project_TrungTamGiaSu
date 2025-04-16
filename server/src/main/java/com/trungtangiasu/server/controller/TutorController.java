@@ -12,9 +12,6 @@ import com.trungtangiasu.server.services.TutorService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 
-
-
-
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/tutors")

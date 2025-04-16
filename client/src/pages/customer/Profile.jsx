@@ -458,7 +458,7 @@ const CustomerProfilePage = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none"
+                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-yellow-200 hover:bg-blue-400  focus:outline-none"
                   disabled={isSaving}
                 >
                   {isSaving ? 'Đang lưu...' : 'Lưu thay đổi'}
@@ -525,7 +525,7 @@ const CustomerProfilePage = () => {
             <div className="mt-6 flex justify-end">
               <button
                 type="submit"
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none"
+                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-yellow-200 hover:bg-blue-400 focus:outline-none"
                 disabled={isSaving}
               >
                 {isSaving ? 'Đang xử lý...' : 'Đổi mật khẩu'}

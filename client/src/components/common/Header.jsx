@@ -10,14 +10,14 @@ const Header = () => {
         <Link to="/" className="text-2xl font-bold">Trung tâm DSTK </Link>
         
         <div className="hidden md:flex space-x-6">
-          <Link to="/" className="hover:text-gray-200">Trang chủ</Link>
-          <Link to="/tutors" className="hover:text-gray-200">Gia sư</Link>
-          <Link to="/about" className="hover:text-gray-200">Về chúng tôi</Link>
-          <Link to="/contact" className="hover:text-gray-200">Liên hệ</Link>
+          <Link to="/" className="hover:bg-gray-200">Trang chủ</Link>
+          <Link to="/tutors" className="hover:bg-gray-200">Gia sư</Link>
+          <Link to="/about" className="hover:bg-gray-200">Về chúng tôi</Link>
+          <Link to="/contact" className="hover:bg-gray-200">Liên hệ</Link>
         </div>
         
         <div className="hidden md:block space-x-4">
-          <Link to="/login" className="py-2 px-4 border border-white rounded hover:bg-white hover:text-primary transition duration-300">
+          <Link to="/login" className="py-2 px-4 border border-white rounded hover:bg-gray-200 hover:text-primary transition duration-300">
             Đăng nhập
           </Link>
           <Link to="/register" className="py-2 px-4 bg-white text-primary rounded hover:bg-gray-200 transition duration-300">
@@ -39,10 +39,10 @@ const Header = () => {
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-primary px-4 py-2">
-          <Link to="/" className="block py-2 hover:text-gray-200">Trang chủ</Link>
-          <Link to="/tutors" className="block py-2 hover:text-gray-200">Gia sư</Link>
-          <Link to="/about" className="block py-2 hover:text-gray-200">Về chúng tôi</Link>
-          <Link to="/contact" className="block py-2 hover:text-gray-200">Liên hệ</Link>
+          <Link to="/" className="block py-2 hover:bg-gray-200">Trang chủ</Link>
+          <Link to="/tutors" className="block py-2 hover:bg-gray-200">Gia sư</Link>
+          <Link to="/about" className="block py-2 hover:bg-gray-200">Về chúng tôi</Link>
+          <Link to="/contact" className="block py-2 hover:bg-gray-200">Liên hệ</Link>
           
           <div className="flex flex-col space-y-2 py-2">
             <Link to="/login" className="py-2 px-4 border border-white rounded text-center hover:bg-white hover:text-primary transition duration-300">

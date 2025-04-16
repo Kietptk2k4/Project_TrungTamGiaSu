@@ -189,7 +189,7 @@ const MyCoursesPage = () => {
                 <div className="flex flex-wrap justify-end gap-2 mt-4">
                   <Link
                     to={`/customer/courses/${course.id}`}
-                    className="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
+                    className="px-4 py-2 bg-primary text-black rounded hover:bg-primary-dark"
                   >
                     Xem chi tiết
                   </Link>
@@ -197,7 +197,7 @@ const MyCoursesPage = () => {
                   {course.status === 'Completed' && !course.has_feedback && (
                     <Link
                       to={`/customer/feedback/${course.id}`}
-                      className="px-4 py-2 bg-secondary text-white rounded hover:bg-green-700"
+                      className="px-4 py-2 bg-secondary bg-blue-700 text-white rounded hover:bg-green-700"
                     >
                       Đánh giá gia sư
                     </Link>
