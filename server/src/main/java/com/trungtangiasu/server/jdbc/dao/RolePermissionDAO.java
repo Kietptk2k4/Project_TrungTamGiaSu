@@ -8,7 +8,7 @@ import com.trungtangiasu.server.jdbc.model.RolePermission;
 
 public class RolePermissionDAO {
     public static List<RolePermission> selectAll() throws SQLException {
-        String sql = "SELECT * FROM Role_Permission";
+        String sql = "SELECT * FROM RolePermissions";
         try (Connection conn = MySql.createConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet res = stmt.executeQuery()) {
@@ -22,7 +22,7 @@ public class RolePermissionDAO {
     }
 
     public static RolePermission select(int roleId, int permissionId) throws SQLException {
-        String sql = "SELECT * FROM Role_Permission WHERE role_id = ? AND permission_id = ?";
+        String sql = "SELECT * FROM RolePermissions WHERE role_id = ? AND permission_id = ?";
         try (Connection conn = MySql.createConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -38,7 +38,7 @@ public class RolePermissionDAO {
     }
 
     public static void insert(RolePermission rp) throws SQLException {
-        String sql = "INSERT INTO Role_Permission (role_id, permission_id) VALUES (?, ?)";
+        String sql = "INSERT INTO RolePermissions (role_id, permission_id) VALUES (?, ?)";
         try (Connection conn = MySql.createConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -52,7 +52,7 @@ public class RolePermissionDAO {
     // }
 
     public static void delete(int roleId, int permissionId) throws SQLException {
-        String sql = "DELETE FROM Role_Permission WHERE role_id = ? AND permission_id = ?";
+        String sql = "DELETE FROM RolePermissions WHERE role_id = ? AND permission_id = ?";
         try (Connection conn = MySql.createConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 

@@ -9,17 +9,19 @@ import java.sql.*;
 @AllArgsConstructor
 @ToString
 public class PersonalInfo {
-    private int id;
-    private String name;
+    private int userId;
+    private String fullName;
     private Gender gender;
     private String phoneNumber;
+    private String address;
 
     public static PersonalInfo fromResultSet(ResultSet res) throws SQLException {
         return PersonalInfo.builder()
-                .id(res.getInt("personal_info_id"))
-                .name(res.getString("name"))
+                .userId(res.getInt("user_id"))
+                .fullName(res.getString("full_name"))
                 .gender(Gender.valueOf(res.getString("gender")))
                 .phoneNumber(res.getString("phone_number"))
+                .address(res.getString("address"))
                 .build();
     }
 

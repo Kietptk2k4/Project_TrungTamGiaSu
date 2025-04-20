@@ -15,6 +15,7 @@ public class TutorCertificate {
     private String certificateName;
     private LocalDateTime issueDate;
     private String issuingAuthority;
+    private String note;
 
     public static TutorCertificate fromResultSet(ResultSet res) throws SQLException {
         return TutorCertificate.builder()
@@ -23,6 +24,7 @@ public class TutorCertificate {
                 .certificateName(res.getString("certificate_name"))
                 .issueDate(res.getTimestamp("issue_date") != null ? res.getTimestamp("issue_date").toLocalDateTime() : null)
                 .issuingAuthority(res.getString("issuing_authority"))
+                .note(res.getString("note"))
                 .build();
     }
 }

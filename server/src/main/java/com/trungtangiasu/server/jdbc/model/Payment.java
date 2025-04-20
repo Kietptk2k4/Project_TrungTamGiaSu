@@ -13,30 +13,32 @@ public class Payment {
     public static Payment fromResultSet(ResultSet res) throws SQLException {
         return Payment.builder()
                 .id(res.getInt("payment_id"))
-                .courseId(res.getInt("course_id"))
-                .customerId(res.getInt("customer_id"))
-                .amount(res.getDouble("amount"))
-                .paymentDate(res.getTimestamp("payment_date").toLocalDateTime())
-                .paymentMethod(res.getString("payment_method"))
-                .transactionCode(res.getString("transaction_code"))
-                .paymentStatus(res.getString("payment_status"))
-                .processedByUserId(res.getObject("processed_by_user_id") != null ? res.getInt("processed_by_user_id") : null)
+                .userId((Integer)res.getObject("user_id"))
+                .tutoringRequestId((Integer)res.getObject("tutoring_request_id"))
+                .type(Type.valueOf(res.getString("type")))
+                .amount(res.getInt("amount"))
                 .description(res.getString("description"))
-                .notes(res.getString("notes"))
+                .createdAt(res.getTimestamp("created_at").toLocalDateTime())
                 .build();
     }
 
     private int id;
-    private int courseId;
-    private int customerId;
-    private double amount;
 
     @Builder.Default
-    private LocalDateTime paymentDate = LocalDateTime.now();
-    private String paymentMethod;
-    private String transactionCode;
-    private String paymentStatus;
-    private Integer processedByUserId;
+    private Integer userId = null;
+
+    @Builder.Default
+    private Integer tutoringRequestId = null;
+    private Type type;
+    private int amount;
     private String description;
-    private String notes;
+
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    public enum Type{
+        DEPOSIT,
+        PAYMENT,
+        REFUND
+    }
 }

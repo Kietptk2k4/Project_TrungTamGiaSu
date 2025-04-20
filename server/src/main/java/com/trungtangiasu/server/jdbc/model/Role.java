@@ -31,10 +31,4 @@ public class Role {
                 .name(res.getString("role_name"))
                 .build();
     }
-
-    public static void main(String []args){
-        System.err.println("helo");
-        Role r = new Role();
-        System.out.println(r);
-    }
 }

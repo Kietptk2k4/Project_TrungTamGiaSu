@@ -13,8 +13,6 @@ public class Tutor {
     
     private int userId;
 
-    private int personalInfoId;
-
     private String introduction;
 
     @Builder.Default
@@ -33,7 +31,6 @@ public class Tutor {
         return Tutor.builder()
                 .id(res.getInt("tutor_id"))
                 .userId(res.getInt("user_id"))
-                .personalInfoId(res.getInt("personal_info_id"))
                 .introduction(res.getString("introduction"))
                 .avgRating(res.getDouble("avg_rating"))
                 .completedCourses(res.getInt("completed_courses"))

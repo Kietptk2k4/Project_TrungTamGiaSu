@@ -7,10 +7,25 @@ import com.trungtangiasu.server.jdbc.MySql;
 import com.trungtangiasu.server.jdbc.model.Subject;
 
 public class SubjectDAO {
+    public static void main(String []args) throws SQLException{
+        Subject []subs = {
+            Subject.builder().name("Toan").build(),
+            Subject.builder().name("Ly").build(),
+            Subject.builder().name("Hoa").build()
+        };
+
+        for (Subject s: subs){
+            SubjectDAO.insert(s);
+            System.out.println(s);
+        }
+
+        System.out.println(SubjectDAO.selectAll());
+        System.out.println(SubjectDAO.select(2));
+    }
 
     public static ArrayList<Subject> selectAll() throws SQLException {
         ArrayList<Subject> list = new ArrayList<>();
-        String sql = "SELECT * FROM Subject";
+        String sql = "SELECT * FROM Subjects";
 
         try (
             Connection con = MySql.createConnection();
@@ -25,7 +40,7 @@ public class SubjectDAO {
     }
 
     public static Subject select(int id) throws SQLException {
-        String sql = "SELECT * FROM Subject WHERE subject_id = ?";
+        String sql = "SELECT * FROM Subjects WHERE subject_id = ?";
         Subject subject = null;
 
         try (
@@ -44,7 +59,7 @@ public class SubjectDAO {
     }
 
     public static void insert(Subject subject) throws SQLException {
-        String sql = "INSERT INTO Subject(subject_name) VALUES (?)";
+        String sql = "INSERT INTO Subjects(subject_name) VALUES (?)";
 
         try (
             Connection con = MySql.createConnection();
@@ -62,7 +77,7 @@ public class SubjectDAO {
     }
 
     public static boolean update(Subject subject) throws SQLException {
-        String sql = "UPDATE Subject SET subject_name = ? WHERE subject_id = ?";
+        String sql = "UPDATE Subjects SET subject_name = ? WHERE subject_id = ?";
 
         try (
             Connection con = MySql.createConnection();
@@ -77,7 +92,7 @@ public class SubjectDAO {
     }
 
     public static boolean delete(int id) throws SQLException {
-        String sql = "DELETE FROM Subject WHERE subject_id = ?";
+        String sql = "DELETE FROM Subjects WHERE subject_id = ?";
 
         try (
             Connection con = MySql.createConnection();

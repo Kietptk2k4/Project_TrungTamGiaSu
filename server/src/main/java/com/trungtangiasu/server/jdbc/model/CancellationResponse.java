@@ -14,11 +14,9 @@ public class CancellationResponse {
         return CancellationResponse.builder()
                 .id(res.getInt("cancellation_response_id"))
                 .cancellationRequestId(res.getInt("cancellation_request_id"))
-                .adminId(res.getObject("admin_id") != null ? res.getInt("admin_id") : null)
+                .adminId(res.getInt("admin_id"))
                 .isApproved(res.getBoolean("is_approved"))
                 .reason(res.getString("reason"))
-                .refundDeposit(res.getDouble("refund_deposit"))
-                .refundTuition(res.getDouble("refund_tuition"))
                 .createdAt(res.getTimestamp("created_at") != null ? res.getTimestamp("created_at").toLocalDateTime() : null)
                 .build();
     }
@@ -27,16 +25,12 @@ public class CancellationResponse {
 
     private int cancellationRequestId;
 
-    private Integer adminId;
+    private int adminId;
 
     @Builder.Default
     private boolean isApproved = false;
 
     private String reason;
-
-    private double refundDeposit;
-
-    private double refundTuition;
 
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();

@@ -1,6 +1,7 @@
 package com.trungtangiasu.server.jdbc.dao;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +10,21 @@ import com.trungtangiasu.server.jdbc.model.Course;
 
 public class CourseDAO {
 
-    public List<Course> selectAll() throws SQLException {
-        String sql = "SELECT * FROM Course";
+    public static void main(String []args)throws SQLException{
+        Course course = Course.builder()
+                        .requestId(2)
+                        .startDate(LocalDate.of(2025, 4, 30))
+                        .endDate(LocalDate.of(2025,5, 29))
+                        .sessionsPerWeek(3)
+                        .build();
+        CourseDAO.insert(course);
+        System.out.println(course);
+        System.out.println(CourseDAO.selectAll());
+        System.out.println(CourseDAO.select(1));
+    }
+
+    public static List<Course> selectAll() throws SQLException {
+        String sql = "SELECT * FROM Courses";
         try (Connection conn = MySql.createConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -22,11 +36,11 @@ public class CourseDAO {
         }
     }
 
-    public Course select(int id) throws SQLException {
-        String sql = "SELECT * FROM Course WHERE course_id = ?";
+    public static Course select(int course_id) throws SQLException {
+        String sql = "SELECT * FROM Courses WHERE course_id = ?";
         try (Connection conn = MySql.createConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
+            ps.setInt(1, course_id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return Course.fromResultSet(rs);
@@ -36,8 +50,8 @@ public class CourseDAO {
         }
     }
 
-    public int insert(Course course) throws SQLException {
-        String sql = "INSERT INTO Course (request_id, start_date, end_date, status, sessions_per_week) VALUES (?, ?, ?, ?, ?)";
+    public static void insert(Course course) throws SQLException {
+        String sql = "INSERT INTO Courses (request_id, start_date, end_date, status, sessions_per_week) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = MySql.createConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, course.getRequestId());
@@ -46,15 +60,15 @@ public class CourseDAO {
             ps.setString(4, course.getStatus().name());
             ps.setInt(5, course.getSessionsPerWeek());
             ps.executeUpdate();
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) return rs.getInt(1);
+            try (ResultSet generatedKey = ps.getGeneratedKeys()) {
+                if (generatedKey.next()) 
+                    course.setId(generatedKey.getInt(1));
             }
-            return -1;
         }
     }
 
-    public boolean update(Course course) throws SQLException {
-        String sql = "UPDATE Course SET request_id = ?, start_date = ?, end_date = ?, status = ?, sessions_per_week = ? WHERE course_id = ?";
+    public static boolean update(Course course) throws SQLException {
+        String sql = "UPDATE Courses SET request_id = ?, start_date = ?, end_date = ?, status = ?, sessions_per_week = ? WHERE course_id = ?";
         try (Connection conn = MySql.createConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, course.getRequestId());
@@ -67,8 +81,8 @@ public class CourseDAO {
         }
     }
 
-    public boolean delete(int id) throws SQLException {
-        String sql = "DELETE FROM Course WHERE course_id = ?";
+    public static boolean delete(int id) throws SQLException {
+        String sql = "DELETE FROM Courses WHERE course_id = ?";
         try (Connection conn = MySql.createConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);

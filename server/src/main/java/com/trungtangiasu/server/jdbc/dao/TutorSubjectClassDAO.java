@@ -10,7 +10,7 @@ public class TutorSubjectClassDAO {
 
     public static ArrayList<TutorSubjectClass> selectAll() throws SQLException {
         ArrayList<TutorSubjectClass> list = new ArrayList<>();
-        String sql = "SELECT * FROM Tutor_Subject_Class";
+        String sql = "SELECT * FROM TutorSubjectClasses";
 
         try (
             Connection con = MySql.createConnection();
@@ -25,7 +25,7 @@ public class TutorSubjectClassDAO {
     }
 
     public static TutorSubjectClass select(int tutorId, int subjectClassId) throws SQLException {
-        String sql = "SELECT * FROM Tutor_Subject_Class WHERE tutor_id = ? AND subject_class_id = ?";
+        String sql = "SELECT * FROM TutorSubjectClasses WHERE tutor_id = ? AND subject_class_id = ?";
         TutorSubjectClass result = null;
 
         try (
@@ -44,9 +44,9 @@ public class TutorSubjectClassDAO {
         return result;
     }
 
-    public static ArrayList<TutorSubjectClass> selectByTutorId(int tutorId) throws SQLException {
+    public static ArrayList<TutorSubjectClass> selectByTutor(int tutorId) throws SQLException {
         ArrayList<TutorSubjectClass> list = new ArrayList<>();
-        String sql = "SELECT * FROM Tutor_Subject_Class WHERE tutor_id = ?";
+        String sql = "SELECT * FROM TutorSubjectClasses WHERE tutor_id = ?";
     
         try (
             Connection con = MySql.createConnection();
@@ -63,9 +63,9 @@ public class TutorSubjectClassDAO {
         return list;
     }
 
-    public static ArrayList<TutorSubjectClass> selectBySubjectClassId(int subjectClassId) throws SQLException {
+    public static ArrayList<TutorSubjectClass> selectBySubjectClass(int subjectClassId) throws SQLException {
         ArrayList<TutorSubjectClass> list = new ArrayList<>();
-        String sql = "SELECT * FROM Tutor_Subject_Class WHERE subject_class_id = ?";
+        String sql = "SELECT * FROM TutorSubjectClasses WHERE subject_class_id = ?";
     
         try (
             Connection con = MySql.createConnection();
@@ -84,7 +84,7 @@ public class TutorSubjectClassDAO {
     
 
     public static void insert(TutorSubjectClass tsc) throws SQLException {
-        String sql = "INSERT INTO Tutor_Subject_Class (tutor_id, subject_class_id) VALUES (?, ?)";
+        String sql = "INSERT INTO TutorSubjectClasses (tutor_id, subject_class_id) VALUES (?, ?)";
 
         try (
             Connection con = MySql.createConnection();
@@ -97,7 +97,7 @@ public class TutorSubjectClassDAO {
     }
 
     public static boolean delete(int tutorId, int subjectClassId) throws SQLException {
-        String sql = "DELETE FROM Tutor_Subject_Class WHERE tutor_id = ? AND subject_class_id = ?";
+        String sql = "DELETE FROM TutorSubjectClasses WHERE tutor_id = ? AND subject_class_id = ?";
 
         try (
             Connection con = MySql.createConnection();

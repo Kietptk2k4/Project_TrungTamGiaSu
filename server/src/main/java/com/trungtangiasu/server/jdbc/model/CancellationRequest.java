@@ -20,10 +20,6 @@ public class CancellationRequest {
                 .build();
     }
 
-    public enum RequesterType {
-        Tutor, Customer
-    }
-
     private int id;
 
     private int courseId;
@@ -34,4 +30,8 @@ public class CancellationRequest {
     private LocalDateTime createdAt = LocalDateTime.now();
     
     private String reason;
+
+    public enum RequesterType {
+        TUTOR, CUSTOMER
+    }
 }

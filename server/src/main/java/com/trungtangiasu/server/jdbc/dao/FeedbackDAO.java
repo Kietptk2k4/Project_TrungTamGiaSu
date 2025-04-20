@@ -7,8 +7,20 @@ import com.trungtangiasu.server.jdbc.MySql;
 import com.trungtangiasu.server.jdbc.model.Feedback;
 
 public class FeedbackDAO {
+    public static void main(String []args)throws SQLException{
+        Feedback f = Feedback.builder()
+                    .courseId(1)
+                    .rating(5)
+                    .content("Giao vien xin xo")
+                    .build();
+        FeedbackDAO.insert(f);
+        System.out.println(f);
+        System.out.println(FeedbackDAO.selectAll());
+        System.out.println(FeedbackDAO.select(1));
+        System.out.println(FeedbackDAO.selectByCourseId(1));
+    }
     public static List<Feedback> selectAll() throws SQLException {
-        String sql = "SELECT * FROM Feedback";
+        String sql = "SELECT * FROM Feedbacks";
         try (Connection conn = MySql.createConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet res = stmt.executeQuery()) {
@@ -21,12 +33,27 @@ public class FeedbackDAO {
         }
     }
 
-    public static Feedback select(int id) throws SQLException {
-        String sql = "SELECT * FROM Feedback WHERE feedback_id = ?";
+    public static Feedback select(int feedback_id) throws SQLException {
+        String sql = "SELECT * FROM Feedbacks WHERE feedback_id = ?";
         try (Connection conn = MySql.createConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, id);
+            stmt.setInt(1, feedback_id);
+            try (ResultSet res = stmt.executeQuery()) {
+                if (res.next()) {
+                    return Feedback.fromResultSet(res);
+                }
+                return null;
+            }
+        }
+    }
+
+    public static Feedback selectByCourseId(int course_id) throws SQLException {
+        String sql = "SELECT * FROM Feedbacks WHERE course_id = ?";
+        try (Connection conn = MySql.createConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, course_id);
             try (ResultSet res = stmt.executeQuery()) {
                 if (res.next()) {
                     return Feedback.fromResultSet(res);
@@ -37,7 +64,7 @@ public class FeedbackDAO {
     }
 
     public static void insert(Feedback feedback) throws SQLException {
-        String sql = "INSERT INTO Feedback (course_id, rating, content, created_at) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Feedbacks (course_id, rating, content, created_at) VALUES (?, ?, ?, ?)";
         try (Connection conn = MySql.createConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -54,7 +81,7 @@ public class FeedbackDAO {
     }
 
     public static void update(Feedback feedback) throws SQLException {
-        String sql = "UPDATE Feedback SET course_id = ?, rating = ?, content = ?, created_at = ? WHERE feedback_id = ?";
+        String sql = "UPDATE Feedbacks SET course_id = ?, rating = ?, content = ?, created_at = ? WHERE feedback_id = ?";
         try (Connection conn = MySql.createConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -68,7 +95,7 @@ public class FeedbackDAO {
     }
 
     public static void delete(int id) throws SQLException {
-        String sql = "DELETE FROM Feedback WHERE feedback_id = ?";
+        String sql = "DELETE FROM Feedbacks WHERE feedback_id = ?";
         try (Connection conn = MySql.createConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
