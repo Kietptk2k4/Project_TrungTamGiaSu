@@ -7,10 +7,16 @@ import com.trungtangiasu.server.jdbc.MySql;
 import com.trungtangiasu.server.jdbc.model.Customer;
 
 public class CustomerDAO {
-
+        public static void main(String []args)throws SQLException{
+        Customer cus = Customer.builder().userId(1).build();
+        CustomerDAO.insert(cus);
+        System.out.println(cus);
+        System.out.println(CustomerDAO.select(1));
+        System.out.println(CustomerDAO.selectAll());
+    }
     public static ArrayList<Customer> selectAll() throws SQLException {
         ArrayList<Customer> customers = new ArrayList<>();
-        String sql = "SELECT * FROM Customer";
+        String sql = "SELECT * FROM Customers";
 
         try (
             Connection con = MySql.createConnection();
@@ -25,15 +31,15 @@ public class CustomerDAO {
         return customers;
     }
 
-    public static Customer select(int id) throws SQLException {
+    public static Customer select(int customer_id) throws SQLException {
         Customer customer = null;
-        String sql = "SELECT * FROM Customer WHERE customer_id = ?";
+        String sql = "SELECT * FROM Customers WHERE customer_id = ?";
 
         try (
             Connection con = MySql.createConnection();
             PreparedStatement stm = con.prepareStatement(sql)
         ) {
-            stm.setInt(1, id);
+            stm.setInt(1, customer_id);
             try (ResultSet res = stm.executeQuery()) {
                 if (res.next()) {
                     customer = Customer.fromResultSet(res);
@@ -45,15 +51,13 @@ public class CustomerDAO {
     }
 
     public static void insert(Customer customer) throws SQLException {
-        String sql = "INSERT INTO Customer(user_id, personal_info_id, address) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Customers(user_id) VALUES (?)";
 
         try (
             Connection con = MySql.createConnection();
             PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         ) {
             stm.setInt(1, customer.getUserId());
-            stm.setInt(2, customer.getPersonalInfoId());
-            stm.setString(3, customer.getAddress());
             stm.executeUpdate();
 
             try (ResultSet res = stm.getGeneratedKeys()) {
@@ -65,15 +69,13 @@ public class CustomerDAO {
     }
 
     public static boolean update(Customer customer) throws SQLException {
-        String sql = "UPDATE Customer SET user_id = ?, personal_info_id = ?, address = ? WHERE customer_id = ?";
+        String sql = "UPDATE Customers SET user_id = ? WHERE customer_id = ?";
 
         try (
             Connection con = MySql.createConnection();
             PreparedStatement stm = con.prepareStatement(sql)
         ) {
             stm.setInt(1, customer.getUserId());
-            stm.setInt(2, customer.getPersonalInfoId());
-            stm.setString(3, customer.getAddress());
             stm.setInt(4, customer.getId());
 
             int affected = stm.executeUpdate();

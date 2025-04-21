@@ -11,7 +11,7 @@ import java.sql.*;
 public class PermissionDAO {
     public static ArrayList<Permission> selectAll() throws SQLException{
         ArrayList<Permission> permissions = new ArrayList<>();
-        String sql = "SELECT * FROM Permission";
+        String sql = "SELECT * FROM Permissions";
 
         try(
             Connection con = MySql.createConnection();
@@ -27,7 +27,7 @@ public class PermissionDAO {
 
     public static Permission select(int id)throws SQLException{
         Permission permission = null;
-        String sql = "SELECT * FROM Permission WHERE permission_id = ?";
+        String sql = "SELECT * FROM Permissions WHERE permission_id = ?";
         try(
             Connection con = MySql.createConnection();
             PreparedStatement stm = con.prepareStatement(sql);
@@ -44,7 +44,7 @@ public class PermissionDAO {
     }
 
     public static void insert(Permission permission) throws SQLException{
-        String sql = "INSERT INTO Permission(permission_name, description) VALUES (?,?)";
+        String sql = "INSERT INTO Permissions(permission_name, description) VALUES (?,?)";
         try(
             Connection con = MySql.createConnection();
             PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -60,7 +60,7 @@ public class PermissionDAO {
     }
 
     public static boolean update(Permission permission) throws SQLException{
-        String sql = "UPDATE Permission SET permission_name = ?, description = ? WHERE permission_id = ?";
+        String sql = "UPDATE Permissions SET permission_name = ?, description = ? WHERE permission_id = ?";
         try(
             Connection con = MySql.createConnection();
             PreparedStatement stm = con.prepareStatement(sql);
@@ -75,7 +75,7 @@ public class PermissionDAO {
     }
 
     public static boolean delete(int id) throws SQLException{
-        String sql = "DELETE FROM Permission WHERE permission_id = ?";
+        String sql = "DELETE FROM Permissions WHERE permission_id = ?";
         try(
             Connection con = MySql.createConnection();
             PreparedStatement stm = con.prepareStatement(sql);

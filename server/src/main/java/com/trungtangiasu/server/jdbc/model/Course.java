@@ -30,13 +30,13 @@ public class Course {
     private LocalDate endDate;
 
     @Builder.Default
-    private Status status = Status.InProgress;
+    private Status status = Status.INPROGRESS;
 
     private int sessionsPerWeek;
 
     public static enum Status{
-        InProgress, 
-        Completed, 
-        Cancelled
+        INPROGRESS, 
+        COMPLETED, 
+        CANCELLED
     }
 }

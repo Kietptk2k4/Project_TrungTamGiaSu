@@ -169,7 +169,7 @@ CREATE TABLE `TutoringRequests` (
   `sessions_per_week` INT,
   `ward_id` VARCHAR(20) NOT NULL,
   `address_detail` VARCHAR(255),
-  `proposed_fee_per_session` DECIMAL(15, 2),
+  `proposed_fee_per_session` INT,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `expired_at` DATETIME,
   `status` ENUM("PENDING", "APPROVED", "REJECTED", "ASSIGNED", "CANCELLED", "REFUNDED") DEFAULT "PENDING",
@@ -251,7 +251,7 @@ CREATE TABLE `Payments` (
     FOREIGN KEY (`tutoring_request_id`) REFERENCES `TutoringRequests`(`request_id`)
 );
 
-CREATE TABLE `RefundReponses` (
+CREATE TABLE `RefundResponses` (
     `cancellation_response_id` INT PRIMARY KEY,
     `refund_deposit` INT, -- hoanTienCoc
     `refund_tuition` INT, -- hoanHocPhi

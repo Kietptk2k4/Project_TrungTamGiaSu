@@ -7,10 +7,34 @@ import com.trungtangiasu.server.jdbc.MySql;
 import com.trungtangiasu.server.jdbc.model.Class;
 
 public class ClassDAO {
+    public static void main(String []args)throws SQLException{
+        Class [] l = {
+            Class.builder().name("Lop 1").build(),
+            Class.builder().name("Lop 2").build(),
+            Class.builder().name("Lop 3").build(),
+            Class.builder().name("Lop 4").build(),
+            Class.builder().name("Lop 5").build(),
+            Class.builder().name("Lop 6").build(),
+            Class.builder().name("Lop 7").build(),
+            Class.builder().name("Lop 8").build(),
+            Class.builder().name("Lop 9").build(),
+            Class.builder().name("Lop 10").build(),
+            Class.builder().name("Lop 11").build(),
+            Class.builder().name("Lop 12").build()
+        };
+
+        for (Class c : l){
+            ClassDAO.insert(c);
+            System.out.println(c);
+        }
+
+        System.out.println(ClassDAO.selectAll());
+        System.out.println(ClassDAO.select(10));
+    }
 
     public static ArrayList<Class> selectAll() throws SQLException {
         ArrayList<Class> list = new ArrayList<>();
-        String sql = "SELECT * FROM Class";
+        String sql = "SELECT * FROM Classes";
 
         try (
             Connection con = MySql.createConnection();
@@ -25,7 +49,7 @@ public class ClassDAO {
     }
 
     public static Class select(int id) throws SQLException {
-        String sql = "SELECT * FROM Class WHERE class_id = ?";
+        String sql = "SELECT * FROM Classes WHERE class_id = ?";
         Class clazz = null;
 
         try (
@@ -44,7 +68,7 @@ public class ClassDAO {
     }
 
     public static void insert(Class clazz) throws SQLException {
-        String sql = "INSERT INTO Class(class_name) VALUES (?)";
+        String sql = "INSERT INTO Classes(class_name) VALUES (?)";
 
         try (
             Connection con = MySql.createConnection();
@@ -62,7 +86,7 @@ public class ClassDAO {
     }
 
     public static boolean update(Class clazz) throws SQLException {
-        String sql = "UPDATE Class SET class_name = ? WHERE class_id = ?";
+        String sql = "UPDATE Classes SET class_name = ? WHERE class_id = ?";
 
         try (
             Connection con = MySql.createConnection();
@@ -77,7 +101,7 @@ public class ClassDAO {
     }
 
     public static boolean delete(int id) throws SQLException {
-        String sql = "DELETE FROM Class WHERE class_id = ?";
+        String sql = "DELETE FROM Classes WHERE class_id = ?";
 
         try (
             Connection con = MySql.createConnection();

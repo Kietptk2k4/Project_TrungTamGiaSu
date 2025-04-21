@@ -32,7 +32,7 @@ public class Notification {
                 .userId(res.getInt("user_id"))
                 .content(res.getString("content"))
                 .isRead(res.getBoolean("is_read"))
-                .createdAt(res.getTimestamp("created_at") != null ? res.getTimestamp("created_at").toLocalDateTime() : null)
+                .createdAt(res.getTimestamp("created_at").toLocalDateTime())
                 .build();
     }
 }
