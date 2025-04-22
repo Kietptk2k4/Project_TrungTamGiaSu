@@ -17,7 +17,6 @@ public class SecurityConfig {
             "/api/auth/register",
             "/api/auth/login",
             "/api/tutors"
-            
         };
         http
             .csrf().disable() // Tắt CSRF cho REST API

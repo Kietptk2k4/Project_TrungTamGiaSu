@@ -27,7 +27,7 @@ const TutorDetailPage = () => {
       { id: 1, customer_name: "Trần Văn B", rating: 5, content: "Thầy dạy rất tận tình, con tôi đã tiến bộ rõ rệt sau 2 tháng học.", date: "2023-05-15" },
       { id: 2, customer_name: "Lê Thị C", rating: 4, content: "Thầy có phương pháp giảng dạy dễ hiểu, phù hợp với trình độ của học sinh.", date: "2023-04-10" },
       { id: 3, customer_name: "Phạm Văn D", rating: 5, content: "Thầy không chỉ dạy kiến thức mà còn truyền cảm hứng học tập cho con tôi.", date: "2023-03-22" }
-    ]
+    ] 
   }
   
   useEffect(() => {

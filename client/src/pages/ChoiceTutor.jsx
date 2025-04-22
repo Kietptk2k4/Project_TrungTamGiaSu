@@ -1,10 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Link } from "react-router-dom"
 import axios from "axios"
 
-const TutorListPage = () => {
+const ChoiceTutor = ({ onSelectTutor }) => {
   const [tutors, setTutors] = useState([])
   const [subjects, setSubjects] = useState([])
   const [classes, setClasses] = useState([])
@@ -15,7 +14,9 @@ const TutorListPage = () => {
   const [searchQuery, setSearchQuery] = useState("")
 
   const [currentPage, setCurrentPage] = useState(1)
-  const tutorsPerPage = 9
+  const tutorsPerPage = 4
+
+  const [selectedTutor, setSelectedTutor] = useState(null)
 
   // Mock data cho danh sách gia sư
   const mockTutors = [
@@ -53,7 +54,7 @@ const TutorListPage = () => {
     },
     {
       id: 3,
-      name: "Phạm Văn A Cộng",
+      name: "Phạm Văn C",
       gender: "MALE",
       avg_rating: 4.9,
       completed_courses: 32,
@@ -67,7 +68,7 @@ const TutorListPage = () => {
     },
     {
       id: 4,
-      name: "Nguyễn Thị C",
+      name: "Lê Thị D",
       gender: "FEMALE",
       avg_rating: 4.7,
       completed_courses: 15,
@@ -80,7 +81,7 @@ const TutorListPage = () => {
     },
     {
       id: 5,
-      name: "Hoàng Văn",
+      name: "Hoàng Văn E",
       gender: "MALE",
       avg_rating: 4.5,
       completed_courses: 22,
@@ -129,10 +130,10 @@ const TutorListPage = () => {
       try {
         const response = await axios.get("http://localhost:8080/api/tutors")
         setTutors(response.data)
+        console.log("Fetched tutors:", response.data)
         setSubjects(mockSubjects)
         setClasses(mockClasses)
         setIsLoading(false)
-        setTutors(mockTutors)
       } catch (error) {
         console.error("Lỗi khi fetch tutors:", error)
         setTutors(mockTutors) // fallback
@@ -218,17 +219,84 @@ const TutorListPage = () => {
     return []
   }
 
-  const handleRegister = (tutorId) => {
-    alert(`Bạn đã chọn đăng ký với gia sư có ID: ${tutorId}`)
-    // hoặc chuyển trang, mở form, gọi API v.v.
+  const handleSelectTutor = (tutor) => {
+    setSelectedTutor(tutor)
+    onSelectTutor(tutor.id, tutor.name)
+  }
+
+  const handleCancelSelection = () => {
+    setSelectedTutor(null)
+    onSelectTutor(0, "")
+  }
+
+  if (isLoading) {
+    return (
+      <div className="text-center py-10">
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        <p className="mt-4 text-gray-600">Đang tải danh sách gia sư...</p>
+      </div>
+    )
+  }
+
+  if (selectedTutor) {
+    // Hiển thị thông tin của gia sư đã chọn
+    return (
+      <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+        <div className="flex justify-between items-start mb-2">
+          <div className="flex items-center">
+            <h3 className="text-lg font-semibold">{selectedTutor.name}</h3>
+            <span className="ml-2 bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Đã chọn</span>
+          </div>
+          <button
+            onClick={handleCancelSelection}
+            className="text-gray-500 hover:text-gray-700"
+            aria-label="Hủy chọn gia sư"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fillRule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <p className="text-sm text-gray-600 mb-2">{selectedTutor.introduction}</p>
+
+        <div className="mb-2">
+          <h4 className="text-sm font-medium mb-1">Môn dạy:</h4>
+          <div className="space-y-1">
+            {getTutorSubjects(selectedTutor).map((subject) => (
+              <div key={subject} className="flex flex-col">
+                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded inline-block w-fit mb-1">
+                  {subject}
+                </span>
+                <div className="flex flex-wrap gap-1 ml-2">
+                  {getClassesForSubject(selectedTutor, subject).map((classItem) => (
+                    <span
+                      key={`${subject}-${classItem}`}
+                      className="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded"
+                    >
+                      {classItem}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="text-xs text-gray-600">
+          Đánh giá: {selectedTutor.avg_rating.toFixed(1)}⭐ | Đã hoàn thành {selectedTutor.completed_courses} khóa học
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Danh sách gia sư</h1>
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-xl font-semibold mb-4">Tìm kiếm gia sư</h2>
-
+    <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+      <div className="mb-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Tìm theo tên</label>
@@ -275,94 +343,67 @@ const TutorListPage = () => {
         </div>
       </div>
 
-      {isLoading ? (
-        <div className="text-center py-10">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-          <p className="mt-4 text-gray-600">Đang tải danh sách gia sư...</p>
-        </div>
-      ) : currentTutors.length === 0 ? (
-        <div className="text-center py-10">
+      {currentTutors.length === 0 ? (
+        <div className="text-center py-4">
           <p className="text-gray-600">Không tìm thấy gia sư phù hợp với tiêu chí của bạn.</p>
         </div>
       ) : (
         <>
           {/* Danh sách gia sư */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {currentTutors.map((tutor) => (
-              <div key={tutor.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-bold">{tutor.name}</h3>
-                    <div className="flex items-center">
-                      <span>{tutor.avg_rating.toFixed(1)}⭐</span>
-                    </div>
-                  </div>
+              <div key={tutor.id} className="border rounded-lg p-3 hover:bg-gray-50">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="text-md font-semibold">{tutor.name}</h3>
+                  <div className="text-sm">{tutor.avg_rating.toFixed(1)}⭐</div>
+                </div>
 
-                  <p className="text-gray-600 mb-4">{tutor.introduction}</p>
+                <p className="text-xs text-gray-600 mb-2 line-clamp-2">{tutor.introduction}</p>
 
-                  <div className="mb-4">
-                    <h4 className="font-semibold mb-2">Môn dạy :</h4>
-                    <div className="space-y-2">
-                      {getTutorSubjects(tutor).map((subject) => (
-                        <div key={subject} className="flex flex-col">
-                          <span className="  bg-blue-100  text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded inline-block w-fit mb-1">
-                            {subject}
-                          </span>
-                          <div className="flex flex-wrap gap-1 ml-2">
-                            {getClassesForSubject(tutor, subject).map((classItem) => (
-                              <span
-                                key={`${subject}-${classItem}`}
-                                className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded"
-                              >
-                                {classItem}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between items-center mt-6">
-                    <div className="text-sm text-gray-600">Đã hoàn thành {tutor.completed_courses} khóa học</div>
-                    <div className="flex gap-2">
-                      <Link
-                        to={`/tutors/${tutor.id}`}
-                        className="bg-primary text-black h-12 w-32 flex items-center justify-center py-2 px-4 rounded hover:bg-primary-dark transition"
+                <div className="mb-2">
+                  <div className="flex flex-wrap gap-1">
+                    {getTutorSubjects(tutor).map((subject) => (
+                      <span
+                        key={subject}
+                        className="bg-blue-100 text-blue-800 text-xs font-medium px-1.5 py-0.5 rounded"
                       >
-                        Xem chi tiết
-                      </Link>
-                      <button
-                        onClick={() => handleRegister(tutor.id)}
-                        className="bg-green-500 text-white h-12 w-24 flex items-center justify-center rounded hover:bg-green-600 transition"
-                      >
-                        Đăng ký
-                      </button>
-                    </div>
+                        {subject}
+                      </span>
+                    ))}
                   </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <div className="text-xs text-gray-600">{tutor.completed_courses} khóa học</div>
+                  <button
+                    onClick={() => handleSelectTutor(tutor)}
+                    className="bg-primary text-black text-xs px-3 py-1 rounded hover:bg-primary-dark transition"
+                  >
+                    Chọn
+                  </button>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Phân trang */}
-          <div className="flex justify-center items-center mt-8 gap-4">
+          <div className="flex justify-center items-center mt-4 gap-2">
             <button
-              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((prev) => prev - 1)}
             >
-              Trang trước
+              Trước
             </button>
-            <span>
+            <span className="text-sm">
               Trang {currentPage} / {Math.max(1, totalPages)}
             </span>
             <button
-              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={currentPage === totalPages || totalPages === 0}
               onClick={() => setCurrentPage((prev) => prev + 1)}
             >
-              Trang sau
+              Sau
             </button>
           </div>
         </>
@@ -371,4 +412,4 @@ const TutorListPage = () => {
   )
 }
 
-export default TutorListPage
+export default ChoiceTutor

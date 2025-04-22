@@ -31,11 +31,11 @@ const CourseDetailPage = () => {
             end_date: null,
             status: "InProgress",
             sessions_per_week: 2,
-            fee_per_session: 200000,
+            fee_per_session: 2000000,
             total_sessions: 24,
             completed_sessions: 8,
             remaining_sessions: 16,
-            next_session: "2023-11-15T18:00:00",
+          
             schedule: [
               { day_of_week: 2, start_time: "18:00", end_time: "19:30" },
               { day_of_week: 5, start_time: "18:00", end_time: "19:30" }
@@ -47,9 +47,9 @@ const CourseDetailPage = () => {
               address_detail: "123 Đường Nguyễn Huệ"
             },
             payments: [
-              { id: 1, amount: 1600000, date: "2023-10-15", status: "Completed", description: "Thanh toán học phí tháng đầu (8 buổi)" }
+              { id: 1, amount: 1600000, date: "2023-10-15", status: "Completed", description: "Thanh toán học phí tháng đầu" }
             ],
-            notes: "Học sinh cần luyện thêm các dạng bài tập nâng cao"
+          
           })
           setIsLoading(false)
         }, 1000)
@@ -140,12 +140,12 @@ const CourseDetailPage = () => {
                   <span className="font-medium">{course.sessions_per_week} buổi</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Học phí mỗi buổi:</span>
+                  <span className="text-gray-600">Học phí:</span>
                   <span className="font-medium">
                     {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(course.fee_per_session)}
                   </span>
                 </div>
-                <div className="flex justify-between">
+                {/* <div className="flex justify-between">
                   <span className="text-gray-600">Tổng số buổi:</span>
                   <span className="font-medium">{course.total_sessions} buổi</span>
                 </div>
@@ -156,7 +156,7 @@ const CourseDetailPage = () => {
                 <div className="flex justify-between">
                   <span className="text-gray-600">Còn lại:</span>
                   <span className="font-medium">{course.remaining_sessions} buổi</span>
-                </div>
+                </div> */}
               </div>
             </div>
             
@@ -171,13 +171,6 @@ const CourseDetailPage = () => {
                 ))}
               </div>
               
-              {course.status === 'InProgress' && course.next_session && (
-                <div className="mt-4 p-3 bg-yellow-50 rounded-md">
-                  <p className="text-sm font-medium text-yellow-800">
-                    Buổi học tiếp theo: {new Date(course.next_session).toLocaleString('vi-VN')}
-                  </p>
-                </div>
-              )}
             </div>
           </div>
           
@@ -277,16 +270,7 @@ const CourseDetailPage = () => {
             )}
           </div>
           
-          {/* Ghi chú */}
-          {course.notes && (
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3">Ghi chú</h3>
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <p className="text-gray-700">{course.notes}</p>
-              </div>
-            </div>
-          )}
-        </div>
+        </div>  
       </div>
       
       {/* Các nút thao tác */}
@@ -300,12 +284,12 @@ const CourseDetailPage = () => {
               Yêu cầu hủy khóa học
             </button>
             
-            <Link 
+            {/* <Link 
               to={`/customer/payment/${course.id}`}
               className="px-4 py-2 bg-primary text-black rounded hover:bg-primary-dark"
             >
               Thanh toán tiếp theo
-            </Link>
+            </Link> */}
           </>
         )}
         

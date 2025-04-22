@@ -15,10 +15,11 @@ public class AuthRepository {
 
     public Map<String, Object> findAccountByEmail(String email) {
         String sql = """
-            SELECT a.user_id, a.username, a.email, a.hashed_password, a.is_active, r.role_name
-            FROM account a
-            JOIN role r ON a.role_id = r.role_id
+            SELECT a.user_id,  a.email, a.hashed_password, a.is_active, r.role_name
+            FROM accounts a
+            JOIN roles r ON a.role_id = r.role_id
             WHERE a.email = ?
+            
         """;
 
         try {

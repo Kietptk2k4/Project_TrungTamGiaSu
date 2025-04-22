@@ -36,7 +36,7 @@ const TutorProfilePage = () => {
     name: '',
     issuer: '',
     issueDate: '',
-    file: null
+    url : null
   })
   
   // Available subjects and classes
