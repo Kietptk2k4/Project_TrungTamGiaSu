@@ -5,7 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.trungtangiasu.server.JDBCRepositories.UserRepository;
-import com.trungtangiasu.server.jdbc.dto.RegisterRequest;
+import com.trungtangiasu.server.jdbc.dto.request.RegisterRequest;
 
 @Service
 public class RegistrationService {

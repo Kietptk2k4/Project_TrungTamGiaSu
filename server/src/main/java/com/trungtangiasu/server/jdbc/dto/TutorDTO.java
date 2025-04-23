@@ -1,30 +1,28 @@
 package com.trungtangiasu.server.jdbc.dto;
 
 import java.util.List;
+import java.util.Map;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class TutorDTO  {
-    private int id;
-    private String name;
-    private String gender;
-    private double avg_rating;
-    private int completed_courses;
-    private String introduction;
-    private List<String> subjects;
-    private List<String> classes;
-    public TutorDTO() {
-    }
-    public TutorDTO (int id, String name, Double avg_rating, Integer completed_courses, String introduction) {
-        this.id = id;
-        this.name = name;
-        this.avg_rating = avg_rating;
-        this.completed_courses = completed_courses;
-        this.introduction = introduction;
-    }
-
+        private int id;
+        private String name;
+        private String gender;
+        private double avgRating;
+        private int completedCourses;
+        private String introduction;
+        private Map<String, List<String>> subjects; // key = môn, value = danh sách lớp
     
 }
+    
+
+    
+

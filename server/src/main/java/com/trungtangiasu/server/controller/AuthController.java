@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.trungtangiasu.server.jdbc.dto.LoginRequest;
-import com.trungtangiasu.server.jdbc.dto.LoginResponse;
-import com.trungtangiasu.server.jdbc.dto.RegisterRequest;
+import com.trungtangiasu.server.jdbc.dto.reponse.LoginResponse;
+import com.trungtangiasu.server.jdbc.dto.request.LoginRequest;
+import com.trungtangiasu.server.jdbc.dto.request.RegisterRequest;
 import com.trungtangiasu.server.services.AuthService;
 import com.trungtangiasu.server.services.RegistrationService;
 

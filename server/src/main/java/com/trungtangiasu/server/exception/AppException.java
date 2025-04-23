@@ -1,4 +1,4 @@
-package com.trungtangiasu.server.exception.example.demo.exception;
+package com.trungtangiasu.server.exception;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
@@ -18,7 +18,7 @@ public class AppException extends RuntimeException{
     }
     public AppException(){
        
-        this.errorCode = ErrorCode.EXISTED_USER_EXCEPTION;
+        this.errorCode = ErrorCode.UNCATEGORIZED_EXCEPTION;
     }
 
 

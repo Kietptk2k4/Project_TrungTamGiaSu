@@ -15,7 +15,7 @@ public class TutoringRequestDAO {
                                 .sessionsPerWeek(3)
                                 .wardId("00004")
                                 .addressDetail("Dia chi chi tiet,,,")
-                                .proposedFeePerSession(100000)
+                                .feePerSession(100000)
                                 .build();
         
         TutoringRequestDAO.insert(request);
@@ -60,7 +60,7 @@ public class TutoringRequestDAO {
             stmt.setInt(4, request.getSessionsPerWeek());
             stmt.setString(5, request.getWardId());
             stmt.setString(6, request.getAddressDetail());
-            stmt.setInt(7, request.getProposedFeePerSession());
+            stmt.setInt(7, request.getFeePerSession());
             stmt.setTimestamp(8, request.getCreatedAt() != null ? Timestamp.valueOf(request.getCreatedAt()) : null);
             stmt.setTimestamp(9, request.getExpiredAt() != null ? Timestamp.valueOf(request.getExpiredAt()) : null);
             stmt.setString(10, request.getStatus().name());
@@ -86,7 +86,7 @@ public class TutoringRequestDAO {
             stmt.setInt(4, request.getSessionsPerWeek());
             stmt.setString(5, request.getWardId());
             stmt.setString(6, request.getAddressDetail());
-            stmt.setInt(7, request.getProposedFeePerSession());
+            stmt.setInt(7, request.getFeePerSession());
             stmt.setTimestamp(8, request.getCreatedAt() != null ? Timestamp.valueOf(request.getCreatedAt()) : null);
             stmt.setTimestamp(9, request.getExpiredAt() != null ? Timestamp.valueOf(request.getExpiredAt()) : null);
             stmt.setString(10, request.getStatus().name());

@@ -16,7 +16,10 @@ public class SecurityConfig {
         final String[] WHITELIST_URLS = {
             "/api/auth/register",
             "/api/auth/login",
-            "/api/tutors"
+            
+            "/api/tutors",
+            "/api/customers/tutoringRequest","/api/subjects/getAllSubjects","/api/classes/getAllClasses","/api/address/getAllProvinces","/api/address/getAllWards",
+            "/api/address/getAllDistricts",
         };
         http
             .csrf().disable() // Tắt CSRF cho REST API

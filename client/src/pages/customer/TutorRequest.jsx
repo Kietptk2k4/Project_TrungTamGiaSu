@@ -1,222 +1,260 @@
-"use client"
-
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import ChoiceTutor from "../ChoiceTutor"
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import ChoiceTutor from "../ChoiceTutor";
+import axios from "axios";
 
 const TutorRequest = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const customer = localStorage.getItem("user");
 
-  // State cho form yêu cầu
+  // State for form data
   const [formData, setFormData] = useState({
-    subject_id: "",
-    class_id: "",
-    sessions_per_week: 2,
-    fee_per_session: "",
-    province_id: "",
-    district_id: "",
-    ward_id: "",
-    address_detail: "",
-    specific_tutor_id: "",
-    specific_tutor_name: "",
-    schedule: [
-      { day_of_week: 2, start_time: "18:00", end_time: "19:30" },
-      { day_of_week: 5, start_time: "18:00", end_time: "19:30" },
+    customerId: JSON.parse(customer).id,
+    subjectId: "",
+    classId: "",
+    sessionsPerWeek: 2,
+    feePerSession: "",
+    provinceId: "",
+    districtId: "",
+    wardId: "",
+    addressDetail: "",
+    tutorId: null,
+    tutorName: "",
+    schedules: [
+      { dayOfWeek: 2, startTime: "18:00", endTime: "19:30" },
+      { dayOfWeek: 5, startTime: "18:00", endTime: "19:30" },
     ],
-  })
+  });
 
-  // State cho select options
-  const [subjects, setSubjects] = useState([])
-  const [classes, setClasses] = useState([])
-  const [provinces, setProvinces] = useState([])
-  const [districts, setDistricts] = useState([])
-  const [wards, setWards] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  // State for select options
+  const [subjects, setSubjects] = useState([]);
+  const [classes, setClasses] = useState([]);
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null); // New state for error messages
 
-  // State cho scheduling
-  const [specificTutor, setSpecificTutor] = useState(false)
+  // State for scheduling
+  const [specificTutor, setSpecificTutor] = useState(false);
 
-  // Mock data cho các options
+  // Fetch initial data (subjects, classes, provinces)
   useEffect(() => {
-    // Giả lập API call
-    setTimeout(() => {
-      setSubjects([
-        { id: 1, name: "Toán" },
-        { id: 2, name: "Văn" },
-        { id: 3, name: "Tiếng Anh" },
-        { id: 4, name: "Vật lý" },
-        { id: 5, name: "Hóa học" },
-      ])
+    const fetchData = async () => {
+      try {
+        const [subjectRes, classRes, provinceRes] = await Promise.all([
+          axios.get("http://localhost:8080/api/subjects/getAllSubjects"),
+          axios.get("http://localhost:8080/api/classes/getAllClasses"),
+          axios.get("http://localhost:8080/api/address/getAllProvinces"),
+        ]);
 
-      setClasses([
-        { id: 1, name: "Lớp 1" },
-        { id: 2, name: "Lớp 2" },
-        { id: 3, name: "Lớp 3" },
-        { id: 4, name: "Lớp 4" },
-        { id: 5, name: "Lớp 5" },
-        { id: 6, name: "Lớp 6" },
-        { id: 7, name: "Lớp 7" },
-        { id: 8, name: "Lớp 8" },
-        { id: 9, name: "Lớp 9" },
-        { id: 10, name: "Lớp 10" },
-        { id: 11, name: "Lớp 11" },
-        { id: 12, name: "Lớp 12" },
-      ])
+        const subjectsData = subjectRes.data.map((s) => ({ id: s.id, name: s.name }));
+        const classesData = classRes.data.map((c) => ({ id: c.id, name: c.name }));
+        const provincesData = provinceRes.data.map((p) => ({ id: p.id, name: p.name }));
 
-      setProvinces([
-        { id: "P01", name: "Hà Nội" },
-        { id: "P02", name: "TP. Hồ Chí Minh" },
-        { id: "P03", name: "Đà Nẵng" },
-      ])
+        setSubjects(subjectsData);
+        setClasses(classesData);
+        setProvinces(provincesData);
 
-      setIsLoading(false)
-    }, 1000)
-  }, [])
-
-  // Load districts khi chọn province
-  useEffect(() => {
-    if (formData.province_id) {
-      // Giả lập API call
-      setTimeout(() => {
-        if (formData.province_id === "P01") {
-          setDistricts([
-            { id: "D01", name: "Ba Đình" },
-            { id: "D02", name: "Hoàn Kiếm" },
-            { id: "D03", name: "Hai Bà Trưng" },
-          ])
-        } else if (formData.province_id === "P02") {
-          setDistricts([
-            { id: "D04", name: "Quận 1" },
-            { id: "D05", name: "Quận 2" },
-            { id: "D06", name: "Quận 3" },
-          ])
-        } else {
-          setDistricts([
-            { id: "D07", name: "Hải Châu" },
-            { id: "D08", name: "Thanh Khê" },
-            { id: "D09", name: "Liên Chiểu" },
-          ])
+        if (provincesData.length === 0) {
+          setError("Không tìm thấy tỉnh/thành phố. Vui lòng kiểm tra kết nối API.");
         }
-        setFormData((prev) => ({ ...prev, district_id: "", ward_id: "" }))
-      }, 500)
-    } else {
-      setDistricts([])
-      setWards([])
-    }
-  }, [formData.province_id])
 
-  // Load wards khi chọn district
+        console.log("Provinces loaded:", provincesData); // Debug
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching initial data:", error.response?.data || error.message);
+        setError("Lỗi khi tải dữ liệu ban đầu. Vui lòng thử lại.");
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Load districts when province is selected
   useEffect(() => {
-    if (formData.district_id) {
-      // Giả lập API call
-      setTimeout(() => {
-        if (formData.district_id === "D01") {
-          setWards([
-            { id: "W01", name: "Phường Phúc Xá" },
-            { id: "W02", name: "Phường Trúc Bạch" },
-          ])
-        } else if (formData.district_id === "D04") {
-          setWards([
-            { id: "W03", name: "Phường Bến Nghé" },
-            { id: "W04", name: "Phường Bến Thành" },
-          ])
-        } else {
-          setWards([
-            { id: "W05", name: "Phường Mẫu mã 1" },
-            { id: "W06", name: "Phường Mẫu mã 2" },
-          ])
-        }
-        setFormData((prev) => ({ ...prev, ward_id: "" }))
-      }, 500)
-    } else {
-      setWards([])
-    }
-  }, [formData.district_id])
+    if (formData.provinceId) {
+      const fetchData = async () => {
+        try {
+          const districtsRes = await axios.get("http://localhost:8080/api/address/getAllDistricts");
+          const allDistricts = districtsRes.data.map((d) => ({
+            id: d.id,
+            name: d.name,
+            provinceId: d.provinceId,
+          }));
 
+          const filteredDistricts = allDistricts
+            .filter((district) => String(district.provinceId) === String(formData.provinceId))
+            .map((district) => ({ id: district.id, name: district.name }));
+
+          setDistricts(filteredDistricts);
+          setFormData((prev) => ({ ...prev, districtId: "", wardId: "" }));
+
+          if (filteredDistricts.length === 0) {
+            setError(`Không tìm thấy quận/huyện cho tỉnh ID ${formData.provinceId}.`);
+          }
+
+          console.log("Districts loaded:", filteredDistricts); // Debug
+        } catch (error) {
+          console.error("Error fetching districts:", error.response?.data || error.message);
+          setError("Lỗi khi tải quận/huyện. Vui lòng thử lại.");
+        }
+      };
+      fetchData();
+    } else {
+      setDistricts([]);
+      setWards([]);
+      setFormData((prev) => ({ ...prev, districtId: "", wardId: "" }));
+    }
+  }, [formData.provinceId]);
+
+  // Load wards when district is selected
+  useEffect(() => {
+    if (formData.districtId) {
+      const fetchData = async () => {
+        try {
+          const wardsRes = await axios.get("http://localhost:8080/api/address/getAllWards");
+          const allWards = wardsRes.data.map((w) => ({
+            id: w.id,
+            name: w.name,
+            districtId: w.districtId,
+          }));
+
+          const filteredWards = allWards
+            .filter((ward) => String(ward.districtId) === String(formData.districtId))
+            .map((ward) => ({ id: ward.id, name: ward.name }));
+
+          setWards(filteredWards);
+          setFormData((prev) => ({ ...prev, wardId: "" }));
+
+          if (filteredWards.length === 0) {
+            setError(`Không tìm thấy phường/xã cho quận ID ${formData.districtId}.`);
+          }
+
+          console.log("Wards loaded:", filteredWards); // Debug
+        } catch (error) {
+          console.error("Error fetching wards:", error.response?.data || error.message);
+          setError("Lỗi khi tải phường/xã. Vui lòng thử lại.");
+        }
+      };
+
+      fetchData();
+    } else {
+      setWards([]);
+      setFormData((prev) => ({ ...prev, wardId: "" }));
+    }
+  }, [formData.districtId]);
+
+  // Handle form input changes
   const handleChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
-    })
-  }
+      [name]:
+        ["subjectId", "classId", "provinceId", "districtId", "wardId"].includes(name)
+          ? value // Store as string, convert in handleSubmit
+          : name === "sessionsPerWeek"
+          ? parseInt(value) || 2
+          : name === "feePerSession"
+          ? value
+          : value,
+    });
+    setError(null); // Clear error on change
+  };
 
+  // Handle schedule changes
   const handleScheduleChange = (index, field, value) => {
-    const newSchedule = [...formData.schedule]
-    newSchedule[index] = { ...newSchedule[index], [field]: value }
+    const newSchedule = [...formData.schedules];
+    newSchedule[index] = { ...newSchedule[index], [field]: value };
+
+    if (field === "endTime" && newSchedule[index].startTime >= value) {
+      alert("Giờ kết thúc phải sau giờ bắt đầu");
+      return;
+    }
+
+    if (field === "dayOfWeek") {
+      newSchedule[index][field] = parseInt(value);
+    }
+
     setFormData({
       ...formData,
-      schedule: newSchedule,
-    })
-  }
+      schedules: newSchedule,
+    });
+  };
 
+  // Add a new schedule item
   const addScheduleItem = () => {
+    if (formData.schedules.length >= 5) {
+      alert("Tối đa 5 lịch học");
+      return;
+    }
     setFormData({
       ...formData,
-      schedule: [...formData.schedule, { day_of_week: 2, start_time: "18:00", end_time: "19:30" }],
-    })
-  }
+      schedules: [...formData.schedules, { dayOfWeek: 2, startTime: "18:00", endTime: "19:30" }],
+    });
+  };
 
+  // Remove a schedule item
   const removeScheduleItem = (index) => {
-    const newSchedule = [...formData.schedule]
-    newSchedule.splice(index, 1)
+    if (formData.schedules.length <= 1) {
+      alert("Yêu cầu ít nhất một lịch học");
+      return;
+    }
+    const newSchedule = [...formData.schedules];
+    newSchedule.splice(index, 1);
     setFormData({
       ...formData,
-      schedule: newSchedule,
-    })
-  }
+      schedules: newSchedule,
+    });
+  };
 
+  // Handle tutor type change
   const handleTutorTypeChange = (e) => {
-    const value = e.target.value
-    setSpecificTutor(value === "specific")
-    // Nếu không chọn gia sư cụ thể thì reset specific_tutor_id
+    const value = e.target.value;
+    setSpecificTutor(value === "specific");
     if (value !== "specific") {
       setFormData({
         ...formData,
-        specific_tutor_id: "",
-        specific_tutor_name: "",
-      })
+        tutorId: null,
+        tutorName: "",
+      });
     }
-  }
+  };
 
+  // Handle tutor selection
   const handleSelectTutor = (tutorId, tutorName) => {
     setFormData({
       ...formData,
-      specific_tutor_id: tutorId.toString(),
-      specific_tutor_name: tutorName,
-    })
-  }
-  const handleSubmit = async () => {
+      tutorId: parseInt(tutorId) || null,
+      tutorName: tutorName,
+    });
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8080/api/tutoring/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          tutoringRequest: {
-            subject_id: formData.subject_id,
-            class_id: formData.class_id,
-            sessions_per_week: formData.sessions_per_week,
-            proposed_fee_per_session: formData.fee_per_session,
-            province_id: formData.province_id,
-            district_id: formData.district_id,
-            ward_id: formData.ward_id,
-            address_detail: formData.address_detail,
-            specific_tutor_id: formData.specific_tutor_id,
-            specific_tutor_name: formData.specific_tutor_name,
-            status: "PENDING", // or another status
-          },
-          schedules: formData.schedule,
-        }),
-      });
+      const payload = {
+        ...formData,
+        customerId: parseInt(formData.customerId),
+        subjectId: parseInt(formData.subjectId) || null,
+        classId: parseInt(formData.classId) || null,
+        provinceId: parseInt(formData.provinceId) || null,
+        districtId: parseInt(formData.districtId) || null,
+        wardId: parseInt(formData.wardId) || null,
+        sessionsPerWeek: parseInt(formData.sessionsPerWeek),
+        tutorId: formData.tutorId ? parseInt(formData.tutorId) : null,
+      };
 
-      const result = await response.json();
+      console.log("Submitting payload:", payload);
 
-      console.log(result);
-      navigate("/customer")
+      const submitres = await axios.post("http://localhost:8080/api/customers/tutoringRequest", payload);
+      console.log("Form submitted successfully:", submitres.data);
+      navigate("/customer");
     } catch (error) {
-      console.error("Error during submission:", error);
+      console.error("Error submitting form:", error.response?.data || error.message);
+      setError("Lỗi khi gửi yêu cầu. Vui lòng kiểm tra dữ liệu và thử lại.");
     }
   };
 
@@ -226,12 +264,18 @@ const TutorRequest = () => {
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         <p className="ml-3">Đang tải...</p>
       </div>
-    )
+    );
   }
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
       <h1 className="text-2xl font-bold mb-6">Tạo yêu cầu gia sư mới</h1>
+
+      {error && (
+        <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
+          {error}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6">
         <div className="mb-6">
@@ -242,8 +286,8 @@ const TutorRequest = () => {
                 Môn học <span className="text-red-500">*</span>
               </label>
               <select
-                name="subject_id"
-                value={formData.subject_id}
+                name="subjectId"
+                value={formData.subjectId}
                 onChange={handleChange}
                 required
                 className="w-full border border-gray-300 rounded-md p-2 focus:ring-primary focus:border-primary"
@@ -262,8 +306,8 @@ const TutorRequest = () => {
                 Lớp <span className="text-red-500">*</span>
               </label>
               <select
-                name="class_id"
-                value={formData.class_id}
+                name="classId"
+                value={formData.classId}
                 onChange={handleChange}
                 required
                 className="w-full border border-gray-300 rounded-md p-2 focus:ring-primary focus:border-primary"
@@ -282,8 +326,8 @@ const TutorRequest = () => {
                 Số buổi học mỗi tuần <span className="text-red-500">*</span>
               </label>
               <select
-                name="sessions_per_week"
-                value={formData.sessions_per_week}
+                name="sessionsPerWeek"
+                value={formData.sessionsPerWeek}
                 onChange={handleChange}
                 required
                 className="w-full border border-gray-300 rounded-md p-2 focus:ring-primary focus:border-primary"
@@ -302,10 +346,10 @@ const TutorRequest = () => {
               </label>
               <input
                 type="number"
-                name="fee_per_session"
-                value={formData.fee_per_session}
+                name="feePerSession"
+                value={formData.feePerSession}
                 onChange={handleChange}
-                placeholder="Ví dụ: 200000"
+                placeholder="Ví dụ: 150000"
                 required
                 className="w-full border border-gray-300 rounded-md p-2 focus:ring-primary focus:border-primary"
               />
@@ -317,13 +361,13 @@ const TutorRequest = () => {
           <h2 className="text-xl font-semibold mb-4">Lịch học</h2>
           <p className="text-sm text-gray-600 mb-4">Vui lòng chọn thời gian học trong tuần</p>
 
-          {formData.schedule.map((item, index) => (
+          {formData.schedules.map((item, index) => (
             <div key={index} className="flex flex-wrap items-center gap-4 mb-4">
               <div className="w-full md:w-auto">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Thứ</label>
                 <select
-                  value={item.day_of_week}
-                  onChange={(e) => handleScheduleChange(index, "day_of_week", e.target.value)}
+                  value={item.dayOfWeek}
+                  onChange={(e) => handleScheduleChange(index, "dayOfWeek", e.target.value)}
                   className="w-full md:w-36 border border-gray-300 rounded-md p-2 focus:ring-primary focus:border-primary"
                 >
                   <option value="2">Thứ Hai</option>
@@ -340,8 +384,8 @@ const TutorRequest = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Giờ bắt đầu</label>
                 <input
                   type="time"
-                  value={item.start_time}
-                  onChange={(e) => handleScheduleChange(index, "start_time", e.target.value)}
+                  value={item.startTime}
+                  onChange={(e) => handleScheduleChange(index, "startTime", e.target.value)}
                   className="w-full md:w-36 border border-gray-300 rounded-md p-2 focus:ring-primary focus:border-primary"
                 />
               </div>
@@ -350,13 +394,13 @@ const TutorRequest = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Giờ kết thúc</label>
                 <input
                   type="time"
-                  value={item.end_time}
-                  onChange={(e) => handleScheduleChange(index, "end_time", e.target.value)}
+                  value={item.endTime}
+                  onChange={(e) => handleScheduleChange(index, "endTime", e.target.value)}
                   className="w-full md:w-36 border border-gray-300 rounded-md p-2 focus:ring-primary focus:border-primary"
                 />
               </div>
 
-              {formData.schedule.length > 1 && (
+              {formData.schedules.length > 1 && (
                 <button
                   type="button"
                   onClick={() => removeScheduleItem(index)}
@@ -381,13 +425,18 @@ const TutorRequest = () => {
             </div>
           ))}
 
-          {formData.schedule.length < 5 && (
+          {formData.schedules.length < 5 && (
             <button
               type="button"
               onClick={addScheduleItem}
               className="flex items-center text-primary hover:text-primary-dark"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 mr-1"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
                 <path
                   fillRule="evenodd"
                   d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
@@ -407,8 +456,8 @@ const TutorRequest = () => {
                 Tỉnh/Thành phố <span className="text-red-500">*</span>
               </label>
               <select
-                name="province_id"
-                value={formData.province_id}
+                name="provinceId"
+                value={formData.provinceId}
                 onChange={handleChange}
                 required
                 className="w-full border border-gray-300 rounded-md p-2 focus:ring-primary focus:border-primary"
@@ -427,11 +476,11 @@ const TutorRequest = () => {
                 Quận/Huyện <span className="text-red-500">*</span>
               </label>
               <select
-                name="district_id"
-                value={formData.district_id}
+                name="districtId"
+                value={formData.districtId}
                 onChange={handleChange}
                 required
-                disabled={!formData.province_id}
+                disabled={!formData.provinceId || districts.length === 0}
                 className="w-full border border-gray-300 rounded-md p-2 focus:ring-primary focus:border-primary"
               >
                 <option value="">Chọn Quận/Huyện</option>
@@ -448,11 +497,11 @@ const TutorRequest = () => {
                 Phường/Xã <span className="text-red-500">*</span>
               </label>
               <select
-                name="ward_id"
-                value={formData.ward_id}
+                name="wardId"
+                value={formData.wardId}
                 onChange={handleChange}
                 required
-                disabled={!formData.district_id}
+                disabled={!formData.districtId || wards.length === 0}
                 className="w-full border border-gray-300 rounded-md p-2 focus:ring-primary focus:border-primary"
               >
                 <option value="">Chọn Phường/Xã</option>
@@ -471,8 +520,8 @@ const TutorRequest = () => {
             </label>
             <input
               type="text"
-              name="address_detail"
-              value={formData.address_detail}
+              name="addressDetail"
+              value={formData.addressDetail}
               onChange={handleChange}
               placeholder="Số nhà, tên đường, thông tin bổ sung..."
               required
@@ -541,7 +590,7 @@ const TutorRequest = () => {
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default TutorRequest
+export default TutorRequest;

@@ -5,6 +5,8 @@ import lombok.Builder.Default;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -21,7 +23,7 @@ public class TutoringRequest {
                 .sessionsPerWeek(res.getInt("sessions_per_week"))
                 .wardId(res.getString("ward_id"))
                 .addressDetail(res.getString("address_detail"))
-                .proposedFeePerSession(res.getInt("proposed_fee_per_session"))
+                .feePerSession(res.getInt("proposed_fee_per_session"))
                 .createdAt(res.getTimestamp("created_at") != null ? res.getTimestamp("created_at").toLocalDateTime() : null)
                 .expiredAt(res.getTimestamp("expired_at") != null ? res.getTimestamp("expired_at").toLocalDateTime() : null)
                 .status(Status.valueOf(res.getString("status")))
@@ -45,7 +47,7 @@ public class TutoringRequest {
 
     private String addressDetail;
 
-    private int proposedFeePerSession;
+    private int feePerSession;
 
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -55,7 +57,9 @@ public class TutoringRequest {
 
     @Builder.Default
     private Status  status = Status.PENDING;
-
+    List<RequestSchedules> schedules = new ArrayList<>();
+    int classId;
+    int subjectId;
 
     public static enum Status{
         PENDING, 

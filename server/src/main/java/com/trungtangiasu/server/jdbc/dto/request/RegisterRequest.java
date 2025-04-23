@@ -1,4 +1,4 @@
-package com.trungtangiasu.server.jdbc.dto;
+package com.trungtangiasu.server.jdbc.dto.request;
 // RegisterRequest.java
 
 import lombok.Getter;

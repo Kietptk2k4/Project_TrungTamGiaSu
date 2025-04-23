@@ -18,112 +18,109 @@ const ChoiceTutor = ({ onSelectTutor }) => {
 
   const [selectedTutor, setSelectedTutor] = useState(null)
 
-  // Mock data cho danh sách gia sư
+  // Dữ liệu mẫu mới
   const mockTutors = [
     {
       id: 1,
-      name: "Nguyễn Văn A",
-      gender: "MALE",
-      avg_rating: 4.8,
-      completed_courses: 25,
-      subjects: [
-        {
-          Toán: ["Lớp 10", "Lớp 11", "Lớp 12"],
-          "Vật lý": ["Lớp 10", "Lớp 11", "Lớp 12"],
-          Hóa: ["Lớp 10", "Lớp 11", "Lớp 12"],
-          Sinh: ["Lớp 10", "Lớp 11", "Lớp 12"],
-          Sử: ["Lớp 10", "Lớp 11", "Lớp 12"],
-          Địa: ["Lớp 10", "Lớp 11", "Lớp 12"],
-        },
-      ],
-      introduction: "Giáo viên giàu kinh nghiệm với hơn 5 năm giảng dạy môn Toán cấp 3.",
+      name: "Trần Thị Bình",
+      gender: "FEMALE",
+      avgRating: 4.5,
+      completedCourses: 10,
+      introduction: "Gia sư Toán với 5 năm kinh nghiệm",
+      subjects: {
+        "Toán học": ["Lớp 1"],
+      },
     },
     {
       id: 2,
-      name: "Trần Thị B",
+      name: "Phạm Thị Dung",
       gender: "FEMALE",
-      avg_rating: 4.6,
-      completed_courses: 18,
-      subjects: [
-        {
-          Văn: ["Lớp 6", "Lớp 7", "Lớp 8", "Lớp 9"],
-          Sử: ["Lớp 6", "Lớp 7", "Lớp 8", "Lớp 9"],
-        },
-      ],
-      introduction: "Sinh viên xuất sắc ngành Sư phạm Ngữ văn, có kinh nghiệm dạy kèm học sinh cấp 2.",
+      avgRating: 4.8,
+      completedCourses: 15,
+      introduction: "Chuyên gia Vật lý, từng giảng dạy tại trường THPT",
+      subjects: {
+        "Vật lý": ["Lớp 1"],
+      },
     },
     {
       id: 3,
-      name: "Phạm Văn C",
+      name: "Bùi Văn Giang",
       gender: "MALE",
-      avg_rating: 4.9,
-      completed_courses: 32,
-      subjects: [
-        {
-          "Vật lý": ["Lớp 10", "Lớp 11", "Lớp 12"],
-          "Hóa học": ["Lớp 10", "Lớp 11", "Lớp 12"],
-        },
-      ],
-      introduction: "Thạc sĩ Vật lý, có chứng chỉ quốc tế về phương pháp giảng dạy.",
+      avgRating: 4.2,
+      completedCourses: 5,
+      introduction: "Chuyên dạy Hóa học, phương pháp dễ hiểu",
+      subjects: {
+        "Hóa học": ["Lớp 1"],
+      },
     },
     {
       id: 4,
-      name: "Lê Thị D",
+      name: "Lê Thị Kim",
       gender: "FEMALE",
-      avg_rating: 4.7,
-      completed_courses: 15,
-      subjects: [
-        {
-          "Tiếng Anh": ["Lớp 6", "Lớp 7", "Lớp 8", "Lớp 9", "Lớp 10", "Lớp 11", "Lớp 12"],
-        },
-      ],
-      introduction: "Giáo viên tiếng Anh với chứng chỉ IELTS 8.0, chuyên dạy học sinh cấp 3.",
-    },
-    {
-      id: 5,
-      name: "Hoàng Văn E",
-      gender: "MALE",
-      avg_rating: 4.5,
-      completed_courses: 22,
-      subjects: [
-        {
-          Toán: ["Lớp 1", "Lớp 2", "Lớp 3", "Lớp 4", "Lớp 5"],
-          "Tiếng Anh": ["Lớp 1", "Lớp 2", "Lớp 3", "Lớp 4", "Lớp 5"],
-        },
-      ],
-      introduction: "Giáo viên tiểu học với phương pháp giảng dạy sinh động, phù hợp với trẻ nhỏ.",
+      avgRating: 4.9,
+      completedCourses: 20,
+      introduction: "Gia sư Sinh học với bằng Tiến sĩ",
+      subjects: {
+        "Sinh học": ["Lớp 1"],
+      },
     },
     {
       id: 6,
-      name: "Đỗ Thị F",
+      name: "Lê Văn Cường",
+      gender: "MALE",
+      avgRating: 4.3,
+      completedCourses: 7,
+      introduction: "Giáo viên Lịch sử, giàu kinh nghiệm",
+      subjects: {
+        "Lịch sử": ["Lớp 1"],
+      },
+    },
+    {
+      id: 7,
+      name: "Hoàng Văn Em",
+      gender: "MALE",
+      avgRating: 4.7,
+      completedCourses: 12,
+      introduction: "Gia sư Địa lý, hỗ trợ học sinh thi THPTQG",
+      subjects: {
+        "Địa lý": ["Lớp 1"],
+      },
+    },
+    {
+      id: 9,
+      name: "Nguyễn Thị Hạnh",
       gender: "FEMALE",
-      avg_rating: 4.9,
-      completed_courses: 28,
-      subjects: [
-        {
-          "Sinh học": ["Lớp 10", "Lớp 11", "Lớp 12"],
-          "Hóa học": ["Lớp 10", "Lớp 11", "Lớp 12"],
-        },
-      ],
-      introduction: "Tiến sĩ Sinh học, có kinh nghiệm ôn thi đại học với tỷ lệ đỗ cao.",
+      avgRating: 4.6,
+      completedCourses: 9,
+      introduction: "Gia sư Tin học, chuyên lập trình",
+      subjects: {
+        "Tin học": ["Lớp 1"],
+      },
+    },
+    {
+      id: 10,
+      name: "Trần Văn In",
+      gender: "MALE",
+      avgRating: 4.4,
+      completedCourses: 6,
+      introduction: "Gia sư Giáo dục công dân, tận tâm",
+      subjects: {
+        "Giáo dục công dân": ["Lớp 1"],
+      },
     },
   ]
 
-  const mockSubjects = ["Toán", "Văn", "Tiếng Anh", "Vật lý", "Hóa học", "Sinh học", "Sử", "Địa"]
-  const mockClasses = [
-    "Lớp 1",
-    "Lớp 2",
-    "Lớp 3",
-    "Lớp 4",
-    "Lớp 5",
-    "Lớp 6",
-    "Lớp 7",
-    "Lớp 8",
-    "Lớp 9",
-    "Lớp 10",
-    "Lớp 11",
-    "Lớp 12",
+  const mockSubjects = [
+    "Toán học",
+    "Vật lý",
+    "Hóa học",
+    "Sinh học",
+    "Lịch sử",
+    "Địa lý",
+    "Tin học",
+    "Giáo dục công dân",
   ]
+  const mockClasses = ["Lớp 1"]
 
   useEffect(() => {
     const fetchTutors = async () => {
@@ -136,7 +133,7 @@ const ChoiceTutor = ({ onSelectTutor }) => {
         setIsLoading(false)
       } catch (error) {
         console.error("Lỗi khi fetch tutors:", error)
-        setTutors(mockTutors) // fallback
+        setTutors(mockTutors) // Fallback
         setSubjects(mockSubjects)
         setClasses(mockClasses)
         setIsLoading(false)
@@ -149,24 +146,15 @@ const ChoiceTutor = ({ onSelectTutor }) => {
   // Hàm kiểm tra xem gia sư có dạy môn học được chọn không
   const tutorTeachesSubject = (tutor, subject) => {
     if (!subject) return true
-
-    for (const subjectObj of tutor.subjects) {
-      if (Object.keys(subjectObj).includes(subject)) {
-        return true
-      }
-    }
-    return false
+    return Object.keys(tutor.subjects).includes(subject)
   }
 
   // Hàm kiểm tra xem gia sư có dạy lớp được chọn không
   const tutorTeachesClass = (tutor, classItem) => {
     if (!classItem) return true
-
-    for (const subjectObj of tutor.subjects) {
-      for (const subject in subjectObj) {
-        if (subjectObj[subject].includes(classItem)) {
-          return true
-        }
+    for (const subject in tutor.subjects) {
+      if (tutor.subjects[subject].includes(classItem)) {
+        return true
       }
     }
     return false
@@ -174,21 +162,15 @@ const ChoiceTutor = ({ onSelectTutor }) => {
 
   // Lọc danh sách gia sư theo các tiêu chí
   const filteredTutors = tutors.filter((tutor) => {
-    // Lọc theo tên
     if (searchQuery && !tutor.name.toLowerCase().includes(searchQuery.toLowerCase())) {
       return false
     }
-
-    // Lọc theo môn học
     if (selectedSubject && !tutorTeachesSubject(tutor, selectedSubject)) {
       return false
     }
-
-    // Lọc theo lớp
     if (selectedClass && !tutorTeachesClass(tutor, selectedClass)) {
       return false
     }
-
     return true
   })
 
@@ -200,23 +182,12 @@ const ChoiceTutor = ({ onSelectTutor }) => {
 
   // Hàm lấy tất cả các môn học của gia sư
   const getTutorSubjects = (tutor) => {
-    const allSubjects = []
-    tutor.subjects.forEach((subjectObj) => {
-      Object.keys(subjectObj).forEach((subject) => {
-        allSubjects.push(subject)
-      })
-    })
-    return allSubjects
+    return Object.keys(tutor.subjects)
   }
 
   // Hàm lấy các lớp tương ứng với môn học
   const getClassesForSubject = (tutor, subject) => {
-    for (const subjectObj of tutor.subjects) {
-      if (subjectObj[subject]) {
-        return subjectObj[subject]
-      }
-    }
-    return []
+    return tutor.subjects[subject] || []
   }
 
   const handleSelectTutor = (tutor) => {
@@ -288,7 +259,7 @@ const ChoiceTutor = ({ onSelectTutor }) => {
         </div>
 
         <div className="text-xs text-gray-600">
-          Đánh giá: {selectedTutor.avg_rating.toFixed(1)}⭐ | Đã hoàn thành {selectedTutor.completed_courses} khóa học
+          Đánh giá: {selectedTutor.avgRating.toFixed(1)}⭐ | Đã hoàn thành {selectedTutor.completedCourses} khóa học
         </div>
       </div>
     )
@@ -349,13 +320,12 @@ const ChoiceTutor = ({ onSelectTutor }) => {
         </div>
       ) : (
         <>
-          {/* Danh sách gia sư */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {currentTutors.map((tutor) => (
               <div key={tutor.id} className="border rounded-lg p-3 hover:bg-gray-50">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="text-md font-semibold">{tutor.name}</h3>
-                  <div className="text-sm">{tutor.avg_rating.toFixed(1)}⭐</div>
+                  <div className="text-sm">{tutor.avgRating.toFixed(1)}⭐</div>
                 </div>
 
                 <p className="text-xs text-gray-600 mb-2 line-clamp-2">{tutor.introduction}</p>
@@ -374,7 +344,7 @@ const ChoiceTutor = ({ onSelectTutor }) => {
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <div className="text-xs text-gray-600">{tutor.completed_courses} khóa học</div>
+                  <div className="text-xs text-gray-600">{tutor.completedCourses} khóa học</div>
                   <button
                     onClick={() => handleSelectTutor(tutor)}
                     className="bg-primary text-black text-xs px-3 py-1 rounded hover:bg-primary-dark transition"
@@ -386,7 +356,6 @@ const ChoiceTutor = ({ onSelectTutor }) => {
             ))}
           </div>
 
-          {/* Phân trang */}
           <div className="flex justify-center items-center mt-4 gap-2">
             <button
               className="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"

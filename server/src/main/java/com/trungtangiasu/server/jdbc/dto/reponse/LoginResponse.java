@@ -1,4 +1,4 @@
-package com.trungtangiasu.server.jdbc.dto;
+package com.trungtangiasu.server.jdbc.dto.reponse;
 
 import java.util.Map;
 

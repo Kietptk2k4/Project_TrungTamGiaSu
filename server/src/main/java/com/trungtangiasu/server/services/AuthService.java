@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.trungtangiasu.server.JDBCRepositories.AuthRepository;
-import com.trungtangiasu.server.jdbc.dto.LoginResponse;
+import com.trungtangiasu.server.jdbc.dto.reponse.LoginResponse;
 
 @Service
 public class AuthService {
@@ -35,16 +35,44 @@ public class AuthService {
         if (!passwordEncoder.matches(password, hashedPassword)) {
             throw new RuntimeException("Mật khẩu không đúng");
         }
+        Map<String, Object> user = null;
+        Object userIdObj = account.get("user_id");
+        int userId = (userIdObj instanceof Integer) ? (Integer) userIdObj : Integer.parseInt((String) userIdObj);
+        
+        if (account.get("role_name").equals("CUSTOMER")) {
+            user = authRepository.findCustomerIDByUserId(userId);
+            if (user == null) {
+                throw new RuntimeException("Không tìm thấy thông tin khách hàng");
+            }
+        } else if (account.get("role_name").equals("TUTOR")) {
+            user = authRepository.findTutorIDByUserId(userId);
+            if (user == null) {
+                throw new RuntimeException("Không tìm thấy thông tin gia sư");
+            }
+        } else if (account.get("role_name").equals("ADMIN")) {
+            user = authRepository.findAdminIDByUserId(userId);
+            if (user == null) {
+                throw new RuntimeException("Không tìm thấy thông tin admin");
+            }
+        }
 
         // Tạo fake token (nếu dùng JWT thật thì tạo ở đây)
         String token = "fake-jwt-token";
 
-        Map<String, Object> user = new HashMap<>();
-        user.put("id", account.get("user_id"));
-        user.put("username", account.get("username"));
-        user.put("email", account.get("email"));
-        user.put("role", account.get("role_name"));
+        Map<String, Object> userRes = new HashMap<>();
+        userRes.put("username", account.get("username"));
+        userRes.put("email", account.get("email"));
+        userRes.put("role", account.get("role_name"));
 
-        return new LoginResponse(token, user);
+
+        if (account.get("role_name").equals("CUSTOMER")) {
+            userRes.put("id", user.get("customer_id"));
+        } else if (account.get("role_name").equals("TUTOR")) {
+            userRes.put("id", user.get("tutor_id"));
+        } else if (account.get("role_name").equals("ADMIN")) {
+            userRes.put("id", user.get("admin_id"));
+        }
+        // userRes.put("id", account.get("user_id"));
+        return new LoginResponse(token, userRes);
     }
 }

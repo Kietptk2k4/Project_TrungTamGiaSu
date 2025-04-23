@@ -1,4 +1,4 @@
-package com.trungtangiasu.server.jdbc.dto;
+package com.trungtangiasu.server.jdbc.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;

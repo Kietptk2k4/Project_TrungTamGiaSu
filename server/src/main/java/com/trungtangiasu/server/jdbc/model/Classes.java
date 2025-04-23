@@ -8,12 +8,12 @@ import java.sql.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Class {
+public class Classes {
     private int id;
     private String name;
 
-    public static Class fromResultSet(ResultSet res) throws SQLException {
-        return Class.builder()
+    public static Classes fromResultSet(ResultSet res) throws SQLException {
+        return Classes.builder()
                 .id(res.getInt("class_id"))
                 .name(res.getString("class_name"))
                 .build();

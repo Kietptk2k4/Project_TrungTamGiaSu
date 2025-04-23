@@ -4,6 +4,8 @@ import lombok.*;
 import java.sql.*;
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -23,6 +25,8 @@ public class RequestSchedule {
     private int id;
     private int requestId;
     private int dayOfWeek;
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime startTime;
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
 }
