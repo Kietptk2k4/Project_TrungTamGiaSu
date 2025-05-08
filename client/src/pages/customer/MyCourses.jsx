@@ -1,85 +1,102 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-
+import axios from 'axios'
 const MyCoursesPage = () => {
   const [courses, setCourses] = useState([])
   const [activeTab, setActiveTab] = useState('active')
   const [isLoading, setIsLoading] = useState(true)
+  const [cancelCourseId, setCancelCourseId] = useState(null);
+  const [cancelReason, setCancelReason] = useState('');
+  const [showCancelForm, setShowCancelForm] = useState(false);
+  const user = localStorage.getItem("user")
+  const userData = JSON.parse(user)
+  const userId = userData.id // Lấy ID người dùng từ localStorage
+  console.log(userId)
+  useEffect(() => {
+   
+    const fetchCourses = async () => {
+      const response = await axios.get(`http://localhost:8080/api/customers/getAllCourses/${userId}`)
+      const data = response.data
+      setCourses(data)
+      setIsLoading(false)
+    }
+    fetchCourses()
+  }, [])
   
   // Giả lập dữ liệu khóa học
-  useEffect(() => {
-    setTimeout(() => {
-      setCourses([
-        {
-          id: 1,
-          subject: "Toán",
-          class: "Lớp 10",
-          tutor_name: "Nguyễn Văn A",
-          start_date: "2023-10-15",
-          end_date: null,
-          status: "InProgress",
-          sessions_per_week: 2,
-          fee_per_session: 200000,
-          next_session: "2023-11-15T18:00:00"
-        },
-        {
-          id: 2,
-          subject: "Tiếng Anh",
-          class: "Lớp 8",
-          tutor_name: "Trần Thị B",
-          start_date: "2023-09-20",
-          end_date: null,
-          status: "InProgress",
-          sessions_per_week: 3,
-          fee_per_session: 180000,
-          next_session: "2023-11-14T17:30:00"
-        },
-        {
-          id: 3,
-          subject: "Văn",
-          class: "Lớp 11",
-          tutor_name: "Phạm Văn C",
-          start_date: "2023-05-10",
-          end_date: "2023-08-15",
-          status: "Completed",
-          sessions_per_week: 2,
-          fee_per_session: 190000,
-          next_session: null
-        },
-        {
-          id: 4,
-          subject: "Hóa học",
-          class: "Lớp 12",
-          tutor_name: "Lê Thị D",
-          start_date: "2023-04-10",
-          end_date: "2023-06-30",
-          status: "Completed",
-          sessions_per_week: 2,
-          fee_per_session: 220000,
-          next_session: null
-        },
-        {
-          id: 5,
-          subject: "Sinh học",
-          class: "Lớp 9",
-          tutor_name: "Hoàng Văn E",
-          start_date: "2023-03-15",
-          end_date: "2023-04-30",
-          status: "Cancelled",
-          sessions_per_week: 1,
-          fee_per_session: 170000,
-          next_session: null
-        }
-      ])
-      setIsLoading(false)
-    }, 1000)
-  }, [])
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setCourses([
+  //       {
+  //         id: 1,
+  //         subject: "Toán",
+  //         class: "Lớp 10",
+  //         tutor_name: "Nguyễn Văn A",
+  //         start_date: "2023-10-15",
+  //         end_date: null,
+  //         status: "INPROGRESS",
+  //         sessions_per_week: 2,
+  //         fee_per_session: 200000,
+  //         next_session: "2023-11-15T18:00:00"
+  //       },
+  //       {
+  //         id: 2,
+  //         subject: "Tiếng Anh",
+  //         class: "Lớp 8",
+  //         tutor_name: "Trần Thị B",
+  //         start_date: "2023-09-20",
+  //         end_date: null,
+  //         status: "INPROGRESS",
+  //         sessions_per_week: 3,
+  //         fee_per_session: 180000,
+  //         next_session: "2023-11-14T17:30:00"
+  //       },
+  //       {
+  //         id: 3,
+  //         subject: "Văn",
+  //         class: "Lớp 11",
+  //         tutor_name: "Phạm Văn C",
+  //         start_date: "2023-05-10",
+  //         end_date: "2023-08-15",
+  //         status: "COMPLETED",
+  //         sessions_per_week: 2,
+  //         fee_per_session: 190000,
+  //         next_session: null
+  //       },
+  //       {
+  //         id: 4,
+  //         subject: "Hóa học",
+  //         class: "Lớp 12",
+  //         tutor_name: "Lê Thị D",
+  //         start_date: "2023-04-10",
+  //         end_date: "2023-06-30",
+  //         status: "COMPLETED",
+  //         sessions_per_week: 2,
+  //         fee_per_session: 220000,
+  //         next_session: null
+  //       },
+  //       {
+  //         id: 5,
+  //         subject: "Sinh học",
+  //         class: "Lớp 9",
+  //         tutor_name: "Hoàng Văn E",
+  //         start_date: "2023-03-15",
+  //         end_date: "2023-04-30",
+  //         status: "CANCELLED",
+  //         sessions_per_week: 1,
+  //         fee_per_session: 170000,
+  //         next_session: null
+  //       }
+  //     ])
+  //     setIsLoading(false)
+  //   }, 1000)
+  // }, [])
   
   // Lọc khóa học theo tab đang chọn
   const filteredCourses = courses.filter(course => {
-    if (activeTab === 'active') return course.status === 'InProgress'
-    if (activeTab === 'completed') return course.status === 'Completed'
-    if (activeTab === 'cancelled') return course.status === 'Cancelled'
+    if (activeTab === 'active') return course.status === 'INPROGRESS'
+    if (activeTab === 'completed') return course.status === 'COMPLETED'
+    if (activeTab === 'cancelled') return course.status === 'CANCELLED'
     return true // Tab "Tất cả"
   })
   
@@ -135,23 +152,23 @@ const MyCoursesPage = () => {
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
                   <div>
                     <h2 className="text-xl font-bold text-gray-900">
-                      {course.subject} - {course.class}
+                      {course.subject} - {course.className}
                     </h2>
-                    <p className="text-gray-600">Gia sư: {course.tutor_name}</p>
+                    <p className="text-gray-600">Gia sư: {course.tutorName}</p>
                   </div>
                   
                   <div className="mt-2 md:mt-0">
-                    {course.status === 'InProgress' && (
+                    {course.status === 'INPROGRESS' && (
                       <span className="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
                         Đang diễn ra
                       </span>
                     )}
-                    {course.status === 'Completed' && (
+                    {course.status === 'COMPLETED' && (
                       <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
                         Đã hoàn thành
                       </span>
                     )}
-                    {course.status === 'Cancelled' && (
+                    {course.status === 'CANCELLED' && (
                       <span className="bg-red-100 text-red-800 text-sm font-medium px-3 py-1 rounded-full">
                         Đã hủy
                       </span>
@@ -163,22 +180,22 @@ const MyCoursesPage = () => {
                   <div>
                     <p className="text-sm text-gray-500">Ngày bắt đầu</p>
                     <p className="font-medium">
-                      {new Date(course.start_date).toLocaleDateString('vi-VN')}
+                      {new Date(course.startDate).toLocaleDateString('vi-VN')}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Số buổi mỗi tuần</p>
-                    <p className="font-medium">{course.sessions_per_week} buổi</p>
+                    <p className="font-medium">{course.sessionsPerWeek} buổi</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Học phí</p>
                     <p className="font-medium">
-                      {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(course.fee_per_session)} / buổi
+                      {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(course.feePerSession)} / buổi
                     </p>
                   </div>
                 </div>
                 
-                {course.status === 'InProgress' && course.next_session && (
+                {course.status === 'INPROGRESS' && course.next_session && (
                   <div className="mb-4 p-3 bg-yellow-50 rounded-md">
                     <p className="text-sm font-medium text-yellow-800">
                       Buổi học tiếp theo: {new Date(course.next_session).toLocaleString('vi-VN')}
@@ -194,7 +211,7 @@ const MyCoursesPage = () => {
                     Xem chi tiết
                   </Link>
                   
-                  {course.status === 'Completed' && !course.has_feedback && (
+                  {course.status === 'COMPLETED' && !course.has_feedback && (
                     <Link
                       to={`/customer/feedback/${course.id}`}
                       className="px-4 py-2 bg-secondary bg-blue-700 text-white rounded hover:bg-green-700"
@@ -203,19 +220,53 @@ const MyCoursesPage = () => {
                     </Link>
                   )}
                   
-                  {course.status === 'InProgress' && (
+                  {course.status === 'INPROGRESS' && (
                     <button
                       className="px-4 py-2 border border-red-500 text-red-500 rounded hover:bg-red-50"
-                      onClick={() => {
-                        if (window.confirm('Bạn có chắc chắn muốn hủy khóa học này không?')) {
-                          alert('Chức năng này sẽ được triển khai sau.');
-                        }
-                      }}
+                      onClick={() => setCancelCourseId(course.id)}
                     >
                       Yêu cầu hủy khóa học
                     </button>
                   )}
+                 
                 </div>
+                {cancelCourseId === course.id &&  (
+                      <div className="mt-4 border p-4 rounded bg-red-50">
+                        <h3 className="text-lg font-semibold text-red-600 mb-2">Nhập lý do hủy khóa học:</h3>
+                        <textarea
+                          className="w-full p-2 border rounded"
+                          rows="4"
+                          value={cancelReason}
+                          onChange={(e) => setCancelReason(e.target.value)}
+                          placeholder="Vui lòng nhập lý do bạn muốn hủy khóa học..."
+                        />
+                        <div className="mt-2 flex gap-2">
+                          <button
+                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                            onClick={() => {
+                              if (cancelReason.trim() === '') {
+                                alert('Bạn cần nhập lý do!');
+                                return;
+                              }
+                              alert(`Đã gửi yêu cầu hủy với lý do: ${cancelReason}`);
+                              // Viet API gửi yêu cầu hủy khóa học ở đây
+                              setCancelCourseId(null);
+                            }}
+                          >
+                            Gửi yêu cầu hủy
+                          </button>
+                          <button
+                            className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
+                            onClick={() => {
+                              setCancelCourseId(null);
+                              setCancelReason('');
+                            }}
+                          >
+                            Hủy bỏ
+                          </button>
+                        </div>
+                      </div>
+                    )}
               </div>
             </div>
           ))}

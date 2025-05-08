@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.trungtangiasu.server.JDBCRepositories.AuthRepository;
+import com.trungtangiasu.server.exception.AppException;
+import com.trungtangiasu.server.exception.ErrorCode;
 import com.trungtangiasu.server.jdbc.dto.reponse.LoginResponse;
 
 @Service
@@ -22,18 +24,18 @@ public class AuthService {
         Map<String, Object> account = authRepository.findAccountByEmail(email);
 
         if (account == null) {
-            throw new RuntimeException("Email không tồn tại");
+            throw new AppException(ErrorCode.LOGIN_FAILED_EXCEPTION);
         }
 
         String hashedPassword = (String) account.get("hashed_password");
         Boolean isActive = (Boolean) account.get("is_active");
 
         if (!isActive) {
-            throw new RuntimeException("Tài khoản chưa được kích hoạt");
+            throw new AppException(ErrorCode.LOCKED_USER_EXCEPTION);
         }
 
         if (!passwordEncoder.matches(password, hashedPassword)) {
-            throw new RuntimeException("Mật khẩu không đúng");
+            throw new AppException(ErrorCode.LOGIN_FAILED_EXCEPTION);
         }
         Map<String, Object> user = null;
         Object userIdObj = account.get("user_id");
@@ -42,17 +44,17 @@ public class AuthService {
         if (account.get("role_name").equals("CUSTOMER")) {
             user = authRepository.findCustomerIDByUserId(userId);
             if (user == null) {
-                throw new RuntimeException("Không tìm thấy thông tin khách hàng");
+                throw new AppException(ErrorCode.USER_NOT_FOUND_EXCEPTION);
             }
         } else if (account.get("role_name").equals("TUTOR")) {
             user = authRepository.findTutorIDByUserId(userId);
             if (user == null) {
-                throw new RuntimeException("Không tìm thấy thông tin gia sư");
+                throw new AppException(ErrorCode.USER_NOT_FOUND_EXCEPTION);
             }
         } else if (account.get("role_name").equals("ADMIN")) {
             user = authRepository.findAdminIDByUserId(userId);
             if (user == null) {
-                throw new RuntimeException("Không tìm thấy thông tin admin");
+                throw new AppException(ErrorCode.USER_NOT_FOUND_EXCEPTION);
             }
         }
 

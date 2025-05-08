@@ -22,6 +22,9 @@ public class ClassController {
     @GetMapping("/getAllClasses")
     public ResponseEntity<List<Classes>> getAllClasses() {
         List<Classes> classes = classService.getAllClasses();
+        if (classes.isEmpty()) {
+            return ResponseEntity.noContent().build();  // Trả về 204 nếu không có lớp nào
+        }
         return ResponseEntity.ok(classes);
     }
 }

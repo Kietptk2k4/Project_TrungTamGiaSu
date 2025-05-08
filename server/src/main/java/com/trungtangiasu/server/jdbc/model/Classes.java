@@ -14,8 +14,8 @@ public class Classes {
 
     public static Classes fromResultSet(ResultSet res) throws SQLException {
         return Classes.builder()
-                .id(res.getInt("class_id"))
-                .name(res.getString("class_name"))
+                .id(res.getInt("grade_id"))
+                .name(res.getString("grade_name"))
                 .build();
     }
 }

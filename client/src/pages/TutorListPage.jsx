@@ -1,4 +1,3 @@
-"use client"
 
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
@@ -119,15 +118,17 @@ const TutorListPage = () => {
     "Tin học",
     "Giáo dục công dân",
   ]
-  const mockClasses = ["Lớp 1"]
+  const mockClasses = ["Lớp 1", "Lớp 2", "Lớp 3", "Lớp 4", "Lớp 5", "Lớp 6", "Lớp 7", "Lớp 8", "Lớp 9", "Lớp 10", "Lớp 11", "Lớp 12"]
 
   useEffect(() => {
     const fetchTutors = async () => {
       try {
         const response = await axios.get("http://localhost:8080/api/tutors")
+        const classResponse = await axios.get("http://localhost:8080/api/classes/getAllClasses")
+        const SubjectResponse = await axios.get("http://localhost:8080/api/subjects/getAllSubjects")
         setTutors(response.data)
-        setSubjects(mockSubjects)
-        setClasses(mockClasses)
+        setSubjects(SubjectResponse.data.map((item) => item.name))
+        setClasses(classResponse.data.map((item) => item.name))
         setIsLoading(false)
       } catch (error) {
         console.error("Lỗi khi fetch tutors:", error)

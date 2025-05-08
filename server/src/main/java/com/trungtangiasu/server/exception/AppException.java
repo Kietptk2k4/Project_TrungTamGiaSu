@@ -17,7 +17,6 @@ public class AppException extends RuntimeException{
         this.errorCode = errorCode;
     }
     public AppException(){
-       
         this.errorCode = ErrorCode.UNCATEGORIZED_EXCEPTION;
     }
 

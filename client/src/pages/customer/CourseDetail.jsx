@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-
+// Removed invalid @import statement. Ensure TailwindCSS is properly configured in your project.
 const CourseDetailPage = () => {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -145,18 +145,7 @@ const CourseDetailPage = () => {
                     {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(course.fee_per_session)}
                   </span>
                 </div>
-                {/* <div className="flex justify-between">
-                  <span className="text-gray-600">Tổng số buổi:</span>
-                  <span className="font-medium">{course.total_sessions} buổi</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Đã hoàn thành:</span>
-                  <span className="font-medium">{course.completed_sessions} buổi</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Còn lại:</span>
-                  <span className="font-medium">{course.remaining_sessions} buổi</span>
-                </div> */}
+               
               </div>
             </div>
             

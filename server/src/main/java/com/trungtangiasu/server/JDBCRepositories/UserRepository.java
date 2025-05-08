@@ -7,19 +7,27 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.trungtangiasu.server.configJDBC.ConDB;
+import com.trungtangiasu.server.exception.AppException;
+import com.trungtangiasu.server.exception.ErrorCode;
+import com.trungtangiasu.server.jdbc.dto.CourseDTO;
+import com.trungtangiasu.server.jdbc.model.CourseSchedule;
+
 @Repository
 public class UserRepository {
 
     @Autowired
     private DataSource dataSource;
-
-    public boolean emailExists(String email) throws SQLException {
+    private boolean emailExists(String email) throws SQLException {
         String sql = "SELECT COUNT(*) FROM Accounts WHERE email = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -29,7 +37,7 @@ public class UserRepository {
         }
     }
 
-    public boolean phoneExists(String phone) throws SQLException {
+    private boolean phoneExists(String phone) throws SQLException {
         String sql = "SELECT COUNT(*) FROM PersonalInfos WHERE phone_number = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -39,7 +47,7 @@ public class UserRepository {
         }
     }
 
-    public Long getRoleIdByName(String roleName, Connection conn) throws SQLException {
+    private Long getRoleIdByName(String roleName, Connection conn) throws SQLException {
         String sql = "SELECT role_id FROM Roles WHERE role_name = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, roleName);
@@ -52,9 +60,53 @@ public class UserRepository {
         }
     }
 
+    private void insertToAdminTable(Long userId, Connection conn ) throws SQLException{
+        String sql = """
+            INSERT INTO Admins (user_id)
+            VALUES (?);
+        """;
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setLong(1, userId);
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
+            throw new SQLException("Them that bai vao bang Admins");
+        }
+    }
+    private void insertToTutorTable(Long userId, Connection conn ) throws SQLException{
+        String sql = """
+            INSERT INTO tutors (user_id)
+            VALUES (?);
+        """;
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setLong(1, userId);
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
+            throw new SQLException("Them that bai vao bang Tutors");
+        }
+    }
+    private void insertToCustomerTable(Long userId, Connection conn ) throws SQLException{
+        String sql = """
+            INSERT INTO customers (user_id)
+            VALUES (?);
+        """;
+        try {
+            System.out.println("Loi truoc khi chen o stament: " + userId);
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setLong(1, userId);
+            System.out.println("Loi truoc khi thuc hien them vao bang: " + userId);
+            stmt.executeUpdate();
+            System.out.println("Loi sau khi chen them vao bang " + userId);
+
+        } catch (Exception e) {
+            throw new SQLException("Them that bai vao bang Customers");
+        }
+    }
     
     //   Chèn một bản ghi vào bảng Accounts và trả về user_id được tạo
-     
     public Long insertAccount(String email, String hashedPassword, Long roleId, Connection conn) throws SQLException {
         String sql = "INSERT INTO Accounts (email, hashed_password, role_id, created_at, is_active) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -66,13 +118,17 @@ public class UserRepository {
             stmt.executeUpdate();
             ResultSet keys = stmt.getGeneratedKeys();
             if (keys.next()) {
+                System.out.println("Đã thêm tài khoản với user_id: " + keys.getLong(1));
+                System.out.println("Da them tai khoan voi email:" + email);
+                System.out.println("Da them tai khoan roleId: " + roleId);
+            
                 return keys.getLong(1); // Trả về user_id
             } else {
                 throw new SQLException("Không thể lấy user_id.");
             }
         }
     }
-
+    // chen thong tin vao bang PersonalInfos
     public void insertPersonalInfo(Long userId, String name, String gender, String phone, Connection conn) throws SQLException {
         String sql = "INSERT INTO PersonalInfos (user_id, full_name, gender, phone_number) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -83,7 +139,7 @@ public class UserRepository {
             stmt.executeUpdate();
         }
     }
-
+    // luu thong tin nguoi dung moi vao  co so du lieu 
     public Long createUser(String email, String hashedPassword, String roleName, String name, String gender, String phone) throws SQLException {
         Connection conn = null;
         try {
@@ -92,18 +148,28 @@ public class UserRepository {
 
             // Kiểm tra email và phone
             if (emailExists(email)) {
-                throw new SQLException("Email đã tồn tại: " + email);
+                throw new AppException(ErrorCode.EXISTED_EMAIL_EXCEPTION);
             }
             if (phoneExists(phone)) {
-                throw new SQLException("Số điện thoại đã tồn tại: " + phone);
+                throw new AppException(ErrorCode.EXISTED_PHONE_NUMBER_EXCEPTION);
             }
 
             // Lấy role_id
             Long roleId = getRoleIdByName(roleName, conn);
-
             // Chèn vào Accounts và lấy user_id
             Long userId = insertAccount(email, hashedPassword, roleId, conn);
 
+            // Chèn thông tin vào bảng Admins, Tutors hoặc Customers
+            if (roleName.equals("ADMIN")) {
+                insertToAdminTable(userId, conn);
+            } else if (roleName.equals("TUTOR")) {
+                insertToTutorTable(userId, conn);   
+            } else if (roleName.equals("CUSTOMER")) {
+                insertToCustomerTable(userId, conn);
+            } else {
+                throw new SQLException("Vai trò không hợp lệ: " + roleName);
+            }
+            
             // Chèn vào PersonalInfos với user_id
             insertPersonalInfo(userId, name, gender, phone, conn);
 
@@ -133,4 +199,8 @@ public class UserRepository {
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
+
+
+
+    
 }

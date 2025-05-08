@@ -18,7 +18,7 @@ public class ClassRepository {
         conDB = new ConDB();
     }
     public List<Classes> getAllClasses() {
-        String sql = "SELECT * FROM classes order by class_id";
+        String sql = "SELECT * FROM grades order by grade_id";
         conDB = new ConDB();
         try (PreparedStatement preparedStatement = conDB.getConnection().prepareStatement(sql)) {
             List<Classes> classes = new ArrayList<>();

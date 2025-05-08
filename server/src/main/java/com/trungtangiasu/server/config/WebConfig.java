@@ -12,8 +12,8 @@ public class WebConfig implements WebMvcConfigurer {
         // Thêm phép truy cập cho tất cả các API dưới đường dẫn "/api/**"
         registry.addMapping("/api/**") 
                 .allowedOrigins("http://localhost:5173") // Cho phép frontend ở địa chỉ này
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Các phương thức HTTP được phép
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") 
                 .allowedHeaders("*") // Cho phép tất cả các header
-                .allowCredentials(true); // Cho phép gửi cookie/tokens (nếu cần)
+                .allowCredentials(true); // Cho phép gửi cookie/tokens 
     }
 }

@@ -52,7 +52,7 @@ public class AuthRepository {
         // JOIN tutors t on a.user_id = t.user_id
         // WHERE a.user_id = ?;
         String sql = """
-            SELECT a.user_id, c.tutor_id, r.role_name
+            SELECT a.user_id, t.tutor_id, r.role_name
             FROM accounts a
             JOIN tutors t ON a.user_id = t.user_id
             JOIN roles r ON a.role_id = r.role_id

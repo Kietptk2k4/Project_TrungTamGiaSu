@@ -17,7 +17,7 @@ public class RegistrationService {
         // Kiểm tra hợp lệ đầu vào
         validateRegisterRequest(request);
 
-        // Chuyển đổi gender từ tiếng Việt sang giá trị ENUM
+        // Chuyển đổi gender cho phù hợp với database 
         String gender = convertGender(request.getGender());
 
         // Mã hóa mật khẩu

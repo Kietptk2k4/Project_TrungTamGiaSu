@@ -9,7 +9,7 @@ const RegisterPage = () => {
     phone: '',
     password: '',
     confirmPassword: '',
-    role: 'Customer',
+    role: 'CUSTOMER',
     gender: ''
   });
   const [errors, setErrors] = useState({});
@@ -160,8 +160,8 @@ const RegisterPage = () => {
                   value={formData.role}
                   onChange={handleChange}
                 >
-                  <option value="Customer">Khách hàng</option>
-                  <option value="Tutor">Gia sư</option>
+                  <option value="CUSTOMER">Khách hàng</option>
+                  <option value="TUTOR">Gia sư</option>
                 </select>
               </div>
 

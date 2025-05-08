@@ -48,18 +48,19 @@ public class TutoringRequest {
     private String addressDetail;
 
     private int feePerSession;
-
+    int classId;
+    int subjectId;
+    String subjectName;
+    String className;
+    @Builder.Default
+    private Status  status = Status.PENDING;
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Builder.Default
     private LocalDateTime expiredAt = LocalDateTime.now().plusDays(7);
 
-    @Builder.Default
-    private Status  status = Status.PENDING;
     List<RequestSchedules> schedules = new ArrayList<>();
-    int classId;
-    int subjectId;
 
     public static enum Status{
         PENDING, 
