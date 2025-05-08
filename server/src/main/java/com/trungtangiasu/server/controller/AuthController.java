@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.trungtangiasu.server.jdbc.dto.reponse.APIReponse;
 import com.trungtangiasu.server.jdbc.dto.reponse.LoginResponse;
 import com.trungtangiasu.server.jdbc.dto.request.LoginRequest;
 import com.trungtangiasu.server.jdbc.dto.request.RegisterRequest;
@@ -30,15 +31,21 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        try {
-            LoginResponse response = authService.login(request.getEmail(), request.getPassword());
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", ex.getMessage()));
-        }
+    public ResponseEntity<APIReponse<LoginResponse>> login(@RequestBody LoginRequest request) {
+        APIReponse<LoginResponse> apiReponse = new APIReponse<>();
+        LoginResponse response = authService.login(request.getEmail(), request.getPassword());
+        apiReponse.setData(response);
+        return ResponseEntity.ok(apiReponse);
+       
     }
-
+    // @PostMapping("/login")
+    // public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    //     APIReponse<LoginResponse> apiReponse = new APIReponse<>();
+    //     LoginResponse response = authService.login(request.getEmail(), request.getPassword());
+    //     return ResponseEntity.ok(response);
+       
+    // }
+    
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {

@@ -1,4 +1,4 @@
-"use client"
+
 
 import { useState, useEffect } from "react"
 import axios from "axios"
@@ -125,11 +125,14 @@ const ChoiceTutor = ({ onSelectTutor }) => {
   useEffect(() => {
     const fetchTutors = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/tutors")
-        setTutors(response.data)
-        console.log("Fetched tutors:", response.data)
-        setSubjects(mockSubjects)
-        setClasses(mockClasses)
+        const tutorResponse = await axios.get("http://localhost:8080/api/tutors")
+        const subjectResponse = await axios.get("http://localhost:8080/api/subjects/getAllSubjects")
+        const gradeResponse = await axios.get("http://localhost:8080/api/classes/getAllClasses")
+        const subjectsData = subjectResponse.data.map(subject => subject.name)
+        const classesData = gradeResponse.data.map(grade => grade.name)
+        setTutors(tutorResponse.data)
+        setSubjects(subjectsData)
+        setClasses(classesData)
         setIsLoading(false)
       } catch (error) {
         console.error("Lỗi khi fetch tutors:", error)
@@ -358,6 +361,7 @@ const ChoiceTutor = ({ onSelectTutor }) => {
 
           <div className="flex justify-center items-center mt-4 gap-2">
             <button
+              type="button"
               className="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((prev) => prev - 1)}
@@ -368,6 +372,7 @@ const ChoiceTutor = ({ onSelectTutor }) => {
               Trang {currentPage} / {Math.max(1, totalPages)}
             </span>
             <button
+              type="button"
               className="px-3 py-1 bg-gray-200 rounded text-sm hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={currentPage === totalPages || totalPages === 0}
               onClick={() => setCurrentPage((prev) => prev + 1)}

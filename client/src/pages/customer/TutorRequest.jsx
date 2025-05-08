@@ -60,7 +60,6 @@ const TutorRequest = () => {
           setError("Không tìm thấy tỉnh/thành phố. Vui lòng kiểm tra kết nối API.");
         }
 
-        console.log("Provinces loaded:", provincesData); // Debug
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching initial data:", error.response?.data || error.message);
@@ -95,7 +94,6 @@ const TutorRequest = () => {
             setError(`Không tìm thấy quận/huyện cho tỉnh ID ${formData.provinceId}.`);
           }
 
-          console.log("Districts loaded:", filteredDistricts); // Debug
         } catch (error) {
           console.error("Error fetching districts:", error.response?.data || error.message);
           setError("Lỗi khi tải quận/huyện. Vui lòng thử lại.");

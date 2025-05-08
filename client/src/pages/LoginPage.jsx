@@ -50,7 +50,8 @@ const LoginPage = () => {
     try {
       // Gọi API login thực tế tại đây
       const response = await axios.post('http://localhost:8080/api/auth/login', formData)
-      const data = response.data
+      const {data} = response.data
+      console.log('Đăng nhập thành công:', response.data)
 
       // Lưu token và thông tin user vào localStorage
       localStorage.setItem('token', data.token)

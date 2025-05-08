@@ -83,9 +83,15 @@ const Header = () => {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user")
-    if (storedUser) {
-      setIsLoggedIn(true)
-      setUser(JSON.parse(storedUser))
+    try {
+      if (storedUser && storedUser !== "undefined") {
+        const parsedUser = JSON.parse(storedUser)
+        setIsLoggedIn(true)
+        setUser(parsedUser)
+      }
+    } catch (error) {
+      console.error("Lỗi khi parse user từ localStorage:", error)
+      localStorage.removeItem("user")
     }
   }, [])
 

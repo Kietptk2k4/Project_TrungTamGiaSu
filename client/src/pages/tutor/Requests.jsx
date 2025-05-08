@@ -263,7 +263,7 @@ const TutorRequestsPage = () => {
                     <>
                       <button
                         onClick={() => handleAccept(request.id)}
-                        className="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
+                        className="px-4 py-2 bg-primary text-green-500 border border-green-500 rounded  hover:bg-primary-dark"
                       >
                         Chấp nhận
                       </button>

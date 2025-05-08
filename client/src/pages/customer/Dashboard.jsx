@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -5,41 +6,58 @@ const CustomerDashboard = () => {
   const [activeCourses, setActiveCourses] = useState([])
   const [pendingRequests, setPendingRequests] = useState([])
   const [loading, setLoading] = useState(true)
-  
+  const user = localStorage.getItem("user")
+  const userData = JSON.parse(user)
+  const userId = userData.id // Lấy ID người dùng từ localStorage
+  // useEffect(() => {
+  //   // Giả lập API call
+  //   setTimeout(() => {
+  //     setActiveCourses([
+  //       {
+  //         id: 1,
+  //         subject: "Toán",
+  //         class: "Lớp 10",
+  //         tutor_name: "Nguyễn Văn A",
+  //         start_date: "2023-10-15",
+  //         status: "INPROGRESS"
+  //       },
+  //       {
+  //         id: 2,
+  //         subject: "Tiếng Anh",
+  //         class: "Lớp 8",
+  //         tutor_name: "Trần Thị B",
+  //         start_date: "2023-09-20",
+  //         status: "INPROGRESS"
+  //       }
+  //     ])
+      
+  //     setPendingRequests([
+  //       {
+  //         id: 3,
+  //         subject: "Văn",
+  //         class: "Lớp 11",
+  //         created_at: "2023-11-05",
+  //         status: "PENDING"
+  //       }
+  //     ])
+      
+  //     setLoading(false)
+  //   }, 1000)
+  // }, [])
   useEffect(() => {
-    // Giả lập API call
-    setTimeout(() => {
-      setActiveCourses([
-        {
-          id: 1,
-          subject: "Toán",
-          class: "Lớp 10",
-          tutor_name: "Nguyễn Văn A",
-          start_date: "2023-10-15",
-          status: "InProgress"
-        },
-        {
-          id: 2,
-          subject: "Tiếng Anh",
-          class: "Lớp 8",
-          tutor_name: "Trần Thị B",
-          start_date: "2023-09-20",
-          status: "InProgress"
-        }
-      ])
-      
-      setPendingRequests([
-        {
-          id: 3,
-          subject: "Văn",
-          class: "Lớp 11",
-          created_at: "2023-11-05",
-          status: "Pending"
-        }
-      ])
-      
-      setLoading(false)
-    }, 1000)
+    const fetchCourseData = async () => {
+      const activeCoursesResponse = await axios.get(`http://localhost:8080/api/customers/getAllCoursesInprogress/${userId}`)
+      const pendingRequestsResponse = await axios.get(`http://localhost:8080/api/customers/getAllTutoringRequest/${userId}`)
+      if (activeCoursesResponse.status === 200) {
+        setActiveCourses(activeCoursesResponse.data)
+        setPendingRequests(pendingRequestsResponse.data)
+        setLoading(false)
+      } else {
+        // setLoading(false)
+        console.error('Error fetching course data:', activeCoursesResponse.statusText)
+      }
+    }
+    fetchCourseData()
   }, [])
   
   return (
@@ -126,14 +144,14 @@ const CustomerDashboard = () => {
                           <div className="text-sm font-medium text-gray-900">{course.subject}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{course.class}</div>
+                          <div className="text-sm text-gray-900">{course.className}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{course.tutor_name}</div>
+                          <div className="text-sm text-gray-900">{course.tutorName}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {new Date(course.start_date).toLocaleDateString('vi-VN')}
+                            {new Date(course.startDate).toLocaleDateString('vi-VN')}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -190,14 +208,14 @@ const CustomerDashboard = () => {
                     {pendingRequests.map((request) => (
                       <tr key={request.id}>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">{request.subject}</div>
+                          <div className="text-sm font-medium text-gray-900">{request.subjectName}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{request.class}</div>
+                          <div className="text-sm text-gray-900">{request.className}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {new Date(request.created_at).toLocaleDateString('vi-VN')}
+                            {new Date(request.createdAt).toLocaleDateString('vi-VN')}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">

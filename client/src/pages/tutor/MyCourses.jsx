@@ -5,6 +5,8 @@ const TutorMyCoursesPage = () => {
   const [courses, setCourses] = useState([])
   const [activeTab, setActiveTab] = useState('active')
   const [isLoading, setIsLoading] = useState(true)
+  const [cancelCourseId, setCancelCourseId] = useState(null);
+  const [cancelReason, setCancelReason] = useState('');
   
   // Giả lập dữ liệu khóa học
   useEffect(() => {
@@ -300,21 +302,59 @@ const TutorMyCoursesPage = () => {
                   <div className="flex flex-wrap gap-2 mt-2 sm:mt-0">
                     <Link
                       to={`/tutor/courses/${course.id}`}
-                      className="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark"
+                      className="px-4 py-2 bg-primary text-black rounded hover:bg-primary-dark"
                     >
                       Xem chi tiết
                     </Link>
                     
                     {course.status === 'InProgress' && (
-                      <Link
-                        to={`/tutor/refunds/create?course=${course.id}`}
+                      <button
                         className="px-4 py-2 border border-red-500 text-red-500 rounded hover:bg-red-50"
-                      >
+                        onClick={() => setCancelCourseId(course.id)}
+                      > 
+
                         Yêu cầu hủy
-                      </Link>
+                      </button>
                     )}
                   </div>
                 </div>
+                  {cancelCourseId === course.id &&  (
+                      <div className="mt-4 border p-4 rounded bg-red-50">
+                        <h3 className="text-lg font-semibold text-red-600 mb-2">Nhập lý do hủy khóa học:</h3>
+                        <textarea
+                          className="w-full p-2 border rounded"
+                          rows="4"
+                          value={cancelReason}
+                          onChange={(e) => setCancelReason(e.target.value)}
+                          placeholder="Vui lòng nhập lý do bạn muốn hủy khóa học..."
+                        />
+                        <div className="mt-2 flex gap-2">
+                          <button
+                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                            onClick={() => {
+                              if (cancelReason.trim() === '') {
+                                alert('Bạn cần nhập lý do!');
+                                return;
+                              }
+                              alert(`Đã gửi yêu cầu hủy với lý do: ${cancelReason}`);
+                              // Viet API gửi yêu cầu hủy khóa học ở đây
+                              setCancelCourseId(null);
+                            }}
+                          >
+                            Gửi yêu cầu hủy
+                          </button>
+                          <button
+                            className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
+                            onClick={() => {
+                              setCancelCourseId(null);
+                              setCancelReason('');
+                            }}
+                          >
+                            Hủy bỏ
+                          </button>
+                        </div>
+                      </div>
+                    )}
               </div>
             </div>
           ))}

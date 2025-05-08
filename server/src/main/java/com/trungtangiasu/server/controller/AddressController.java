@@ -2,6 +2,7 @@ package com.trungtangiasu.server.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.trungtangiasu.server.jdbc.dto.reponse.APIReponse;
 import com.trungtangiasu.server.jdbc.model.District;
 import com.trungtangiasu.server.jdbc.model.Province;
 import com.trungtangiasu.server.jdbc.model.Ward;
@@ -26,18 +27,26 @@ public class AddressController {
     }
     
     @GetMapping("/getAllProvinces")
-    public ResponseEntity<List<Province>> getAllProvinces() {      
-       List<Province> provinces = addressService.getAllProvinces();
-        return ResponseEntity.ok(provinces);
+    public APIReponse<List<Province>> getAllProvinces() {    
+        APIReponse<List<Province>> apiReponse = new APIReponse<>();
+
+        apiReponse.setData(addressService.getAllProvinces());  
+        return apiReponse;
     }
     @GetMapping("/getAllDistricts")
-    public ResponseEntity<List<District>> getAllDistricts() {         
-        List<District> districts = addressService.getAllDistricts();
-        return ResponseEntity.ok(districts);
+    public APIReponse<List<District>> getAllDistricts() {    
+        APIReponse<List<District>> apiReponse = new APIReponse<>();
+        apiReponse.setData(addressService.getAllDistricts());     
+        // List<District> districts = addressService.getAllDistricts();
+        return apiReponse;
     }
     @GetMapping("/getAllWards")
-    public ResponseEntity<List<Ward>> getAllWards() {        
-        List<Ward> wards = addressService.getAllWards();
-        return ResponseEntity.ok(wards);
+    public APIReponse<List<Ward>> getAllWards() {        
+        APIReponse<List<Ward>> apiReponse = new APIReponse<>();
+        apiReponse.setData(addressService.getAllWards());
+        return apiReponse;
+
+        // List<Ward> wards = addressService.getAllWards();
+        // return ResponseEntity.ok(wards);
     }
 }

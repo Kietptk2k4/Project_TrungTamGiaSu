@@ -13,25 +13,25 @@ public class CourseScheduleDAO {
     public static void main(String []args)throws SQLException{
         List<CourseSchedule> list = new ArrayList<>();
         list.add(CourseSchedule.builder()
-            .courseId(1)
+            // .courseId(1)
             .dayOfWeek(1)
             .startTime(LocalTime.of(7, 0))
             .endTime(LocalTime.of(10, 0))
             .build());
         
-        list.add(CourseSchedule.builder()
-            .courseId(1)
-            .dayOfWeek(3)
-            .startTime(LocalTime.of(7, 0))
-            .endTime(LocalTime.of(10, 0))
-            .build());
+        // list.add(CourseSchedule.builder()
+        //     // .courseId(1)
+        //     .dayOfWeek(3)
+        //     .startTime(LocalTime.of(7, 0))
+        //     .endTime(LocalTime.of(10, 0))
+        //     .build());
         
-        list.add(CourseSchedule.builder()
-            .courseId(1)
-            .dayOfWeek(7)
-            .startTime(LocalTime.of(7, 0))
-            .endTime(LocalTime.of(10, 0))
-            .build());
+        // list.add(CourseSchedule.builder()
+        //     // .courseId(1)
+        //     .dayOfWeek(7)
+        //     .startTime(LocalTime.of(7, 0))
+        //     .endTime(LocalTime.of(10, 0))
+        //     .build());
         
         for (CourseSchedule c: list){
             CourseScheduleDAO.insert(c);

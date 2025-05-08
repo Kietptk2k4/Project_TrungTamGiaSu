@@ -26,14 +26,13 @@ public class TutorJdbcRepository {
                 t.completed_courses,
                 t.introduction,
                 s.subject_name,
-                c.class_name
+                g.grade_name
             FROM Tutors t
             JOIN Accounts a ON t.user_id = a.user_id
             JOIN PersonalInfos pi ON pi.user_id = a.user_id
             LEFT JOIN TutorSubjectClasses tsc ON t.tutor_id = tsc.tutor_id
-            LEFT JOIN SubjectClassMappings scm ON scm.subject_class_id = tsc.subject_class_id
-            LEFT JOIN Subjects s ON s.subject_id = scm.subject_id
-            LEFT JOIN Classes c ON c.class_id = scm.class_id
+            LEFT JOIN Subjects s ON s.subject_id = tsc.subject_id
+            LEFT JOIN grades g ON g.grade_id = tsc.grade_id
             WHERE t.is_approved = true
             ORDER BY t.tutor_id
         """;
@@ -58,7 +57,7 @@ public class TutorJdbcRepository {
                 }
 
                 String subject = rs.getString("subject_name");
-                String clazz = rs.getString("class_name");
+                String clazz = rs.getString("grade_name");
                 if (subject != null && clazz != null) {
                     tutor.getSubjects()
                          .computeIfAbsent(subject, k -> new ArrayList<>())
