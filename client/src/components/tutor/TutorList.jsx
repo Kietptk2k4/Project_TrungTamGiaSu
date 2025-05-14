@@ -19,8 +19,9 @@ const TutorList = () => {
   useEffect(() => {
     const fetchTutors = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/tutors')
-        setTutors(response.data)
+        const tutorResponse = await axios.get('http://localhost:8080/api/tutors')
+        const {data} = tutorResponse.data
+        setTutors(data)
 
         setIsLoading(false)
         setSubjects(mockSubjects)

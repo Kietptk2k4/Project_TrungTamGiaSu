@@ -126,14 +126,14 @@ const TutorListPage = () => {
         const response = await axios.get("http://localhost:8080/api/tutors")
         const classResponse = await axios.get("http://localhost:8080/api/classes/getAllClasses")
         const SubjectResponse = await axios.get("http://localhost:8080/api/subjects/getAllSubjects")
-        setTutors(response.data)
-        setSubjects(SubjectResponse.data.map((item) => item.name))
-        setClasses(classResponse.data.map((item) => item.name))
+    
+        setTutors(response.data.data)
+        setSubjects(SubjectResponse.data.data.map((item) => item.name))
+        setClasses(classResponse.data.data.map((item) => item.name))
         setIsLoading(false)
       } catch (error) {
         console.error("Lỗi khi fetch tutors:", error)
-        setTutors(mockTutors) // Fallback
-        setSubjects(mockSubjects)
+        setTutors(mockTutors) // Fallbacka
         setClasses(mockClasses)
         setIsLoading(false)
       }

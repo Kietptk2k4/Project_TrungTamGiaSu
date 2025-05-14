@@ -11,6 +11,7 @@ import com.trungtangiasu.server.services.AddressService;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/address")
+
+@CrossOrigin(origins = "http://localhost:5173")
 public class AddressController {
 
     private final AddressService addressService;
@@ -29,7 +32,6 @@ public class AddressController {
     @GetMapping("/getAllProvinces")
     public APIReponse<List<Province>> getAllProvinces() {    
         APIReponse<List<Province>> apiReponse = new APIReponse<>();
-
         apiReponse.setData(addressService.getAllProvinces());  
         return apiReponse;
     }

@@ -96,23 +96,6 @@ public class CustomerRepository {
         }
     }
 
-    private Integer getSubjectClassId(int subjectId, int classId) throws SQLException {
-        String sql = """
-            SELECT subject_class_id FROM SubjectClassMappings
-            WHERE subject_id = ? AND class_id = ?
-        """;
-        PreparedStatement ps = connection.getConnection().prepareStatement(sql);
-        ps.setInt(1, subjectId);
-        ps.setInt(2, classId);
-        ResultSet rs = ps.executeQuery();
-        Integer result = null;
-        if (rs.next()) {
-            result = rs.getInt("subject_class_id");
-        }
-        rs.close();
-        ps.close();
-        return result;
-    }
 
     private int saveSchedules(int requestId, List<RequestSchedules> schedules) throws SQLException {
         String sql = """

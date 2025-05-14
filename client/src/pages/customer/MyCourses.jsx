@@ -16,8 +16,8 @@ const MyCoursesPage = () => {
    
     const fetchCourses = async () => {
       const response = await axios.get(`http://localhost:8080/api/customers/getAllCourses/${userId}`)
-      const data = response.data
-      setCourses(data)
+      
+      setCourses(response.data.data)
       setIsLoading(false)
     }
     fetchCourses()
