@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.trungtangiasu.server.jdbc.dto.TutorDTO;
+import com.trungtangiasu.server.jdbc.dto.reponse.APIReponse;
 import com.trungtangiasu.server.services.TutorService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -23,8 +24,13 @@ public class TutorController {
         this.tutorService = tutorService;
     }
 
+
+    
     @GetMapping
-    public ResponseEntity<List<TutorDTO>> getAllTutors() {
-        return ResponseEntity.ok(tutorService.getAllTutors());
+    public ResponseEntity<APIReponse<List<TutorDTO>>> getAllTutors() {
+        APIReponse<List<TutorDTO>> apiReponse = new APIReponse<>();
+        apiReponse.setData(tutorService.getAllTutors());
+        return ResponseEntity.ok(apiReponse);
     }
+
 }

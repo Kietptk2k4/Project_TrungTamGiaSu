@@ -23,7 +23,6 @@ public class TutorDTO  {
         private int completedCourses;
         private String introduction;
         private Map<String, List<String>> subjects; // key = môn, value = danh sách lớp
-    
 }
     
 

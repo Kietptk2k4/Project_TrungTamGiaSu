@@ -49,8 +49,8 @@ const CustomerDashboard = () => {
       const activeCoursesResponse = await axios.get(`http://localhost:8080/api/customers/getAllCoursesInprogress/${userId}`)
       const pendingRequestsResponse = await axios.get(`http://localhost:8080/api/customers/getAllTutoringRequest/${userId}`)
       if (activeCoursesResponse.status === 200) {
-        setActiveCourses(activeCoursesResponse.data)
-        setPendingRequests(pendingRequestsResponse.data)
+        setActiveCourses(activeCoursesResponse.data.data)
+        setPendingRequests(pendingRequestsResponse.data.data)
         setLoading(false)
       } else {
         // setLoading(false)

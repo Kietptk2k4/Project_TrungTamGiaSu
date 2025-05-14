@@ -1,13 +1,10 @@
 package com.trungtangiasu.server.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.trungtangiasu.server.JDBCRepositories.SubjectRepository;
-import com.trungtangiasu.server.jdbc.dto.CourseDTO;
-import com.trungtangiasu.server.jdbc.model.CourseSchedule;
 import com.trungtangiasu.server.jdbc.model.Subject;
 
 @Service

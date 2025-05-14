@@ -7,20 +7,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.trungtangiasu.server.configJDBC.ConDB;
 import com.trungtangiasu.server.exception.AppException;
 import com.trungtangiasu.server.exception.ErrorCode;
-import com.trungtangiasu.server.jdbc.dto.CourseDTO;
-import com.trungtangiasu.server.jdbc.model.CourseSchedule;
 
 @Repository
 public class UserRepository {

@@ -48,9 +48,9 @@ const TutorRequest = () => {
           axios.get("http://localhost:8080/api/address/getAllProvinces"),
         ]);
 
-        const subjectsData = subjectRes.data.map((s) => ({ id: s.id, name: s.name }));
-        const classesData = classRes.data.map((c) => ({ id: c.id, name: c.name }));
-        const provincesData = provinceRes.data.map((p) => ({ id: p.id, name: p.name }));
+        const subjectsData = subjectRes.data.data.map((s) => ({ id: s.id, name: s.name }));
+        const classesData = classRes.data.data.map((c) => ({ id: c.id, name: c.name }));
+        const provincesData = provinceRes.data.data.map((p) => ({ id: p.id, name: p.name }));
 
         setSubjects(subjectsData);
         setClasses(classesData);
@@ -77,7 +77,7 @@ const TutorRequest = () => {
       const fetchData = async () => {
         try {
           const districtsRes = await axios.get("http://localhost:8080/api/address/getAllDistricts");
-          const allDistricts = districtsRes.data.map((d) => ({
+          const allDistricts = districtsRes.data.data.map((d) => ({
             id: d.id,
             name: d.name,
             provinceId: d.provinceId,
@@ -113,7 +113,7 @@ const TutorRequest = () => {
       const fetchData = async () => {
         try {
           const wardsRes = await axios.get("http://localhost:8080/api/address/getAllWards");
-          const allWards = wardsRes.data.map((w) => ({
+          const allWards = wardsRes.data.data.map((w) => ({
             id: w.id,
             name: w.name,
             districtId: w.districtId,

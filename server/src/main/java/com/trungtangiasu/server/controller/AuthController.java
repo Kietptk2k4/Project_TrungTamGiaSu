@@ -38,21 +38,15 @@ public class AuthController {
         return ResponseEntity.ok(apiReponse);
        
     }
-    // @PostMapping("/login")
-    // public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-    //     APIReponse<LoginResponse> apiReponse = new APIReponse<>();
-    //     LoginResponse response = authService.login(request.getEmail(), request.getPassword());
-    //     return ResponseEntity.ok(response);
-       
-    // }
+
     
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        try {
-            registrationService.registerUser(request);
-            return ResponseEntity.ok("Đăng ký thành công!");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi đăng ký: " + e.getMessage());
-        }
+    public ResponseEntity<APIReponse> register(@RequestBody RegisterRequest request) throws Exception {
+        registrationService.registerUser(request);
+        APIReponse apiReponse = new APIReponse();
+        apiReponse.setStatusCode(1000);
+        apiReponse.setMessage("Đăng ký thành công!");
+        return ResponseEntity.ok(apiReponse);
+      
     }
 }
