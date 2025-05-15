@@ -20,7 +20,7 @@ public class vnpayConfig {
     
     // public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8080/vnpay_jsp/vnpay_return.jsp";
+    public static String vnp_ReturnUrl = "http://localhost:5173/payment/PaymentResult";
     public static String vnp_TmnCode = "O4T19ZQB";
     public static String secretKey = "HLYZCE503WQK16AA00G2TGX4T15FNY4X";
                 

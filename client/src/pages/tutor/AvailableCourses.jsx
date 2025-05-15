@@ -115,7 +115,7 @@ const AvailableCoursesPage = () => {
   })
 const handleRegisterCourse = async (course) => {
   const params = new URLSearchParams()
-  params.append("amount", course.feePerSession * 2) // đóng 2 buổi làm ví dụ
+  params.append("amount", course.feePerSession * 8 * 3 /10) // đóng 2 buổi làm ví dụ
   params.append("vnp_OrderInfo", `Gia sư đăng ký dạy ${course.subjectName} - ${course.className}`)
   params.append("ordertype", "tutor-register")
   params.append("language", "vn")

@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -32,9 +33,9 @@ import com.trungtangiasu.server.jdbc.dto.reponse.PaymentResponseDTO;
 public class PaymentController {
     
     @GetMapping("/vnpay")
-    public ResponseEntity<?> createPayment() throws UnsupportedEncodingException {
+    public ResponseEntity<?> createPayment(@RequestParam("amount") long courseAmount) throws UnsupportedEncodingException {
         
-        long amount =50000000;
+        long amount =courseAmount*100;
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";

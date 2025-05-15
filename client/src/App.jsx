@@ -42,6 +42,8 @@ import UsersManagementPage from './pages/admin/UsersManagement';
 // import PaymentsManagementPage from './pages/admin/PaymentsManagement';
 // import StatisticsPage from './pages/admin/Statistics';
 
+
+import PaymentResult from './pages/payment/PaymentResult';
 // Component bổ sung (nếu cần)
 // import LoadingSpinner from './components/common/LoadingSpinner';
 import NotFoundPage from './pages/NotFoundPage';
@@ -57,6 +59,7 @@ function App() {
         <Route path="tutors" element={<TutorListPage />} />
         <Route path="tutors/:id" element={<TutorDetailPage />} />
         <Route path="about" element={<AboutPage />} />
+        <Route path="payment/PaymentResult" element={<PaymentResult />} />
         {/* <Route path="contact" element={<ContactPage />} /> */}
       </Route>
       
