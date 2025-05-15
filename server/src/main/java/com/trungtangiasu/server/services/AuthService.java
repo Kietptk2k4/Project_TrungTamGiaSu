@@ -37,7 +37,7 @@ public class AuthService {
         if (!passwordEncoder.matches(password, hashedPassword)) {
             throw new AppException(ErrorCode.LOGIN_FAILED_EXCEPTION);
         }
-        Map<String, Object> user = null;
+        Map<String, Object> user = new HashMap<>();
         Object userIdObj = account.get("user_id");
         int userId = (userIdObj instanceof Integer) ? (Integer) userIdObj : Integer.parseInt((String) userIdObj);
         

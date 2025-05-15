@@ -17,10 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 
 public class vnpayConfig {
     
+    
+    // public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8080/vnpay_jsp/vnpay_return.jsp";
-    public static String vnp_TmnCode = "HMCKPB7A";
-    public static String secretKey = "NOUFP21D0ABHTV9F0AEYYBLWFD8V569J";
+    public static String vnp_ReturnUrl = "http://localhost:5173/payment/PaymentResult";
+    public static String vnp_TmnCode = "O4T19ZQB";
+    public static String secretKey = "HLYZCE503WQK16AA00G2TGX4T15FNY4X";
+                
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";

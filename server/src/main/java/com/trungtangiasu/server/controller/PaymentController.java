@@ -19,59 +19,46 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.trungtangiasu.server.config.vnpayConfig;
 import com.trungtangiasu.server.jdbc.dto.reponse.PaymentResponseDTO;
-import com.trungtangiasu.server.vnpay.common.Config;
 
 @RestController
 @RequestMapping("/api/payment")
-
 @CrossOrigin(origins = "http://localhost:5173")
 public class PaymentController {
     
     @GetMapping("/vnpay")
-    public ResponseEntity<?> createPayment() throws UnsupportedEncodingException {
+    public ResponseEntity<?> createPayment(@RequestParam("amount") long courseAmount) throws UnsupportedEncodingException {
         
-        long amount =50000000;
-
-
-
-
-
-
-        // long amount = Integer.parseInt(req.getParameter("amount"))*100;
-        // String bankCode = req.getParameter("bankCode");
+        long amount =courseAmount*100;
+        String vnp_Version = "2.1.0";
+        String vnp_Command = "pay";
+        String orderType = "other";
+        // String bankCode = "NCB";
         
-        String vnp_TxnRef = Config.getRandomNumber(8);
-        // String vnp_IpAddr = Config.getIpAddress(req);
-        String vnp_IpAddr = "192.168.1.1";
-        String vnp_TmnCode = Config.vnp_TmnCode;
+        String vnp_TxnRef = vnpayConfig.getRandomNumber(8);
+        String vnp_IpAddr = "192.168.1.11";
+
+        String vnp_TmnCode = vnpayConfig.vnp_TmnCode;
         
         Map<String, String> vnp_Params = new HashMap<>();
-        vnp_Params.put("vnp_Version", vnpayConfig.vnp_Version);
-        vnp_Params.put("vnp_Command", vnpayConfig.vnp_Command);
+        vnp_Params.put("vnp_Version", vnp_Version);
+        vnp_Params.put("vnp_Command", vnp_Command);
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
         vnp_Params.put("vnp_Amount", String.valueOf(amount));
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_BankCode", "NCB");
-        vnp_Params.put("vnp_ReturnUrl", vnpayConfig.vnp_ReturnUrl);
-        
-        // if (bankCode != null && !bankCode.isEmpty()) {
-        //     vnp_Params.put("vnp_BankCode", bankCode);
-        // }
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
-        vnp_Params.put("vnp_OrderType", vnpayConfig.orderType);
-
+        vnp_Params.put("vnp_OrderType", orderType);
         vnp_Params.put("vnp_Locale", "vn");
-     
-        vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl);
+        vnp_Params.put("vnp_ReturnUrl", vnpayConfig.vnp_ReturnUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
-
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(cld.getTime());
@@ -105,32 +92,13 @@ public class PaymentController {
             }
         }
         String queryUrl = query.toString();
-        String vnp_SecureHash = Config.hmacSHA512(Config.secretKey, hashData.toString());
+        String vnp_SecureHash = vnpayConfig.hmacSHA512(vnpayConfig.secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-        String paymentUrl = Config.vnp_PayUrl + "?" + queryUrl;
+        String paymentUrl = vnpayConfig.vnp_PayUrl + "?" + queryUrl;
         PaymentResponseDTO paymentResponseDTO = new PaymentResponseDTO();
         paymentResponseDTO.setStatus("ok");
         paymentResponseDTO.setMessage("success");
         paymentResponseDTO.setURL(paymentUrl);
         return ResponseEntity.status(HttpStatus.OK).body(paymentResponseDTO);
-
-
-
-
-        // com.google.gson.JsonObject job = new JsonObject();
-        // job.addProperty("code", "00");
-        // job.addProperty("message", "success");
-        // job.addProperty("data", paymentUrl);
-        // Gson gson = new Gson();
-        // resp.getWriter().write(gson.toJson(job));
-      
-    }
-
-    @GetMapping("/paymentInfo")
-    public ResponseEntity<?> returnUrl() {
-        // Handle the return URL from VNPAY
-        // You can extract the parameters and process the payment result here
-        return ResponseEntity.ok("Payment successful");
-    }
-
+    }   
 }
