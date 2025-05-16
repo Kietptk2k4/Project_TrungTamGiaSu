@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import UploadImage from '../../components/UploadImage'
 
 const TutorProfilePage = () => {
   const navigate = useNavigate()
@@ -384,7 +385,7 @@ const TutorProfilePage = () => {
           {successMessage}
         </div>
       )}
-      
+      <UploadImage />
       {/* Thông tin cơ bản */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
         <div className="px-6 py-4 bg-gray-50 border-b flex justify-between items-center">
