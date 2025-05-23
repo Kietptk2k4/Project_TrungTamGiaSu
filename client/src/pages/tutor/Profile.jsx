@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import UploadImage from '../../components/fileUpload/UploadImage'
+import { FileUpload } from '../../components/fileUpload/FileUpload'
 
 const TutorProfilePage = () => {
   const navigate = useNavigate()
@@ -42,7 +44,29 @@ const TutorProfilePage = () => {
   // Available subjects and classes
   const [availableSubjects, setAvailableSubjects] = useState([])
   const [availableClasses, setAvailableClasses] = useState([])
-  
+
+  const [avatarImage, setAvatarImage] = useState(null);
+  const [url, setUrl] = useState('');
+
+  const handleAvatarChange = (e) => {
+    setAvatarImage(e.target.files[0]);
+  };
+
+  const handleAvatarUpload = async () => {
+    const formData = new FormData();
+    formData.append('file', image);
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setUrl(response.data.url);
+    } catch (err) {
+      console.error('Upload failed', err);
+    }
+  };
   useEffect(() => {
     // Giả lập API call để lấy thông tin người dùng và các thông tin khác
     const fetchUserProfile = async () => {
@@ -53,7 +77,7 @@ const TutorProfilePage = () => {
         // Dữ liệu giả lập
         setTimeout(() => {
           setProfile({
-            name: 'Nguyễn Văn Thành',
+            name: 'Nguyễn Thị Diệu Hằng',
             email: 'thanh.nguyen@example.com',
             phone: '0912345678',
             gender: 'MALE',
@@ -372,7 +396,7 @@ const TutorProfilePage = () => {
   return (
     <div className="max-w-4xl mx-auto py-8">
       <h1 className="text-2xl font-bold mb-6">Thông tin gia sư</h1>
-      
+       
       {error && (
         <div className="mb-6 p-4 bg-red-100 text-red-700 rounded-md">
           {error}
@@ -384,7 +408,8 @@ const TutorProfilePage = () => {
           {successMessage}
         </div>
       )}
-      
+      {/* <UploadImage /> */}
+     
       {/* Thông tin cơ bản */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
         <div className="px-6 py-4 bg-gray-50 border-b flex justify-between items-center">
@@ -400,71 +425,82 @@ const TutorProfilePage = () => {
         
         <div className="p-6">
           <form onSubmit={handleProfileSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Họ và tên
-                </label>
-                {isEditing ? (
-                  <input
+            <div className="flex  gap-6 mb-6">
+              <div >
+                <div className  = "flex justify-between items-center mb-4">
+                  <img className = "bg-center" src="data:image/jpeg;base64,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" alt="Uploaded" />
+                </div>  
+                <button type='button' className="block text-sm font-medium text-gray-700 mb-1">
+                  Đổi ảnh đại diện
+                  <input type="file" className=' text-red-500' />  
+                </button>
+              </div>
+              <div className="grid grid-cols-2 mb-16">
+                <div >
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Họ và tên
+                  </label>
+                  {isEditing ? (
+                    <input
                     type="text"
                     name="name"
                     value={profile.name}
                     onChange={handleProfileChange}
                     className="w-full border border-gray-300 rounded-md p-2 focus:ring-primary focus:border-primary"
                     required
-                  />
-                ) : (
-                  <p className="text-gray-900">{profile.name}</p>
-                )}
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
-                <p className="text-gray-900">{profile.email}</p>
-                <p className="text-sm text-gray-500 mt-1">Email không thể thay đổi</p>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Số điện thoại
-                </label>
-                {isEditing ? (
-                  <input
+                    />
+                  ) : (
+                    <p className="text-gray-900">{profile.name}</p>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Email
+                  </label>
+                  <p className="text-gray-900">{profile.email}</p>
+                  <p className="text-sm text-gray-500 mt-1">Email không thể thay đổi</p>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Số điện thoại
+                  </label>
+                  {isEditing ? (
+                    <input
                     type="tel"
                     name="phone"
                     value={profile.phone}
                     onChange={handleProfileChange}
                     className="w-full border border-gray-300 rounded-md p-2 focus:ring-primary focus:border-primary"
                     required
-                  />
-                ) : (
-                  <p className="text-gray-900">{profile.phone}</p>
-                )}
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Giới tính
-                </label>
-                {isEditing ? (
-                  <select
+                    />
+                  ) : (
+                    <p className="text-gray-900">{profile.phone}</p>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Giới tính
+                  </label>
+                  {isEditing ? (
+                    <select
                     name="gender"
                     value={profile.gender}
                     onChange={handleProfileChange}
                     className="w-full border border-gray-300 rounded-md p-2 focus:ring-primary focus:border-primary"
-                  >
-                    <option value="">Chọn giới tính</option>
-                    <option value="MALE">Nam</option>
-                    <option value="FEMALE">Nữ</option>
-                  </select>
-                ) : (
-                  <p className="text-gray-900">
-                    {profile.gender === 'MALE' ? 'Nam' : profile.gender === 'FEMALE' ? 'Nữ' : ''}
-                  </p>
-                )}
+                    >
+                      <option value="">Chọn giới tính</option>
+                      <option value="MALE">Nam</option>
+                      <option value="FEMALE">Nữ</option>
+                    </select>
+                  ) : (
+                    <p className="text-gray-900">
+                      {profile.gender === 'MALE' ? 'Nam' : profile.gender === 'FEMALE' ? 'Nữ' : ''}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
             
