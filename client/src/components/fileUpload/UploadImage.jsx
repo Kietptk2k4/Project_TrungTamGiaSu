@@ -1,7 +1,7 @@
 import  { useState } from 'react';
 import axios from 'axios';
 
-const UploadImage = () => {
+const UploadImage = ({lable="Chọn file"}) => {
   const [image, setImage] = useState(null);
   const [url, setUrl] = useState('');
 
@@ -27,7 +27,7 @@ const UploadImage = () => {
 
   return (
     <div>
-      <input type="file" onChange={handleFileChange} />
+      <input type="file" onChange={handleFileChange}  />
       <button onClick={handleUpload}>Upload</button>
       {url && <img src={url} alt="Uploaded" width="300" />}
     </div>

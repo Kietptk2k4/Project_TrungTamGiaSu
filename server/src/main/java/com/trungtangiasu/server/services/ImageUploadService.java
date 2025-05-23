@@ -26,7 +26,8 @@ public class ImageUploadService {
         Map<?, ?> result = cloudinary.uploader().upload(
             uploadedFile,
             ObjectUtils.asMap(
-                "folder", "NMCNPM" 
+                "folder", "NMCNPM/Avatar",
+                "upload_preset", "CongNghePhanMem"
             )
         ); 
         return result.get("secure_url").toString();
