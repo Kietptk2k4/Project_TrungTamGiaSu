@@ -28,7 +28,8 @@ public class SecurityConfig {
             "/api/address/getAllDistricts",
             "/api/courses/allRegisterCourses",
             "/api/payment/vnpay",
-            "/api/upload",    
+            "/api/upload",
+            "/api/upload/avatar",    
         };
         http
             .csrf().disable() // Tắt CSRF cho REST API
