@@ -1,16 +1,29 @@
 package com.trungtangiasu.server.services;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.Payload;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.trungtangiasu.server.JDBCRepositories.AuthRepository;
 import com.trungtangiasu.server.exception.AppException;
 import com.trungtangiasu.server.exception.ErrorCode;
 import com.trungtangiasu.server.jdbc.dto.reponse.LoginResponse;
+
+import lombok.experimental.NonFinal;
 
 @Service
 public class AuthService {
@@ -19,6 +32,13 @@ public class AuthService {
     private AuthRepository authRepository;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    
+    @NonFinal
+    protected String SIGNER_KEY ="1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij";
+
+    @NonFinal
+    protected long VALID_DURATION=10000;
+
 
     public LoginResponse login(String email, String password) {
         Map<String, Object> account = authRepository.findAccountByEmail(email);
@@ -59,7 +79,7 @@ public class AuthService {
         }
 
         // Tạo fake token (nếu dùng JWT thật thì tạo ở đây)
-        String token = "fake-jwt-token";
+        String token = generateToken(userId);
 
         Map<String, Object> userRes = new HashMap<>();
         userRes.put("username", account.get("username"));
@@ -76,5 +96,29 @@ public class AuthService {
         }
         // userRes.put("id", account.get("user_id"));
         return new LoginResponse(token, userRes);
+    }
+    private String generateToken(int userID) {
+        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
+                
+                .issuer("devteria.com")
+                .issueTime(new Date())
+                .expirationTime(new Date(
+                        Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()))
+                .jwtID(UUID.randomUUID().toString())
+                .claim("user_id", userID)
+                .build();
+
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+
+        JWSObject jwsObject = new JWSObject(header, payload);
+
+        try {
+            jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
+            return jwsObject.serialize();
+        } catch (JOSEException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
