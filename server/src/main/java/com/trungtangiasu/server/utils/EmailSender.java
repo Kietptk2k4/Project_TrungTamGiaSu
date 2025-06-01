@@ -4,34 +4,46 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
+import static com.trungtangiasu.server.utils.DebugPrinter.*;
 
 /**
  * @author TuLe
  */
 public class EmailSender {
-    private static String email = "email@gmail.com";
-    private static String password = "password";
+    private static String email;
+    private static String password;
 
-    /**
-     * Cau hinh 1 lan, dung mai mai.
-     * @author Tule
-     * @param email     email duoc dung phai bat xac thuc 2 lop(nen dung email@gmail.com)
-     * @param password  Mat khau ung dung(App password), khong phai mat khau dang nhap google
-     */
+    static{
+        try{
+            var prop = PropertyLoader.loadProperties();
+            String email = prop.getProperty("EmailSender.email");
+            String password  = prop.getProperty("EmailSender.password");
+
+            printSeparator();
+            printTitle("Load EmailSender config from application.properties");
+            print(
+                String.format("Email: '%s'", email),
+                String.format("Password: '%s'", password)
+            );
+
+            if (email == null || password == null)
+                throw new IllegalArgumentException("Email or password cannot be null");
+
+            EmailSender.configSenderEmail(email, password);
+        }catch(Exception e){
+            printError("Can not config EmailSender");
+            printError("Exception message: " + e.getMessage());
+
+            printWarning("To use EmailSender, please have EmailSender.email and EmailSender.password in resource/application.properties");
+        }
+        printSeparator();
+    }
+    
     public static void configSenderEmail(String email, String password){
         EmailSender.email = email;
         EmailSender.password = password;
     }
 
-    /**
-     * Gui email den nguoi nhan
-     * 
-     * @see #configSenderEmail(String email, String password)
-     * @param receiverEmail   Email nguoi nhan
-     * @param emailTitle      Tieu de email
-     * @param emailContent    Noi dung email
-     * @throws MessagingException Neu gui email that bai
-     */
     public static void sendEmail(String receiverEmail, String emailTitle, String emailContent)
                     throws MessagingException
     {
