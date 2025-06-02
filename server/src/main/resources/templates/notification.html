@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Email Template</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background: #f4f4f4;
+          margin: 0; padding: 0;
+        }
+
+        .email-container {
+          max-width: 600px;
+          margin: 20px auto;
+          background: #fff;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0,0,0,0.1);
+          overflow: hidden;
+        }
+
+        .email-header {
+          background: linear-gradient(90deg, #1a73e8, #4285f4);
+          color: #fff;
+          padding: 25px 20px;
+          text-align: center;
+          border-bottom: 4px solid #155ab6;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .email-header h1 {
+          margin: 0;
+          font-size: 26px;
+          font-weight: 700;
+          letter-spacing: 1px;
+        }
+
+        .email-body {
+          padding: 20px;
+          color: #333;
+        }
+
+        .notice {
+          max-width: 600px;
+          margin: 15px auto 30px auto;
+          padding: 10px 20px;
+          font-size: 12px;
+          line-height: 1.4;
+          color: #444444;
+          background: #f9f9f9;
+          border-left: 4px solid #1a73e8;
+          border-radius: 3px;
+          font-family: Arial, sans-serif;
+          font-weight: 600;
+        }
+
+        .email-footer {
+          background: #f0f0f0;
+          color: #666;
+          font-size: 12px;
+          text-align: center;
+          padding: 15px;
+          line-height: 1.5;
+          font-family: Arial, sans-serif;
+        }
+
+        .email-footer p {
+          margin: 5px 0 0 0;
+        }
+
+        .otp-code {
+          font-size: 32px;
+          font-weight: bold;
+          letter-spacing: 6px;
+          background-color: #f1f3f4;
+          padding: 15px 25px;
+          display: inline-block;
+          border-radius: 6px;
+          margin: 20px 0;
+          user-select: all;
+        }
+    </style>
+</head>
+
+<!--    EMAIL HERE   -->
+<body>
+<div class="email-container">
+
+    <!--    HEADER      -->
+    <div class="email-header">
+        <h1>Hệ thống Quản lý Trung tâm Gia sư DSTK</h1>
+    </div>
+
+    <!--    CONTENT     -->
+    <div class="email-body">
+        Xin chào ${name},<br><br>
+        ${message}<br>
+    </div>
+
+    <!--    FOOTER      -->
+    <div class="notice">
+        <p style="margin: 0;">
+            Đây là email được gửi trong quá trình kiểm thử chương trình của chúng tôi.<br />
+            Nếu bạn nhận được email này, rất có thể đó là do sơ suất của chúng tôi.<br />
+            Vui lòng bỏ qua email này.<br />
+            Xin chân thành cảm ơn và mong bạn thông cảm!
+        </p>
+    </div>
+    <div class="email-footer">
+        <p>Đây là email thử nghiệm, xin vui lòng không trả lời.</p>
+        <p><strong>DSTK Center | TutorLink</strong></p>
+        <p>© 2025 Trung tâm Gia sư DSTK</p>
+    </div>
+
+</div>
+</body>
+</html>

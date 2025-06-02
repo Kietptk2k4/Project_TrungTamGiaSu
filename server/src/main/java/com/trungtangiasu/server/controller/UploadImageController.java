@@ -18,18 +18,26 @@ import com.trungtangiasu.server.services.ImageUploadService;
 
 @RestController
 @RequestMapping("/api/upload")
-
 @CrossOrigin(origins = "http://localhost:5173")
-public class UploadController {
+public class UploadImageController {
 
     private final ImageUploadService imageUploadService;
 
-    public UploadController(ImageUploadService imageUploadService) {
+    public UploadImageController(ImageUploadService imageUploadService) {
         this.imageUploadService = imageUploadService;
     }
 
     @PostMapping
     public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
+        try {
+            String url = imageUploadService.uploadImage(file);
+            return ResponseEntity.ok(Map.of("url", url));
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Upload failed");
+        }
+    }
+    @PostMapping("/avatar")
+    public ResponseEntity<?> uploadAvatarImg(@RequestParam("file") MultipartFile file) {
         try {
             String url = imageUploadService.uploadImage(file);
             return ResponseEntity.ok(Map.of("url", url));
