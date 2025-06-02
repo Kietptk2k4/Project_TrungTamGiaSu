@@ -38,6 +38,7 @@ public abstract class MySql {
         catch (Exception e){
             printError("Can not connect to Mysql");
             printError("Exception message: " + e.getMessage());
+            printWarning("Please make sure the file resources/application.properties has the correct database configuration.");
         }
         printSeparator();
     }
