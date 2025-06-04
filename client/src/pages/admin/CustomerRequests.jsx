@@ -1,238 +1,364 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CustomerRequestsPage = () => {
-  const [requests, setRequests] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState('pending')
-  
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('pending');
+  const [error, setErrorMsg] = useState(null);
+  const navigate = useNavigate();
+
+  const translateStatus = (status) => {
+    const statusMap = {
+      PENDING: { text: 'Processing', color: 'bg-yellow-100 text-yellow-800' },
+      APPROVED: { text: 'Approved', color: 'bg-green-100 text-green-800' },
+      REJECTED: { text: 'Rejected', color: 'bg-red-100 text-red-800' },
+    };
+    return statusMap[status] || { text: 'Unknown', color: 'bg-gray-100 text-gray-800' };
+  };
+
   useEffect(() => {
-    // Giả lập API call
-    setTimeout(() => {
-      setRequests([
-        {
-          id: 1,
-          customer_name: "Nguyễn Văn A",
-          subject: "Toán",
-          class: "Lớp 10",
-          location: "Quận 1, TP.HCM",
-          fee: 200000,
-          created_at: "2023-11-05",
-          status: "Pending"
-        },
-        {
-          id: 2,
-          customer_name: "Trần Thị B",
-          subject: "Tiếng Anh",
-          class: "Lớp 8",
-          location: "Quận 3, TP.HCM",
-          fee: 180000,
-          created_at: "2023-11-04",
-          status: "Approved"
-        },
-        {
-          id: 3,
-          customer_name: "Lê Văn C",
-          subject: "Vật lý",
-          class: "Lớp 12",
-          location: "Quận 7, TP.HCM",
-          fee: 220000,
-          created_at: "2023-11-03",
-          status: "Rejected"
-        },
-        {
-          id: 4,
-          customer_name: "Phạm Thị D",
-          subject: "Hóa học",
-          class: "Lớp 11",
-          location: "Quận 2, TP.HCM",
-          fee: 210000,
-          created_at: "2023-11-02",
-          status: "Pending"
-        },
-        {
-          id: 5,
-          customer_name: "Hoàng Văn E",
-          subject: "Sinh học",
-          class: "Lớp 9",
-          location: "Quận 5, TP.HCM",
-          fee: 190000,
-          created_at: "2023-11-01",
-          status: "Approved"
+    const fetchRequests = async () => {
+      setLoading(true);
+      setErrorMsg(null);
+      let apiUrl = 'http://localhost:8080/api/admin/customer-requests';
+
+      if (activeTab !== 'all') {
+        apiUrl += `?status=${activeTab.toUpperCase()}`;
+      }
+
+      try {
+        const token = localStorage.getItem('token');
+        console.log('Token:', token || 'No token');
+        if (!token) {
+          setErrorMsg('Vui lòng đăng nhập để truy cập danh sách yêu cầu.');
+          setLoading(false);
+          navigate('/login');
+          return;
         }
-      ])
-      setIsLoading(false)
-    }, 1000)
-  }, [])
-  
-  // Lọc yêu cầu theo tab đang chọn
-  const filteredRequests = requests.filter(request => {
-    if (activeTab === 'all') return true
-    return request.status.toLowerCase() === activeTab
-  })
-  
-  const handleApprove = (id) => {
-    // Trong thực tế, bạn sẽ gọi API để duyệt yêu cầu
-    console.log(`Duyệt yêu cầu có ID: ${id}`)
-    
-    // Cập nhật state để hiển thị thay đổi
-    const updatedRequests = requests.map(request => 
-      request.id === id ? { ...request, status: 'Approved' } : request
-    )
-    setRequests(updatedRequests)
-  }
-  
-  const handleReject = (id) => {
-    // Trong thực tế, bạn sẽ gọi API để từ chối yêu cầu
-    console.log(`Từ chối yêu cầu có ID: ${id}`)
-    
-    // Cập nhật state để hiển thị thay đổi
-    const updatedRequests = requests.map(request => 
-      request.id === id ? { ...request, status: 'Rejected' } : request
-    )
-    setRequests(updatedRequests)
-  }
-  
+
+        console.log('Sending request to:', apiUrl);
+        const response = await fetch(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          let errorMessage = `Lỗi API: ${response.status}`;
+          let errorBody = '';
+          try {
+            const errorData = await response.json();
+            errorMessage = errorData.message || errorMessage;
+            errorBody = JSON.stringify(errorData);
+          } catch {
+            errorBody = await response.text() || 'Không có thông tin lỗi.';
+            errorMessage = errorBody || errorMessage;
+          }
+          console.error(`Lỗi HTTP! status: ${response.status}`, errorBody);
+          if (response.status === 401) {
+            setErrorMsg('Phiên đăng nhập hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
+            localStorage.removeItem('token');
+            navigate('/login');
+          } else if (response.status === 403) {
+            setErrorMsg('Bạn không có quyền truy cập tài nguyên này.');
+            navigate('/login');
+          } else {
+            throw new Error(errorMessage);
+          }
+        }
+
+        const responseData = await response.json();
+        console.log('Phản hồi API:', responseData);
+        if (responseData && responseData.statusCode === 1000 && responseData.data) {
+          setRequests(responseData.data);
+          setErrorMsg(null);
+        } else {
+          console.error('Lỗi API:', responseData.message);
+          setErrorMsg('Không tìm thấy yêu cầu nào.');
+          setRequests([]);
+        }
+      } catch (err) {
+        console.error('Không thể tải danh sách yêu cầu:', err);
+        if (err.message.includes('Failed to fetch')) {
+          setErrorMsg('Lỗi kết nối server hoặc CORS. Vui lòng kiểm tra server.');
+        } else {
+          setErrorMsg('Không tìm thấy yêu cầu nào.');
+        }
+        setRequests([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRequests();
+  }, [activeTab, navigate]);
+
+  const handleApprove = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setErrorMsg('Vui lòng đăng nhập.');
+        navigate('/login');
+        return;
+      }
+      const response = await fetch(`http://localhost:8080/api/admin/customer-requests/${id}/approve`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        let errorMessage = 'Không thể phê duyệt yêu cầu.';
+        let errorBody = '';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+          errorBody = JSON.stringify(errorData);
+        } catch {
+          errorBody = await response.text() || 'Không có thông tin lỗi.';
+          errorMessage = errorBody || errorMessage;
+        }
+        console.error(`Lỗi phê duyệt: status=${response.status}`, errorBody);
+        if (response.status === 401) {
+          setErrorMsg('Phiên đăng nhập hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
+          localStorage.removeItem('token');
+          navigate('/login');
+        } else if (response.status === 404) {
+          setErrorMsg(`Không tìm thấy yêu cầu ID ${id}.`);
+        } else {
+          setErrorMsg(`Lỗi khi phê duyệt yêu cầu: ${errorMessage}`);
+        }
+        throw new Error(errorMessage);
+      }
+      const responseData = await response.json();
+      if (responseData.statusCode === 1000) {
+        setRequests(requests.map((request) =>
+          request.id === id ? { ...request, status: 'APPROVED' } : request
+        ));
+        setErrorMsg(null);
+        alert('Yêu cầu đã được phê duyệt thành công!');
+      } else {
+        throw new Error(responseData.message || 'Không thể phê duyệt yêu cầu.');
+      }
+    } catch (err) {
+      console.error('Lỗi phê duyệt:', err);
+      if (!error) setErrorMsg(`Lỗi khi phê duyệt yêu cầu: ${err.message}`);
+    }
+  };
+
+  const handleReject = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setErrorMsg('Vui lòng đăng nhập.');
+        navigate('/login');
+        return;
+      }
+      const response = await fetch(`http://localhost:8080/api/admin/customer-requests/${id}/reject`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        let errorMessage = 'Không thể từ chối yêu cầu.';
+        let errorBody = '';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+          errorBody = JSON.stringify(errorData);
+        } catch {
+          errorBody = await response.text() || 'Không có thông tin lỗi.';
+          errorMessage = errorBody || errorMessage;
+        }
+        console.error(`Lỗi từ chối: status=${response.status}`, errorBody);
+        if (response.status === 401) {
+          setErrorMsg('Phiên đăng nhập hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
+          localStorage.removeItem('token');
+          navigate('/login');
+        } else if (response.status === 404) {
+          setErrorMsg(`Không tìm thấy yêu cầu ID ${id}.`);
+        } else {
+          setErrorMsg(`Lỗi khi từ chối yêu cầu: ${errorMessage}`);
+        }
+        throw new Error(errorMessage);
+      }
+      const responseData = await response.json();
+      if (responseData.statusCode === 1000) {
+        setRequests(requests.map((request) =>
+          request.id === id ? { ...request, status: 'REJECTED' } : request
+        ));
+        setErrorMsg(null);
+        alert('Yêu cầu đã được từ chối thành công!');
+      } else {
+        throw new Error(responseData.message || 'Không thể từ chối yêu cầu.');
+      }
+    } catch (err) {
+      console.error('Lỗi từ chối:', err);
+      if (!error) setErrorMsg(`Lỗi khi từ chối yêu cầu: ${err.message}`);
+    }
+  };
+
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Yêu cầu từ khách hàng</h1>
-      
-      {/* Tab navigation */}
+      <h1 className="text-2xl font-bold mb-6">Yêu Cầu Khách Hàng</h1>
+
+      {error && (
+        <div className="bg-red-100 text-red-700 p-4 rounded-lg mb-6">{error}</div>
+      )}
+
       <div className="flex border-b border-gray-200 mb-6">
         <button
-          className={`py-2 px-4 font-medium ${activeTab === 'all' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`py-2 px-4 font-medium ${
+            activeTab === 'all' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'
+          }`}
           onClick={() => setActiveTab('all')}
         >
-          Tất cả
+          Tất Cả
         </button>
         <button
-          className={`py-2 px-4 font-medium ${activeTab === 'pending' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`py-2 px-4 font-medium ${
+            activeTab === 'pending' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'
+          }`}
           onClick={() => setActiveTab('pending')}
         >
-          Đang chờ
+          Đang Xử Lý
         </button>
         <button
-          className={`py-2 px-4 font-medium ${activeTab === 'approved' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`py-2 px-4 font-medium ${
+            activeTab === 'approved' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'
+          }`}
           onClick={() => setActiveTab('approved')}
         >
-          Đã duyệt
+          Đã Phê Duyệt
         </button>
         <button
-          className={`py-2 px-4 font-medium ${activeTab === 'rejected' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`py-2 px-4 font-medium ${
+            activeTab === 'rejected' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'
+          }`}
           onClick={() => setActiveTab('rejected')}
         >
-          Đã từ chối
+          Đã Từ Chối
         </button>
       </div>
-      
-      {isLoading ? (
+
+      {loading ? (
         <div className="text-center py-8">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-          <p className="mt-4 text-gray-600">Đang tải dữ liệu...</p>
+          <div className="inline-block animate-spin rounded-full h-6 w-6 border-t-2 border-blue-600"></div>
+          <p className="mt-4 text-gray-600">Đang tải...</p>
         </div>
-      ) : filteredRequests.length === 0 ? (
+      ) : requests.length === 0 ? (
         <div className="bg-white p-8 rounded-lg shadow-md text-center">
-          <p className="text-gray-500">Không có yêu cầu nào trong danh mục này.</p>
+          <p className="text-gray-500">Không tìm thấy yêu cầu nào.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="bg-white rounded-lg shadow-md overflow-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Khách hàng
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-tight">
+                  Khách Hàng
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Môn học
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-tight">
+                  Môn Học
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Lớp
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-tight">
+                  Tiêu Đề
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Địa điểm
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-tight">
+                  Địa Điểm
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Học phí
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-tight">
+                  Học Phí
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Ngày tạo
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-tight">
+                  Ngày Tạo
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Trạng thái
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-tight">
+                  Trạng Thái
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Thao tác
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-tight">
+                  Hành Động
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredRequests.map((request) => (
+              {requests.map((request) => (
                 <tr key={request.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{request.customer_name}</div>
+                  <td className="px-4 py-2 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900">{request.client_name || 'N/A'}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{request.subject}</div>
+                  <td className="px-4 py-2 whitespace-nowrap">
+                    <div className="text-sm text-gray-700">{request.subject || 'N/A'}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{request.class}</div>
+                  <td className="px-4 py-2 whitespace-nowrap">
+                    <div className="text-sm text-gray-700">{request.title || 'N/A'}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{request.location}</div>
+                  <td className="px-4 py-2 whitespace-nowrap">
+                    <div className="text-sm text-gray-700">{request.location || 'N/A'}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-4 py-2 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(request.fee)} / buổi
+                      {request.fee
+                        ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'VND' }).format(
+                            request.fee
+                          ) + '/tháng'
+                        : 'N/A'}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {new Date(request.created_at).toLocaleDateString('vi-VN')}
+                  <td className="px-4 py-2 whitespace-nowrap">
+                    <div className="text-sm text-gray-600">
+                      {request.created_at
+                        ? new Date(request.created_at).toLocaleDateString('en-GB')
+                        : 'N/A'}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                      ${request.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
-                        request.status === 'Approved' ? 'bg-green-100 text-green-800' : 
-                        'bg-red-100 text-red-800'}`}
+                  <td className="px-4 py-2 whitespace-nowrap text-center">
+                    <span
+                      className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-lg ${translateStatus(
+                        request.status
+                      ).color}`}
                     >
-                      {request.status === 'Pending' ? 'Đang chờ' : 
-                       request.status === 'Approved' ? 'Đã duyệt' : 
-                       'Đã từ chối'}
+                      {translateStatus(request.status).text}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2">
-                      <Link 
-                        to={`/admin/customer-requests/${request.id}`} 
-                        className="text-primary hover:text-primary-dark"
+                      <Link
+                        to={`/admin/customer-requests/${request.id}/detail`}
+                        className="text-blue-600 hover:text-blue-800"
                       >
-                        Chi tiết
+                        Chi Tiết
                       </Link>
-                      
-                      {request.status === 'Pending' && (
+                      {request.status === 'PENDING' && (
                         <>
-                          <button 
+                          <button
                             onClick={() => handleApprove(request.id)}
                             className="text-green-600 hover:text-green-800"
                           >
-                            Duyệt
+                            Phê Duyệt
                           </button>
-                          <button 
+                          <button
                             onClick={() => handleReject(request.id)}
                             className="text-red-600 hover:text-red-800"
                           >
-                            Từ chối
+                            Từ Chối
                           </button>
                         </>
                       )}
-                      
-                      {request.status === 'Approved' && (
-                        <Link 
-                          to={`/admin/courses/create?request_id=${request.id}`} 
-                          className="text-secondary hover:text-green-700"
+                      {request.status === 'APPROVED' && (
+                        <Link
+                          to={`/admin/courses/create?request_id=${request.id}`}
+                          className="text-blue-600 hover:text-blue-800"
                         >
-                          Tạo khóa học
+                          Tạo Khóa Học
                         </Link>
                       )}
                     </div>
@@ -244,7 +370,7 @@ const CustomerRequestsPage = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default CustomerRequestsPage
+export default CustomerRequestsPage;

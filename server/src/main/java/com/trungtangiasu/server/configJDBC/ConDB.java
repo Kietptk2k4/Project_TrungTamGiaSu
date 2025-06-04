@@ -11,7 +11,7 @@ public class ConDB {
 
     public ConDB(){
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tutorlink", "root", "dat1102");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/tutorlink", "root", "0966757817");
             System.out.println("ket noi voi db cua dat thanh cong");
             statement = connection.createStatement();
         }  

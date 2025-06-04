@@ -11,13 +11,16 @@ import lombok.Setter;
 public class AppException extends RuntimeException{
     private ErrorCode errorCode;
 
-
+    public AppException() {
+        super();
+    }
     public AppException(ErrorCode errorCode){
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
-    public AppException(){
-        this.errorCode = ErrorCode.UNCATEGORIZED_EXCEPTION;
+    public AppException(ErrorCode errorCode, String message) {
+        super(message);  // Truyền thông báo lỗi tùy chỉnh
+        this.errorCode = errorCode;
     }
 
 
