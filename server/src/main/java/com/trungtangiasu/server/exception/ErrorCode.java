@@ -20,9 +20,12 @@ public enum ErrorCode {
     LOCKED_USER_EXCEPTION(112, "TÀI KHOẢN BỊ KHÓA", HttpStatus.UNAUTHORIZED),    
     EMPTY_GRADE_EXCEPTION(113, "LỚP(kHỐI) TRỐNG", HttpStatus.BAD_REQUEST),
     EMPTY_SUBJECT_EXCEPTION(114, "MÔN HỌC TRỐNG", HttpStatus.BAD_REQUEST),
-    EMPTY_POST_EXCEPTION(115, "DANH SÁCH BÀI ĐĂNG KHÓA HỌC RỖNG", HttpStatus.BAD_REQUEST),;
-
-
+    EMPTY_POST_EXCEPTION(115, "DANH SÁCH BÀI ĐĂNG KHÓA HỌC RỖNG", HttpStatus.BAD_REQUEST),
+    UNAUTHORIZED(116, "KHÔNG CÓ QUYỀN TRUY CẬP", HttpStatus.UNAUTHORIZED),
+    INVALID_REQUEST(117, "YÊU CẦU KHÔNG HỢP LỆ", HttpStatus.BAD_REQUEST),
+    NOT_FOUND(118, "KHÔNG TÌM THẤY TÀI NGUYÊN", HttpStatus.NOT_FOUND),
+    INTERNAL_SERVER_ERROR(119, "LỖI MÁY CHỦ NỘI BỘ", HttpStatus.INTERNAL_SERVER_ERROR),
+    REQUEST_NOT_FOUND(120, "YÊU CẦU KHÔNG TÌM THẤY", HttpStatus.NOT_FOUND);
 
     private final int code;
     private final String message;
@@ -33,4 +36,9 @@ public enum ErrorCode {
         this.message = message;
         this.httpStatusCode = httpStatusCode;
     }
+
+    public HttpStatusCode getHttpStatus() {
+        return httpStatusCode;
+    }
+
 }
